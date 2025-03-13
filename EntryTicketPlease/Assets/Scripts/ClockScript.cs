@@ -3,32 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ClockScript : MonoBehaviour
 {
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
+    [SerializeField] int duration;
+    [SerializeField] int startHour;
+    [SerializeField] DateTime date;
+    [SerializeField] int timewarnning;
+    public UnityEvent<int> AlmostFinished;
+    public UnityEvent Finished;
     private float ratio;
-    DateTime time;
-
-    [SerializeField] Date date;
+    
+   
 
 
     void Start()
     {
-        ratio = 600 / nbSeconds;
-        time = new DateTime(date.year, date.month, date.day, 8, 0, 0);
+        ratio = (duration * 60) / nbSeconds;
+        GameTime = date;
+        TimeSpan ts = new TimeSpan(startHour, 0, 0);
+        GameTime = GameTime.Date + ts;
     }
 
     // Update is called once per frame
     void Update()
     {
-        time = time.AddMinutes(ratio * Time.deltaTime);
-        affichage.text = time.ToString("H:mm dd/MM/yyyy");
+        GameTime = GameTime.AddMinutes(ratio * Time.deltaTime);
+        affichage.text = GameTime.ToString("H:mm dd/MM/yyyy");
+        if(GameTime.Hour == startHour + duration - timewarnning)
+        {
+            AlmostFinished.Invoke(timewarnning);
+        }
+        if(GameTime.Hour == startHour + duration)
+        {
+            Finished.Invoke();
+        }
     }
-}
-
-public struct Date
-{
-    public int year, month, day;
+    public DateTime GameTime { get; private set; }
 }
