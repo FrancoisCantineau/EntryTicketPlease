@@ -25,6 +25,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     [Header("Table")]
     public Transform tableTransform;      // Référence à la table dans la scène (non utilisé ici)
 
+    [Header("Draggable Zone")]
+    public Collider2D noDragZone;         // Référence à la zone "no drag" dans la scène
+
     private Vector3 targetPosition;       // Position cible actuelle
     private NavMeshAgent navAgent;        // Référence au NavMeshAgent
     private Animator animator;            // Pour gérer les animations
@@ -61,6 +64,14 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             if (refuseObj != null) refuseButton = refuseObj.GetComponent<UnityEngine.UI.Button>();
         }
 
+        // Recherche automatique de noDragZone si non assigné
+        if (noDragZone == null)
+        {
+            GameObject noDragObj = GameObject.Find("NoDragZone"); // Remplace par le nom exact de ton objet
+            if (noDragObj != null) noDragZone = noDragObj.GetComponent<Collider2D>();
+            if (noDragZone == null) Debug.LogWarning("NoDragZone non trouvé dans la scène !");
+        }
+
         navAgent.updateRotation = false;
 
         // Désactive les boutons au démarrage
@@ -89,7 +100,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             hasReachedInitialTarget = true;
             if (validateButton != null) validateButton.interactable = true;
             if (refuseButton != null) refuseButton.interactable = true;
-            SpawnTicketsOnTable(); // Fait spawn les tickets à la position spécifiée
+            SpawnTicketsOnTable();
         }
 
         if (isMoving && navAgent.velocity != Vector3.zero)
@@ -151,15 +162,23 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         for (int i = 0; i < ticketCount; i++)
         {
-            // Instancie le prefab
-            GameObject ticketObj = Instantiate(ticketPrefab);
+            // Position et rotation fixes spécifiées
+            Vector3 spawnPos = new Vector3(0f, 0.8f, -8f);
+            Quaternion spawnRot = Quaternion.Euler(30f, 0.6f, 271f);
 
-            // Position fixe spécifiée
-            Vector3 spawnPos = new Vector3(-0.61243093f, -1.70192051f, -0.768740654f);
-            ticketObj.transform.position = spawnPos;
+            // Instancie le prefab directement à la bonne position et rotation
+            GameObject ticketObj = Instantiate(ticketPrefab, spawnPos, spawnRot);
 
-            // Rotation fixe spécifiée (en degrés)
-            ticketObj.transform.rotation = Quaternion.Euler(30.3290653f, 0.592949092f, 271.174133f);
+            // Récupère le composant DraggableObject et assigne noDragZone
+            DraggableObject draggable = ticketObj.GetComponent<DraggableObject>();
+            if (draggable != null && noDragZone != null)
+            {
+                draggable.noDragZone = noDragZone;
+            }
+            else
+            {
+                Debug.LogWarning("DraggableObject ou noDragZone manquant pour le ticket !");
+            }
 
             // Vérifie le SpriteRenderer
             SpriteRenderer renderer = ticketObj.GetComponent<SpriteRenderer>();
@@ -179,8 +198,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             {
                 Debug.Log("Animation terminée pour ticket à : " + ticketObj.transform.position + " échelle finale : " + ticketObj.transform.localScale);
             });
-
-            Debug.Log("Ticket spawné à : " + spawnPos + " avec échelle initiale : " + ticketObj.transform.localScale);
         }
     }
 

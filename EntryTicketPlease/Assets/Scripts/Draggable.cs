@@ -19,6 +19,8 @@ public class DraggableObject : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip grabSound;
 
+    private bool isSpawning = true;
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -47,26 +49,28 @@ public class DraggableObject : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        if (grabSound == null)
-        {
-            Debug.LogWarning("Aucun clip audio assigné à 'Grab Sound' dans l'inspecteur !");
-        }
 
-        // Initialise initialScale à (1, 1, 1) si l’échelle est zéro au départ
+
         initialScale = transform.localScale;
         if (initialScale == Vector3.zero)
         {
             initialScale = Vector3.one;
-            Debug.LogWarning("Échelle initiale était (0, 0, 0), corrigée à (1, 1, 1) pour : " + gameObject.name);
         }
 
         initialSortingOrder = spriteRenderer.sortingOrder;
         highestSortingOrder = Mathf.Max(highestSortingOrder, initialSortingOrder);
+
+        Invoke("FinishSpawning", 0.6f);
+    }
+
+    private void FinishSpawning()
+    {
+        isSpawning = false;
     }
 
     void Update()
     {
-        if (mainCamera == null) return;
+        if (mainCamera == null || isSpawning) return;
 
         // Mode Mobile (Touch)
         if (Input.touchCount > 0)
@@ -113,6 +117,7 @@ public class DraggableObject : MonoBehaviour
                     isDragging = true;
                     offset = transform.position - mousePosition;
                     ZoomIn();
+                    Debug.Log("Début du drag à : " + transform.position);
                 }
             }
             else if (Input.GetMouseButton(0) && isDragging)
@@ -125,11 +130,11 @@ public class DraggableObject : MonoBehaviour
                 {
                     isDragging = false;
                     ZoomOut();
+                    Debug.Log("Fin du drag à : " + transform.position);
                 }
             }
         }
 
-        // Ajuste l’échelle uniquement si elle a été définie (évite d’overwrite au spawn)
         if (initialScale != Vector3.zero)
         {
             if (isDragging)
@@ -142,6 +147,8 @@ public class DraggableObject : MonoBehaviour
             }
         }
     }
+
+
 
     private Vector3 GetWorldPosition(Vector2 screenPosition)
     {
@@ -177,6 +184,7 @@ public class DraggableObject : MonoBehaviour
         newPosition.y = Mathf.Clamp(newPosition.y, minBounds.y, maxBounds.y);
         newPosition.z = transform.position.z;
         transform.position = newPosition;
+
     }
 
     private void ZoomIn()
