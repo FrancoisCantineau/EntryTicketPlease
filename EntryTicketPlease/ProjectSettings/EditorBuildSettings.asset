@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/02-Scenes/L_MainMenu.unity
-    guid: 6a70af4be255d014cbf5dbde76a910e6
-  - enabled: 1
     path: Assets/02-Scenes/GameLucie.unity
     guid: 7b9065c42cda42947902831c85cbb3c3
+  - enabled: 1
+    path: Assets/02-Scenes/endDayScene.unity
+    guid: 8b27d9fdc886e164993aabc26fe5bfcf
+  - enabled: 1
+    path: Assets/02-Scenes/Game.unity
+    guid: 07da4e1c6ef080a4abeecc37956e547e
+  - enabled: 1
+    path: Assets/02-Scenes/L_MainMenu.unity
+    guid: 6a70af4be255d014cbf5dbde76a910e6
   m_configObjects: {}

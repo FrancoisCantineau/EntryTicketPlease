@@ -23,17 +23,17 @@ public class GameManager : SingletonMB<GameManager>
 
     private void OnEnable()
     {
-        m_clock.Finished.AddListener(OnClockFinished);
+        m_clock.Finished.AddListener(OnRoundTerminated);
     }
     #endregion
     #region API -------------------------------------------------------------------------
 
-    public void NextDay()
+    public void HandleNextDay()
     {
         Debug.Log("Next Day");
     }
 
-    public void RestartDay()
+    public void HandleRestartDay()
     {
         Debug.Log("Restart Day");
     }
@@ -52,10 +52,10 @@ public class GameManager : SingletonMB<GameManager>
         BeginRound.Invoke(roundData);
     }
 
-    void OnClockFinished()
+    void OnRoundTerminated()
     {
         EndRound.Invoke();
-        SceneManager.LoadSceneAsync("endDayScene", LoadSceneMode.Additive);
+        SceneManager.LoadScene("endDayScene", LoadSceneMode.Single);
     }
 
 

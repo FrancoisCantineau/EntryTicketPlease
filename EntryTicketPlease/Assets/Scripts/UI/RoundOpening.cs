@@ -80,7 +80,7 @@ public class RoundOpening : MonoBehaviour
 
     void SetDay(int _day)
     {
-        m_dayNumber.text = $"{_day}";
+        m_dayNumber.text = _day.ToString("D2");
     }
 
     void AddThought(string _thought)
