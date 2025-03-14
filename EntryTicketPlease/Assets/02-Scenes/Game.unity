@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9037f722a3a75439038d9b1ef3400e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_clock: {fileID: 304830047}
 --- !u!114 &23845585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +204,7 @@ MonoBehaviour:
   visitorMinWeight: 30
   visitorMaxWeight: 120
   queueLengthByShiftLengthFactor: 1.5
-  hourDurationSeconds: 12
+  hourDurationSeconds: 2
 --- !u!114 &23845586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -794,13 +795,15 @@ MonoBehaviour:
   calandar: {fileID: 1639618704}
   duration: 10
   startHour: 8
-  timewarnning: 2
+  endHour: 0
   AlmostFinished:
     m_PersistentCalls:
       m_Calls: []
   Finished:
     m_PersistentCalls:
       m_Calls: []
+  timesUpObject: {fileID: 987460538}
+  timeLowObject: {fileID: 150336167}
 --- !u!4 &422794766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a293a77ca0535e84c85ef0697851e514,
@@ -1249,7 +1252,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 08:00
+  m_text: 08:02
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3031c77684330e749839ec701a7bbc88, type: 2}
   m_sharedMaterial: {fileID: 3337319148600210441, guid: 3031c77684330e749839ec701a7bbc88,
@@ -1283,7 +1286,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 8
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1305,7 +1308,7 @@ MonoBehaviour:
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
-  m_horizontalMapping: 0
+  m_horizontalMapping: 1
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
@@ -1401,7 +1404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &987460539
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2410,32 +2413,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2021915413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021915412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0afe1238fd94a1d4ba7399aba3688e84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nbSeconds: 10
-  affichage: {fileID: 555971190}
-  calandar: {fileID: 1639618704}
-  duration: 10
-  startHour: 8
-  timewarnning: 2
-  AlmostFinished:
-    m_PersistentCalls:
-      m_Calls: []
-  Finished:
-    m_PersistentCalls:
-      m_Calls: []
-  timesUpObject: {fileID: 0}
-  timeLowObject: {fileID: 0}
 --- !u!114 &2021915414
 MonoBehaviour:
   m_ObjectHideFlags: 0
