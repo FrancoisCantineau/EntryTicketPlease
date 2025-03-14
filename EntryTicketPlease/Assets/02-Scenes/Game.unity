@@ -229,6 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_roundOpening: {fileID: 2024785684}
+  m_clock: {fileID: 304830047}
 --- !u!1 &27391482
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +714,7 @@ GameObject:
   - component: {fileID: 304830044}
   - component: {fileID: 304830046}
   - component: {fileID: 304830045}
+  - component: {fileID: 304830047}
   m_Layer: 5
   m_Name: ClockBg
   m_TagString: Untagged
@@ -775,6 +777,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304830043}
   m_CullTransparentMesh: 1
+--- !u!114 &304830047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304830043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0afe1238fd94a1d4ba7399aba3688e84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nbSeconds: 10
+  affichage: {fileID: 555971190}
+  calandar: {fileID: 1639618704}
+  duration: 10
+  startHour: 8
+  timewarnning: 2
+  AlmostFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  Finished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &422794766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a293a77ca0535e84c85ef0697851e514,
@@ -2377,7 +2403,6 @@ GameObject:
   - component: {fileID: 2021915416}
   - component: {fileID: 2021915415}
   - component: {fileID: 2021915414}
-  - component: {fileID: 2021915413}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -2527,6 +2552,9 @@ MonoBehaviour:
   m_thoughtChipPrefab: {fileID: 5424012295250041404, guid: 1781ef73a9aaf0f4d8efa72daf9844e2,
     type: 3}
   m_StartSignal: {fileID: 457005534}
+  m_OnOpeningEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &3510242827436246903
 PrefabInstance:
   m_ObjectHideFlags: 0
