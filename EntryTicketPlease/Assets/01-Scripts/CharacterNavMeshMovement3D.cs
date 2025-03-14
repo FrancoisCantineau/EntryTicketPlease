@@ -19,7 +19,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     private bool isMoving = false;        // Indique si le personnage bouge
     private bool hasReachedInitialTarget = false; // Indique si le premier point est atteint
 
-    [Header("UI (TMP Buttons)")]
+    [Header("UI")]
     public UnityEngine.UI.Button validateButton; // Référence au bouton TMP "Valider"
     public UnityEngine.UI.Button refuseButton;   // Référence au bouton TMP "Refuser"
 
@@ -29,21 +29,8 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
 
-        if (navAgent == null)
+        if (navAgent == null || animator == null || mainCamera == null)
         {
-            Debug.LogError("NavMeshAgent manquant sur le personnage !");
-            enabled = false;
-            return;
-        }
-        if (animator == null)
-        {
-            Debug.LogError("Animator manquant sur le personnage !");
-            enabled = false;
-            return;
-        }
-        if (mainCamera == null)
-        {
-            Debug.LogError("Aucune caméra principale trouvée dans la scène !");
             enabled = false;
             return;
         }
@@ -51,18 +38,13 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         // Recherche automatique des boutons TMP
         if (validateButton == null)
         {
-            GameObject validateObj = GameObject.Find("Valider"); // Ajuste au nom exact
+            GameObject validateObj = GameObject.Find("Valider");
             if (validateObj != null) validateButton = validateObj.GetComponent<UnityEngine.UI.Button>();
         }
         if (refuseButton == null)
         {
-            GameObject refuseObj = GameObject.Find("Refuser"); // Ajuste au nom exact
+            GameObject refuseObj = GameObject.Find("Refuser");
             if (refuseObj != null) refuseButton = refuseObj.GetComponent<UnityEngine.UI.Button>();
-        }
-
-        if (validateButton == null || refuseButton == null)
-        {
-            Debug.LogWarning("Boutons TMP non trouvés ou non assignés ! Vérifie leurs noms ou assigne-les manuellement.");
         }
 
         navAgent.updateRotation = false;
@@ -91,17 +73,8 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         if (!isMoving && !hasReachedInitialTarget && Vector3.Distance(transform.position, targetPosition) <= stoppingDistance)
         {
             hasReachedInitialTarget = true;
-            Debug.Log("Premier point atteint, activation des boutons.");
-            if (validateButton != null)
-            {
-                validateButton.interactable = true;
-                Debug.Log("Bouton Valider activé");
-            }
-            if (refuseButton != null)
-            {
-                refuseButton.interactable = true;
-                Debug.Log("Bouton Refuser activé");
-            }
+            if (validateButton != null) validateButton.interactable = true;
+            if (refuseButton != null) refuseButton.interactable = true;
         }
 
         if (isMoving && navAgent.velocity != Vector3.zero)
@@ -131,7 +104,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             if (!isMoving && !animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
                 animator.Play("Idle");
-                Debug.Log("Forcé l'animation Idle.");
             }
         }
     }
@@ -143,11 +115,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         if (NavMesh.SamplePosition(newTarget, out hit, 10.0f, NavMesh.AllAreas))
         {
             targetPosition = hit.position;
-            Debug.Log($"Cible ajustée à : {targetPosition}");
         }
         else
         {
-            Debug.LogWarning($"La cible {newTarget} n'est pas sur le NavMesh, repli sur la position actuelle !");
             targetPosition = transform.position;
         }
 
@@ -158,29 +128,17 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
     public void OnValidateButton()
     {
-        Debug.Log("OnValidateButton appelé");
         if (hasReachedInitialTarget)
         {
             SetTarget(validateTarget);
-            Debug.Log("Bouton Valider cliqué : Direction " + validateTarget);
-        }
-        else
-        {
-            Debug.Log("Bouton Valider ignoré : Premier point non atteint.");
         }
     }
 
     public void OnRefuseButton()
     {
-        Debug.Log("OnRefuseButton appelé");
         if (hasReachedInitialTarget)
         {
             SetTarget(refuseTarget);
-            Debug.Log("Bouton Refuser cliqué : Direction " + refuseTarget);
-        }
-        else
-        {
-            Debug.Log("Bouton Refuser ignoré : Premier point non atteint.");
         }
     }
 }
