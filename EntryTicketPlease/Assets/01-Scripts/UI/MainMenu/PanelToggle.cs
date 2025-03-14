@@ -10,6 +10,7 @@ public class PanelToggle : MonoBehaviour
     [SerializeField] private Sprite pressedSprite;
     [SerializeField] private float animationDuration = 0.3f;
     [SerializeField] private float buttonScaleFactor = 1.1f;
+    [SerializeField] private bool allowOtherPanels = false; // Permet d'ouvrir d'autres panels en pause
 
     private bool isPanelOpen = false;
     private RectTransform panelRect;
@@ -21,7 +22,7 @@ public class PanelToggle : MonoBehaviour
     {
         panelRect = panel.GetComponent<RectTransform>();
         originalButtonScale = listButton.transform.localScale;
-        closedPosition = new Vector3(-panelRect.rect.width-200, panelRect.anchoredPosition.y, 0);
+        closedPosition = new Vector3(-panelRect.rect.width - 200, panelRect.anchoredPosition.y, 0);
         openPosition = new Vector3(-200, panelRect.anchoredPosition.y, 0);
         panelRect.anchoredPosition = closedPosition;
         panel.SetActive(false);
@@ -32,21 +33,16 @@ public class PanelToggle : MonoBehaviour
     {
         if (isPanelOpen && Input.GetMouseButtonDown(0))
         {
-            if (!IsPointerOverGameObject())
+            if (!IsPointerOverUI())
             {
                 TogglePanel();
             }
         }
     }
 
-    private bool IsPointerOverGameObject()
+    private bool IsPointerOverUI()
     {
-        return IsPointerOverUIElement(panelRect) || IsPointerOverUIElement(listButton.GetComponent<RectTransform>());
-    }
-
-    private bool IsPointerOverUIElement(RectTransform rectTransform)
-    {
-        return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, null);
+        return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
     }
 
     public void TogglePanel()
@@ -57,13 +53,16 @@ public class PanelToggle : MonoBehaviour
         if (isPanelOpen)
         {
             panel.SetActive(true);
-            panelRect.DOAnchorPos(openPosition, animationDuration).SetEase(Ease.OutBounce);
-            listButton.transform.DOScale(originalButtonScale * buttonScaleFactor, animationDuration * 0.5f).SetEase(Ease.OutQuad);
+            panelRect.DOAnchorPos(openPosition, animationDuration).SetEase(Ease.OutBounce).SetUpdate(true);
+            listButton.transform.DOScale(originalButtonScale * buttonScaleFactor, animationDuration * 0.5f).SetEase(Ease.OutQuad).SetUpdate(true);
         }
         else
         {
-            panelRect.DOAnchorPos(closedPosition, animationDuration).SetEase(Ease.InOutQuad).OnComplete(() => panel.SetActive(false));
-            listButton.transform.DOScale(originalButtonScale, animationDuration * 0.5f).SetEase(Ease.InOutQuad);
+            panelRect.DOAnchorPos(closedPosition, animationDuration).SetEase(Ease.InOutQuad).SetUpdate(true).OnComplete(() =>
+            {
+                panel.SetActive(false);
+            });
+            listButton.transform.DOScale(originalButtonScale, animationDuration * 0.5f).SetEase(Ease.InOutQuad).SetUpdate(true);
         }
     }
 }
