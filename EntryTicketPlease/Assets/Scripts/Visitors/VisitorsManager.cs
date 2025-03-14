@@ -171,7 +171,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
 
         //Condition check to see if allowed
-        VerificationAlgo.Instance.IsVisitorAllowed(newVisitor);
+        VerificationAlgo.IsVisitorAllowed(newVisitor);
 
 
         visitorQueue.Add(newVisitor);

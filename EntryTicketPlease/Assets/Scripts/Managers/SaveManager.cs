@@ -3,7 +3,15 @@ using UnityEngine;
 
 public class SaveManager : SingletonMB<SaveManager>
 {
-    private static string savePath = Application.persistentDataPath + "/save.json";
+    private static string savePath;
+
+    protected override void Awake()
+    {
+       base.Awake();
+       savePath = Application.persistentDataPath + "/save.json";
+        
+    }
+    
 
     /// <summary>
     /// Sauvegarde les données
