@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VerificationAlgo : MonoBehaviour
+public static class VerificationAlgo
 {
-    public static VerificationAlgo Instance;
+    private static float minHeight;
 
-    private float minHeight;
+    private static char  forbiddenSection;
 
-    private char  forbiddenSection;
+    private static float maxWeight;
+    private static float minWeight;
 
-    private float maxWeight;
-    private float minWeight;
-
-    private int minAge;
-    private int maxAge;
+    private static int minAge;
+    private static int maxAge;
 
     /// <summary>
     /// Delegate function to choose verifications for each day.
@@ -24,22 +22,9 @@ public class VerificationAlgo : MonoBehaviour
     public delegate bool VisitorCondition(Visitor visitor);
 
 
-    private List<VisitorCondition> activeConditions = new List<VisitorCondition>();
+    private static List<VisitorCondition> activeConditions = new List<VisitorCondition>();
 
-    private void Awake()
-    {
-        
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
-    public void UpdateAlgorithm(RoundData roundData)
+    public static void UpdateAlgorithm(RoundData roundData)
     {
         activeConditions.Clear();
 
@@ -94,7 +79,7 @@ public class VerificationAlgo : MonoBehaviour
     /// Adds a new function for the delegate
     /// </summary>
     /// <param name="condition"></param>
-    private void AddCondition(VisitorCondition condition)
+    private static void AddCondition(VisitorCondition condition)
     {
         if (!activeConditions.Contains(condition))
         {
@@ -107,7 +92,7 @@ public class VerificationAlgo : MonoBehaviour
     /// Check is the visitor is allowed depending on the conditions
     /// </summary>
     /// <param name="Visitor"></param>
-    public bool IsVisitorAllowed(Visitor visitor)
+    public static bool IsVisitorAllowed(Visitor visitor)
     {
         foreach (var condition in activeConditions)
         {
@@ -120,37 +105,37 @@ public class VerificationAlgo : MonoBehaviour
     }
 
     //DEFAULT CONDITIONS
-    private bool HasValidTicket(Visitor visitor)
+    private static bool HasValidTicket(Visitor visitor)
     {
         return visitor.ticket.IsValid;
     }
 
-    private bool AgeMatch(Visitor visitor)
+    private static bool AgeMatch(Visitor visitor)
     {
         return visitor.id.Age == visitor.ticket.Age;
     }
 
-    private bool HasValidName(Visitor visitor)
+    private static bool HasValidName(Visitor visitor)
     {
         return visitor.ticket.Name == visitor.id.Name;
     }
 
     //VARIABLE CONDITIONS
 
-    private bool HasValidHeight(Visitor visitor)
+    private static bool HasValidHeight(Visitor visitor)
     {
         return visitor.id.Height >= minHeight ;
     }
 
-    private bool HasValidSection(Visitor visitor)
+    private static bool HasValidSection(Visitor visitor)
     {
         return visitor.ticket.Section != forbiddenSection;
     }
-    private bool HasValidWeight(Visitor visitor)
+    private static bool HasValidWeight(Visitor visitor)
     {
         return visitor.id.Weight <= maxWeight && visitor.id.Weight >= minWeight;
     }
-    private bool HasValidAge(Visitor visitor)
+    private static bool HasValidAge(Visitor visitor)
     {
         return visitor.id.Age >=minAge && visitor.id.Age <= maxAge;
     }

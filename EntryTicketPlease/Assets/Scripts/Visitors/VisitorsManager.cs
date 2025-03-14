@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Analytics;
 using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 
-public class VisitorsManager : MonoBehaviour
+public class VisitorsManager : SingletonMB<VisitorsManager>
 {
     private float validityTreshHoldValue = 0.3f; //Used to increase or decrease invalid tickets
     private float fraudValue = 1f; //Variable to increase or decrease fraud among visitors
@@ -29,6 +29,8 @@ public class VisitorsManager : MonoBehaviour
        
     }
 
+
+
     /// <summary>
     /// Demands a float parameter between 0.0f and 1.0f. 
     /// 0.0 = 0% fraud and 1.0 = 100% fraud 
@@ -38,7 +40,6 @@ public class VisitorsManager : MonoBehaviour
     {
         fraudValue = m_fraudValue;
     }
-
 
     /// <summary>
     /// Set a value for ticket validity probability.
@@ -50,11 +51,25 @@ public class VisitorsManager : MonoBehaviour
         validityTreshHoldValue = m_validityTreshHoldValue;
     }
 
+
+    /// <summary>
+    /// Creates visitors queue with a parameter to change visitor's daily amount
+    /// </summary>
+    public void CreateQueue(int m_visitorsAmount)
+    {
+        visitorQueue.Clear();
+
+        for (int i = 0; i < m_visitorsAmount; i++)
+        {
+            InitializeVisitor(i);
+
+        }
+    }
+
     /// <summary>
     /// Start visitor's Queue & first spawn. 
     /// Parameter demands a daily visitors amount
     /// </summary>
-    
     public void RestartVisitors(int m_visitorsAmount)
     {
       
@@ -62,20 +77,21 @@ public class VisitorsManager : MonoBehaviour
         SpawnVisitors();
     }
 
-    /// <summary>
-    /// Creates visitors queue with a parameter to change visitor's daily amount
-    /// </summary>
-    private void CreateQueue(int m_visitorsAmount)
-    {
-        visitorQueue.Clear(); 
 
-        for (int i = 0; i < m_visitorsAmount; i++)
+    public void NextVisitor()
+    {
+        if (currentVisitorIndex < visitorQueue.Count)
         {
-            InitializeVisitor(i);
-            
+            SpawnVisitors();
+        }
+        else
+        {
+            Debug.Log("Aucun autre visiteur dans la queue.");
         }
     }
     
+
+
 
     private void InitializeVisitor(int i)
     {
@@ -169,8 +185,9 @@ public class VisitorsManager : MonoBehaviour
         newVisitor.Initialize(id, ticket);
 
 
-        ////Condition check to see if allowed
-        //VerificationAlgo.Instance.IsVisitorAllowed(newVisitor);
+        //Condition check to see if allowed
+        VerificationAlgo.IsVisitorAllowed(newVisitor);
+
 
 
         visitorQueue.Add(newVisitor);
@@ -247,15 +264,4 @@ public class VisitorsManager : MonoBehaviour
     }
 
 
-    public void NextVisitor()
-    {
-        if (currentVisitorIndex < visitorQueue.Count)
-        {
-            SpawnVisitors(); 
-        }
-        else
-        {
-            Debug.Log("Aucun autre visiteur dans la queue.");
-        }
-    }
 }
