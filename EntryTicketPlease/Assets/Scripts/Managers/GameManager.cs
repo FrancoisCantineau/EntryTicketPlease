@@ -14,6 +14,7 @@ public class GameManager : SingletonMB<GameManager>
     void Start()
     {
         currentData = SaveManager.Instance.FetchGameData();
+        InitGame();
     }
 
     // Update is called once per frame
@@ -41,9 +42,10 @@ public class GameManager : SingletonMB<GameManager>
     {
         currentData = SaveManager.Instance.FetchGameData();
         GenerateRound(currentData.currentDay);
-
+        VerificationAlgo.Instance.UpdateAlgorithm(roundData);
         VisitorsManager.Instance.CreateQueue(roundData.queueLength);
-        
+
+        BeginRound.Invoke(roundData);
     }
 
     void GenerateRound(int currentDay)
