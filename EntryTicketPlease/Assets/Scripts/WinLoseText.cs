@@ -45,7 +45,6 @@ public class WinLoseText : MonoBehaviour
         }
         
     }
-
     // Update is called once per frame
     void Update()
     {
