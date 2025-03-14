@@ -7,12 +7,13 @@ public class clipBoard : MonoBehaviour
 {
 
     RoundData roundData;
-    [SerializeField] TextMeshProUGUI clipBoardText;
+    [SerializeField] GameObject text;
+    private TextMeshPro clipBoardText;
     string res;
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
     private void OnEnable()
     {
@@ -20,7 +21,7 @@ public class clipBoard : MonoBehaviour
     }
     private void OnDisable()
     {
-        GameManager.Instance.BeginRound.RemoveListener(onRoundBegin);  
+        GameManager.Instance.BeginRound.RemoveListener(onRoundBegin); 
     }
     // Update is called once per frame
     void Update()
@@ -31,32 +32,32 @@ public class clipBoard : MonoBehaviour
     {
         if(roundData.notice.minWeightRestrictionEnabled)
         {
-            res += "Les personnes doivent au moins peusé " + roundData.notice.minWeightRestriction.ToString() + "Kg" + "<br>";
+            res += "- People need to weight at least " + roundData.notice.minWeightRestriction.ToString() + "Kg" + "<br>";
         }
         if(roundData.notice.maxWeightRestrictionEnabled)
         {
-            res += "Les personnes doivent peusé au macximum" + roundData.notice.maxWeightRestriction.ToString() + "Kg" + "<br>";
+            res += "- People need to weight at most " + roundData.notice.maxWeightRestriction.ToString() + "Kg" + "<br>";
         }
         if(roundData.notice.heightLimitEnabled)
         {
-            res += "Les personnes doivent au minimum mesuré" + roundData.notice.heightLimit.ToString() + "cm" + "<br>";
+            res += "- People need to be at least " + roundData.notice.heightLimit.ToString() + " cm tall" + "<br>";
         }
         if(roundData.notice.kidsAreForbidenEnabled)
         {
-            res += "Les enfants ne sont pas autorisé" + "<br>";
+            res += "- Kids are not allowed" + "<br>";
         }
         if(roundData.notice.kidsNotAllowedAfterHourEnabled)
         {
-            res += "Les enfants ne sont plus autorisé apres " + roundData.notice.kidsNotAllowedAfterHour.ToString() + "<br>";
+            res += "- Kids are not allowed after " + roundData.notice.kidsNotAllowedAfterHour.ToString() + "<br>";
         }
         if(roundData.notice.maxAgeRestrictionEnabled)
         {
-            res += "Les personne ne doivent pas avoir plus de " + roundData.notice.maxAgeRestriction.ToString() + "ans" + "<br>";
+            res += "- People shouldn't be older than " + roundData.notice.maxAgeRestriction.ToString() + " years old" + "<br>";
         }
         if(roundData.notice.validityExtensionEnabled)
         {
-            res += "Les billets on une extension de validitée de " + roundData.notice.validityExtensionDays.ToString() + "jours" + "<br>";
+            res += "- Tickets are valid for " + roundData.notice.validityExtensionDays.ToString() + " more days" + "<br>";
         }
-        clipBoardText.text = res;
+        text.GetComponent<TextMeshPro>().text = res;
     }
 }
