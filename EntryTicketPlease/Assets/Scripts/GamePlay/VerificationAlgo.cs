@@ -140,6 +140,7 @@ public static class VerificationAlgo
     }
     private static bool HasValidAge(Visitor visitor)
     {
+    
         return visitor.id.Age > minAge && visitor.id.Age < maxAge;
     }
     private static bool HasValidPrice(Visitor visitor)

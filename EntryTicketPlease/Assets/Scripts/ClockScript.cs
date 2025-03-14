@@ -13,7 +13,7 @@ public class ClockScript : MonoBehaviour
     [SerializeField] int startHour;
     [SerializeField] int endHour;
     [SerializeField] DateTime date;
-    [SerializeField] int timewarnning = 2+1;
+    int timewarnning = 2+1;
     bool isTimeLow = false;
     public UnityEvent<int> AlmostFinished = new();
     public UnityEvent Finished = new();

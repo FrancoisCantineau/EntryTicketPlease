@@ -19,8 +19,8 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     public Transform spawnPoint;
 
-    private string[] menNames = { "Bastien", "Mathias", "Francois" };
-    private string[] womenNames = { "Lucie", "Julie", "Marion" };
+    private string[] menNames = { "Bastien", "Mathias", "Francois", "Clement" };
+    private string[] womenNames = { "Lucie", "Julie", "Marion", "Celine" };
     private char[] sections = { 'A', 'B', 'C'};
 
     [SerializeField] private CharacterData characterData;
@@ -63,16 +63,6 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         }
     }
 
-    /// <summary>
-    /// Start visitor's Queue & first spawn. 
-    /// Parameter demands a daily visitors amount
-    /// </summary>
-    public void RestartVisitors(int m_visitorsAmount)
-    {
-      
-        CreateQueue(m_visitorsAmount);
-        SpawnVisitors();
-    }
 
     /// <summary>
     /// Returns Visitor currently used
@@ -100,6 +90,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     private void InitializeVisitor(int i)
     { 
+        
 
         GameObject newVisitorObject = new GameObject("Visitor" + i);
         Visitor addedVisitor = newVisitorObject.AddComponent<Visitor>();
