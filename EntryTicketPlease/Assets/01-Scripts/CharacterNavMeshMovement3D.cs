@@ -10,26 +10,32 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     public Vector3 refuseTarget = new Vector3(-1.867f, 0.898f, -6.201f);  // Après "Refuser"
 
     [Header("Paramètres")]
-    public float stoppingDistance = 0.1f;
-    public float rotationSpeed = 5f;     
+    public float stoppingDistance = 0.1f; // Distance à laquelle le personnage s'arrête
+    public float rotationSpeed = 5f;      // Vitesse de rotation pour regarder la caméra
 
     [Header("Sprites")]
-    public Sprite[] validateSprites;     
-    public Sprite[] refuseSprites;       
-    public float spriteHeight = 1.5f;    
-    public float spriteDuration = 2f;    
+    public Sprite[] validateSprites;      // Liste de sprites pour "Valider"
+    public Sprite[] refuseSprites;        // Liste de sprites pour "Refuser"
+    public GameObject ticketPrefab;       // Prefab pour les tickets
+    public int ticketCount = 1;           // Nombre de tickets à faire spawn
+    public float spriteHeight = 1.5f;     // Hauteur au-dessus du personnage pour validate/refuse
+    public float spriteDuration = 2f;     // Durée de l'animation validate/refuse
+    public float ticketSpawnRadius = 0.5f;// Rayon de spawn autour de la table (non utilisé ici)
 
-    private Vector3 targetPosition;      
-    private NavMeshAgent navAgent;      
-    private Animator animator;          
-    private Camera mainCamera;            
-    private bool isMoving = false;       
-    private bool hasReachedInitialTarget = false; 
-    private GameObject currentSpriteObj;  
+    [Header("Table")]
+    public Transform tableTransform;      // Référence à la table dans la scène (non utilisé ici)
+
+    private Vector3 targetPosition;       // Position cible actuelle
+    private NavMeshAgent navAgent;        // Référence au NavMeshAgent
+    private Animator animator;            // Pour gérer les animations
+    private Camera mainCamera;            // Référence à la caméra principale
+    private bool isMoving = false;        // Indique si le personnage bouge
+    private bool hasReachedInitialTarget = false; // Indique si le premier point est atteint
+    private GameObject currentSpriteObj;  // Référence au sprite actuel (validate/refuse)
 
     [Header("UI")]
-    public UnityEngine.UI.Button validateButton; 
-    public UnityEngine.UI.Button refuseButton;   
+    public UnityEngine.UI.Button validateButton; // Référence au bouton TMP "Valider"
+    public UnityEngine.UI.Button refuseButton;   // Référence au bouton TMP "Refuser"
 
     void Start()
     {
@@ -37,12 +43,13 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
 
-        if (navAgent == null || animator == null || mainCamera == null)
+        if (navAgent == null || animator == null || mainCamera == null || ticketPrefab == null)
         {
             enabled = false;
             return;
         }
 
+        // Recherche automatique des boutons TMP
         if (validateButton == null)
         {
             GameObject validateObj = GameObject.Find("Valider");
@@ -56,9 +63,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         navAgent.updateRotation = false;
 
+        // Désactive les boutons au démarrage
         if (validateButton != null) validateButton.interactable = false;
         if (refuseButton != null) refuseButton.interactable = false;
 
+        // Ajuste toutes les cibles au NavMesh
         NavMeshHit hit;
         if (NavMesh.SamplePosition(initialTarget, out hit, 10.0f, NavMesh.AllAreas))
             initialTarget = hit.position;
@@ -80,6 +89,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             hasReachedInitialTarget = true;
             if (validateButton != null) validateButton.interactable = true;
             if (refuseButton != null) refuseButton.interactable = true;
+            SpawnTicketsOnTable(); // Fait spawn les tickets à la position spécifiée
         }
 
         if (isMoving && navAgent.velocity != Vector3.zero)
@@ -131,6 +141,49 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         hasReachedInitialTarget = false;
     }
 
+    private void SpawnTicketsOnTable()
+    {
+        if (ticketPrefab == null)
+        {
+            Debug.LogWarning("Ticket Prefab non assigné !");
+            return;
+        }
+
+        for (int i = 0; i < ticketCount; i++)
+        {
+            // Instancie le prefab
+            GameObject ticketObj = Instantiate(ticketPrefab);
+
+            // Position fixe spécifiée
+            Vector3 spawnPos = new Vector3(-0.61243093f, -1.70192051f, -0.768740654f);
+            ticketObj.transform.position = spawnPos;
+
+            // Rotation fixe spécifiée (en degrés)
+            ticketObj.transform.rotation = Quaternion.Euler(30.3290653f, 0.592949092f, 271.174133f);
+
+            // Vérifie le SpriteRenderer
+            SpriteRenderer renderer = ticketObj.GetComponent<SpriteRenderer>();
+            if (renderer == null || renderer.sprite == null)
+            {
+                Debug.LogError("Le ticket spawné n’a pas de SpriteRenderer ou de sprite !");
+            }
+            else
+            {
+                renderer.sortingOrder = 10; // Met le ticket devant
+            }
+
+            // Animation d’apparition avec DOTween
+            ticketObj.transform.localScale = Vector3.zero;
+            ticketObj.SetActive(true); // S’assure que le ticket est actif
+            ticketObj.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                Debug.Log("Animation terminée pour ticket à : " + ticketObj.transform.position + " échelle finale : " + ticketObj.transform.localScale);
+            });
+
+            Debug.Log("Ticket spawné à : " + spawnPos + " avec échelle initiale : " + ticketObj.transform.localScale);
+        }
+    }
+
     private void ShowSprite(Sprite sprite, Vector3 nextTarget)
     {
         if (currentSpriteObj != null)
@@ -147,16 +200,16 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         currentSpriteObj.transform.position = startPos;
 
         currentSpriteObj.transform.localScale = Vector3.zero;
-        renderer.color = new Color(1f, 1f, 1f, 1f); 
+        renderer.color = new Color(1f, 1f, 1f, 1f);
         Sequence spriteSequence = DOTween.Sequence();
         spriteSequence
-            .Append(currentSpriteObj.transform.DOScale(1f, 0.5f)) 
-            .Join(currentSpriteObj.transform.DOMoveY(startPos.y + 0.5f, spriteDuration).SetEase(Ease.OutQuad)) 
-            .Append(renderer.DOFade(0f, 0.5f)) 
+            .Append(currentSpriteObj.transform.DOScale(1f, 0.5f))
+            .Join(currentSpriteObj.transform.DOMoveY(startPos.y + 0.5f, spriteDuration).SetEase(Ease.OutQuad))
+            .Append(renderer.DOFade(0f, 0.5f))
             .OnComplete(() =>
             {
-                Destroy(currentSpriteObj); 
-                SetTarget(nextTarget);   
+                Destroy(currentSpriteObj);
+                SetTarget(nextTarget);
             });
     }
 
@@ -171,7 +224,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             }
             else
             {
-                SetTarget(validateTarget); 
+                SetTarget(validateTarget);
             }
         }
     }

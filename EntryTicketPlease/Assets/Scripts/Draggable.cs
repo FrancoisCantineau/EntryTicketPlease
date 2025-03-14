@@ -11,16 +11,13 @@ public class DraggableObject : MonoBehaviour
 
     public Vector2 minBounds = new Vector2(-5f, -5f);
     public Vector2 maxBounds = new Vector2(5f, 5f);
-
     public Collider2D noDragZone;
-
     public float zoomScale = 1.5f;
     public float zoomSpeed = 5f;
 
     private static int highestSortingOrder = 0;
-
     private AudioSource audioSource;
-    public AudioClip grabSound; 
+    public AudioClip grabSound;
 
     void Start()
     {
@@ -55,7 +52,14 @@ public class DraggableObject : MonoBehaviour
             Debug.LogWarning("Aucun clip audio assigné à 'Grab Sound' dans l'inspecteur !");
         }
 
+        // Initialise initialScale à (1, 1, 1) si l’échelle est zéro au départ
         initialScale = transform.localScale;
+        if (initialScale == Vector3.zero)
+        {
+            initialScale = Vector3.one;
+            Debug.LogWarning("Échelle initiale était (0, 0, 0), corrigée à (1, 1, 1) pour : " + gameObject.name);
+        }
+
         initialSortingOrder = spriteRenderer.sortingOrder;
         highestSortingOrder = Mathf.Max(highestSortingOrder, initialSortingOrder);
     }
@@ -77,7 +81,7 @@ public class DraggableObject : MonoBehaviour
                     {
                         isDragging = true;
                         offset = transform.position - touchPosition;
-                        ZoomIn(); 
+                        ZoomIn();
                     }
                     break;
 
@@ -108,7 +112,7 @@ public class DraggableObject : MonoBehaviour
                 {
                     isDragging = true;
                     offset = transform.position - mousePosition;
-                    ZoomIn(); 
+                    ZoomIn();
                 }
             }
             else if (Input.GetMouseButton(0) && isDragging)
@@ -125,13 +129,17 @@ public class DraggableObject : MonoBehaviour
             }
         }
 
-        if (isDragging)
+        // Ajuste l’échelle uniquement si elle a été définie (évite d’overwrite au spawn)
+        if (initialScale != Vector3.zero)
         {
-            transform.localScale = Vector3.Lerp(transform.localScale, initialScale * zoomScale, Time.deltaTime * zoomSpeed);
-        }
-        else
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, initialScale, Time.deltaTime * zoomSpeed);
+            if (isDragging)
+            {
+                transform.localScale = Vector3.Lerp(transform.localScale, initialScale * zoomScale, Time.deltaTime * zoomSpeed);
+            }
+            else
+            {
+                transform.localScale = Vector3.Lerp(transform.localScale, initialScale, Time.deltaTime * zoomSpeed);
+            }
         }
     }
 
@@ -177,13 +185,12 @@ public class DraggableObject : MonoBehaviour
         {
             audioSource.PlayOneShot(grabSound);
         }
-
         SetOnTop();
     }
 
     private void ZoomOut()
     {
-        // transform.localScale = initialScale;
+        // Rien ici, géré dans Update
     }
 
     private void SetOnTop()

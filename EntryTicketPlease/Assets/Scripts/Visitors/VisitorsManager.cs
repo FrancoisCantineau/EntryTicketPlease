@@ -194,6 +194,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
 
         visitorQueue.Add(newVisitor);
+        SpawnVisitors();
     }
 
 
