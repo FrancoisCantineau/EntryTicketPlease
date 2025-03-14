@@ -37,6 +37,11 @@ public class RoundData
     Notice notice;
 
 
+    /// <summary>
+    /// Une section du parc est-elle fermée
+    /// </summary>
+    ClosedSection closedSection;
+
     public static RoundData Default(DateTime currentDate)
     {
         RoundData data = new();
@@ -44,7 +49,8 @@ public class RoundData
         data.shiftLength = 10;
         data.queueLength = 15;
         data.incoherencesOdds = 0.2f;
-
+        data.notice = new();
+        data.closedSection = ClosedSection.None;
         return data;
     }
 }
@@ -94,4 +100,12 @@ public struct Notice
     /// </summary>
     bool kidsNotAllowedAfterHourEnabled;
     int kidsNotAllowedAfterHour;
+}
+
+public enum ClosedSection
+{
+    None,
+    A,
+    B,
+    C
 }
