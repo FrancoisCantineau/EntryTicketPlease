@@ -6,18 +6,22 @@ using UnityEngine.Analytics;
 
 public class Visitor : MonoBehaviour
 {
+    [SerializeField] public GameObject prefab;
 
+    [SerializeField] public bool isAllowed;
     
+
     [System.Serializable] // Visitor's ID struct containing all infos for ID
     public struct VisitorID
     {
-        private string name;
-        private int age;
-        private float height;
-        private float weight;
-        private string genre;
+        [SerializeField] private string name;
+        [SerializeField] private int age;
+        [SerializeField] private float height;
+        [SerializeField] private float weight;
+        [SerializeField] public Gender genre;
+    
 
-        public VisitorID(string m_name, int m_age, float m_height, float m_weight, string m_genre)//Constructor
+        public VisitorID(string m_name, int m_age, float m_height, float m_weight, Gender m_genre)//Constructor
         {
             this.name = m_name;
             this.age = m_age;
@@ -47,7 +51,7 @@ public class Visitor : MonoBehaviour
             get { return weight; }
         }
 
-        public string Genre
+        public Gender Gender
         {
             get { return genre; }
         }
@@ -61,28 +65,32 @@ public class Visitor : MonoBehaviour
     [System.Serializable]
     public struct VisitorTicket// Visitor's Ticket struc containing all infos for ticket
     {
-        private string name;    // could be falsified
-        private int age;        // Could be falsified
-        private bool isValid;   // Ticket validity 
-        private char section;   // Ticket section validity
 
-        public VisitorTicket(string m_name, int m_age, bool m_isValid, char m_section)//Constructor
+
+        [SerializeField] private string ticketName;
+        [SerializeField] private int price;
+        [SerializeField] private bool isValid;
+        [SerializeField] private char section;
+
+        
+
+        public VisitorTicket(string m_name, int m_price, bool m_isValid, char m_section)//Constructor
         {
-            this.name = m_name;
-            this.age = m_age;
+            this.ticketName = m_name;
+            this.price = m_price;
             this.isValid = m_isValid;
             this.section = m_section;
         }
 
         // Getters (Properties)
-        public string Name
+        public string TicketName
         {
-            get { return name; }
+            get { return ticketName; }
         }
 
-        public int Age
+        public int Price
         {
-            get { return age; }
+            get { return price; }
         }
 
         public bool IsValid
@@ -98,7 +106,7 @@ public class Visitor : MonoBehaviour
 
         public override string ToString()
         {
-            return $"Name: {name}, Age: {age}, IsValid: {isValid}, Section: {section}";
+            return $"Name: {ticketName}, Price: {price}, IsValid: {isValid}, Section: {section}";
         }
     }
 
@@ -112,7 +120,23 @@ public class Visitor : MonoBehaviour
     public void Initialize(VisitorID m_id, VisitorTicket m_ticket)
     {
         ticket = m_ticket;
-        id = m_id;   
+        id = m_id;  
+        
+    }
+    public bool GetIsAllowed()
+    {
+        return isAllowed;
+    }
+    public void SetIsAllowed(bool m_isAllowed)
+    {
+  
+        isAllowed = m_isAllowed;
+      
+    }
+
+    public void SetPrefab(GameObject m_prefab)
+    {
+        prefab = m_prefab;
     }
 
 }

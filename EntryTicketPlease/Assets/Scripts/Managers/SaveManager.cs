@@ -1,12 +1,21 @@
 using System.IO;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SaveManager : SingletonMB<SaveManager>
 {
-    private static string savePath = Application.persistentDataPath + "/save.json";
+    private static string savePath;
+
+    protected override void Awake()
+    {
+       base.Awake();
+       savePath = Application.persistentDataPath + "/save.json";
+        
+    }
+    
 
     /// <summary>
-    /// Sauvegarde les données
+    /// Sauvegarde les donnï¿½es
     /// </summary>
     public void SaveGameData(SaveData saveData)
     {
@@ -16,7 +25,7 @@ public class SaveManager : SingletonMB<SaveManager>
     }
 
     /// <summary>
-    /// Récupère les données
+    /// Rï¿½cupï¿½re les donnï¿½es
     /// </summary>
     public SaveData FetchGameData()
     {
@@ -30,5 +39,10 @@ public class SaveManager : SingletonMB<SaveManager>
         {
             return SaveData.Default();
         }
+    }
+
+    public void ResetData()
+    {
+        File.Delete(savePath);
     }
 }

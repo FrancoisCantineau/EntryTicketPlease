@@ -14,6 +14,8 @@ public class RoundData
     /// </summary>
     public int startingHour;
 
+    public int endingHour;
+
     /// <summary>
     /// Longueur du shift
     /// </summary>
@@ -30,12 +32,18 @@ public class RoundData
     /// </summary>
     public float incoherencesOdds;
 
+    /// <summary>
+    /// Compris entre 0 et 1
+    /// Chances que le visiteur tente vraiment de frauder
+    /// </summary>
+    public float fraudOdds;
 
     /// <summary>
     /// Règles supplémentaires pour la journées
     /// </summary>
     public Notice notice;
 
+    public PriceGrid priceGrid;
 
     /// <summary>
     /// Une section du parc est-elle fermée
@@ -45,14 +53,25 @@ public class RoundData
     public static RoundData Default(DateTime currentDate)
     {
         RoundData data = new();
-        data.startingHour = 8;
-        data.shiftLength = 10;
-        data.queueLength = 15;
+        data.currentDate = currentDate;
+        data.startingHour = 9;
+        data.endingHour = 17;
+        data.shiftLength = 8;
+        data.queueLength = 12;
         data.incoherencesOdds = 0.2f;
+        data.fraudOdds = 0.1f;
         data.notice = new();
-        data.closedSection = ClosedSection.None;
+        data.closedSection = ClosedSection.N;
         return data;
     }
+}
+
+[System.Serializable]
+public class VisitorData
+{
+    public GameObject prefab;
+    public Visitor.VisitorID id;
+    public Visitor.VisitorTicket ticket;
 }
 
 /// <summary>
@@ -102,9 +121,32 @@ public struct Notice
     public int kidsNotAllowedAfterHour;
 }
 
+public struct PriceGrid
+{
+    /// <summary>
+    /// Faut-il modifier le prix des enfants ? 
+    /// </summary>
+    public bool childrenPriceModifEnabled;
+    public int childrenPrice;
+
+    /// <summary>
+    /// Faut-il modifier le prix des ados ? 
+    /// </summary>
+    public bool teensPriceModifEnabled;
+    public int teensPrice;
+
+    /// <summary>
+    /// Faut-il modifier le prix des adultes ? 
+    /// </summary>
+    public bool adultsPriceModifEnabled;
+    public int adultsPrice;
+}
+
+
+
 public enum ClosedSection
 {
-    None,
+    N,
     A,
     B,
     C
