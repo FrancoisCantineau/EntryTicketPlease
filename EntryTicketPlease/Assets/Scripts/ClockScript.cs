@@ -13,8 +13,8 @@ public class ClockScript : MonoBehaviour
     [SerializeField] int startHour;
     [SerializeField] DateTime date;
     [SerializeField] int timewarnning;
-    public UnityEvent<int> AlmostFinished;
-    public UnityEvent Finished;
+    public UnityEvent<int> AlmostFinished = new();
+    public UnityEvent Finished = new();
     private float ratio;
     
    
