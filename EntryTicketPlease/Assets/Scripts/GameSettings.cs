@@ -16,7 +16,7 @@ public class GameSettings : SingletonMB<GameSettings>
     
     [Header("RoundSettings")]
     [SerializeField] float queueLengthByShiftLengthFactor = 1.5f;
-    
+    [SerializeField] float hourDurationSeconds = 12f;
     #endregion
 
     public static int RulerMinHeightCm { get => Instance.rulerMinHeightCm; }
@@ -29,7 +29,7 @@ public class GameSettings : SingletonMB<GameSettings>
     public static int VisitorMaxWeight { get => Instance.visitorMaxWeight; }
 
     public static float QueueLengthByShiftLengthFactor { get => Instance.queueLengthByShiftLengthFactor; }
-
+    public static float HourDurationSeconds { get => Instance.hourDurationSeconds; }
 
     #region LIFECYCLE ----------------------------------------------------------------
     // Start is called before the first frame update
