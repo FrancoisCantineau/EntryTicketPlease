@@ -742,10 +742,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nbSeconds: 180
-  year: 2025
-  month: 5
-  day: 1
   affichage: {fileID: 1462657216}
+  duration: 10
+  startHour: 8
+  timewarnning: 2
+  AlmostFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  Finished:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1949052669
 Transform:
   m_ObjectHideFlags: 0

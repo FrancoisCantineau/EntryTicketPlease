@@ -16,31 +16,31 @@ public class WinLoseText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        star1.enabled = false;
-        star2.enabled = false;
-        star3.enabled = false;
+        star1.gameObject.SetActive(false);
+        star2.gameObject.SetActive(false);
+        star3.gameObject.SetActive(false);
         if (isWinning)
         {
             winLosetext.text = "You Win";
             switch (nbStars)
             {
                 case 1:
-                    star1.enabled = true;
+                    star1.gameObject.SetActive(true);
                     break;
                 case 2:
-                    star1.enabled = true;
-                    star2.enabled = true;
+                    star1.gameObject.SetActive(true);
+                    star2.gameObject.SetActive(true);
                     break;
                 case 3:
-                    star1.enabled = true;
-                    star2.enabled = true;
-                    star3.enabled = true;
+                    star1.gameObject.SetActive(true);
+                    star2.gameObject.SetActive(true);
+                    star3.gameObject.SetActive(true);
                     break;
             }
         }
         else
         {
-            nextDay.enabled = false;
+            nextDay.gameObject.SetActive(false);
             winLosetext.text = "You lose";
         }
         
