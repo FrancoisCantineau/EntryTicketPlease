@@ -110,12 +110,6 @@ public struct Notice
     /// </summary>
     public bool kidsNotAllowedAfterHourEnabled;
     public int kidsNotAllowedAfterHour;
-
-    /// <summary>
-    /// Y a t-il une section interdite ? 
-    /// </summary>
-    public bool ForbiddenSectionEnabled;
-    public ClosedSection closedSection;
 }
 
 public enum ClosedSection

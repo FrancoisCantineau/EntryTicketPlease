@@ -13,7 +13,8 @@ public class SingletonMB<T> : MonoBehaviour where T : SingletonMB<T>
         }
         else
         {
-            Destroy(gameObject);
+            Debug.LogWarning($"An instance of {GetType()} in {gameObject.name} already exists. Destroying this one.");
+            Destroy(this);
         }
     }
 }
