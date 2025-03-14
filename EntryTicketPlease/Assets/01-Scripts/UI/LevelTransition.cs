@@ -27,29 +27,32 @@ public class LevelTransition : MonoBehaviour
     private IEnumerator FadeIn()
     {
         transitionPanel.SetActive(true);
-        CanvasGroup canvasGroup = transitionPanel.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-        {
-            canvasGroup = transitionPanel.AddComponent<CanvasGroup>();
-        }
+        CanvasGroup canvasGroup = GetOrAddCanvasGroup();
         canvasGroup.alpha = 1;
-        canvasGroup.DOFade(0, transitionDuration);
-        yield return new WaitForSeconds(transitionDuration);
+        canvasGroup.DOFade(0, transitionDuration).SetUpdate(true);
+        yield return new WaitForSecondsRealtime(transitionDuration);
         transitionPanel.SetActive(false);
     }
 
     private IEnumerator FadeOut(string sceneName)
     {
         transitionPanel.SetActive(true);
+        CanvasGroup canvasGroup = GetOrAddCanvasGroup();
+        canvasGroup.alpha = 0;
+        canvasGroup.DOFade(1, transitionDuration).SetUpdate(true);
+        yield return new WaitForSecondsRealtime(transitionDuration);
+        Time.timeScale = 1f; // Assure que la transition fonctionne même en pause
+        SceneManager.LoadScene(sceneName);
+    }
+
+    private CanvasGroup GetOrAddCanvasGroup()
+    {
         CanvasGroup canvasGroup = transitionPanel.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
         {
             canvasGroup = transitionPanel.AddComponent<CanvasGroup>();
         }
-        canvasGroup.alpha = 0;
-        canvasGroup.DOFade(1, transitionDuration);
-        yield return new WaitForSeconds(transitionDuration);
-        SceneManager.LoadScene(sceneName);
+        return canvasGroup;
     }
 
     public void ActivatePanel()
