@@ -60,7 +60,7 @@ public class RoundData
         data.incoherencesOdds = 0.2f;
         data.fraudOdds = 0.1f;
         data.notice = new();
-        data.closedSection = ClosedSection.None;
+        data.closedSection = ClosedSection.N;
         return data;
     }
 }
@@ -110,11 +110,17 @@ public struct Notice
     /// </summary>
     public bool kidsNotAllowedAfterHourEnabled;
     public int kidsNotAllowedAfterHour;
+
+    /// <summary>
+    /// Y a t-il une section interdite ? 
+    /// </summary>
+    public bool ForbiddenSectionEnabled;
+    public ClosedSection closedSection;
 }
 
 public enum ClosedSection
 {
-    None,
+    N,
     A,
     B,
     C
