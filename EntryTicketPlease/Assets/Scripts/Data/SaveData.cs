@@ -11,7 +11,7 @@ public class SaveData
     {
         SaveData data = new();
         data.currentDay = 1;
-        data.currentDate = new DateTime(1984, 4, 3);
+        data.currentDate = new DateTime(1984, 4, 4);
         return data;
     }
 }

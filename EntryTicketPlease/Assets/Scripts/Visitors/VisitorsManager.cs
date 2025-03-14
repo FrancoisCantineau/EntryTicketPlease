@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Analytics;
 using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 
-public class VisitorsManager : MonoBehaviour
+public class VisitorsManager : SingletonMB<VisitorsManager>
 {
     private float validityTreshHoldValue = 0.3f; //Used to increase or decrease invalid tickets
     private float fraudValue = 1f; //Variable to increase or decrease fraud among visitors
@@ -12,21 +14,22 @@ public class VisitorsManager : MonoBehaviour
     private string ticketName;
     private int ticketAge;
 
-    public GameObject visitorPrefab;
     public Transform spawnPoint;
 
     private string[] menNames = { "Bastien", "Mathias", "Francois" };
     private string[] womenNames = { "Lucie", "Julie", "Marion" };
-    private char[] sections = { 'A', 'B', 'C', 'D', 'E' };
-    private string[] genres = { "Man", "Woman" };
+    private char[] sections = { 'A', 'B', 'C'};
+
+    [SerializeField] private CharacterData characterData;
 
     private List<Visitor> visitorQueue = new List<Visitor>();
 
     void Start()
     {
        
-        
     }
+
+
 
     /// <summary>
     /// Demands a float parameter between 0.0f and 1.0f. 
@@ -38,7 +41,6 @@ public class VisitorsManager : MonoBehaviour
         fraudValue = m_fraudValue;
     }
 
-
     /// <summary>
     /// Set a value for ticket validity probability.
     /// Demands a float parameter between 0.0f and 1.0f. 
@@ -49,35 +51,58 @@ public class VisitorsManager : MonoBehaviour
         validityTreshHoldValue = m_validityTreshHoldValue;
     }
 
-    /// <summary>
-    /// Start visitor's Queue & first spawn. 
-    /// Parameter demands a daily visitors amount
-    /// </summary>
-    
-    public void RestartVisitors(int m_visitorsAmount)
-    {
-        CreateQueue(m_visitorsAmount);
-        SpawnVisitors();
-    }
 
     /// <summary>
     /// Creates visitors queue with a parameter to change visitor's daily amount
     /// </summary>
-    private void CreateQueue(int m_visitorsAmount)
+    public void CreateQueue(int m_visitorsAmount)
     {
-        visitorQueue.Clear(); 
+        visitorQueue.Clear();
 
         for (int i = 0; i < m_visitorsAmount; i++)
         {
             InitializeVisitor(i);
-            
+
         }
     }
 
+    /// <summary>
+    /// Start visitor's Queue & first spawn. 
+    /// Parameter demands a daily visitors amount
+    /// </summary>
+    public void RestartVisitors(int m_visitorsAmount)
+    {
+      
+        CreateQueue(m_visitorsAmount);
+        SpawnVisitors();
+    }
+
+
+    public void NextVisitor()
+    {
+        if (currentVisitorIndex < visitorQueue.Count)
+        {
+            SpawnVisitors();
+        }
+        else
+        {
+            Debug.Log("Aucun autre visiteur dans la queue.");
+        }
+    }
+    
+
+
+
     private void InitializeVisitor(int i)
     {
-        GameObject visitorObj = new GameObject("Visitor");
-        Visitor newVisitor = visitorObj.AddComponent<Visitor>();
+    
+        Visitor newVisitor = new Visitor();
+
+        Gender[] genres = { Gender.Male, Gender.Female };
+        Gender randomGender = genres[Random.Range(0, genres.Length)];
+
+        GameObject prefabVisitor = characterData.GetVisitorModel(randomGender);
+      
 
         bool hasValidTicket = Random.value > validityTreshHoldValue;
 
@@ -87,17 +112,23 @@ public class VisitorsManager : MonoBehaviour
         int age = Random.Range(5, 80);
         ticketAge = age;
 
-        string genre = genres[Random.Range(0, genres.Length)];
+        
+
+        //GameObject prefabVisitor = characterData.GetVisitorModel(randomGender);
 
         char section = sections[Random.Range(0, sections.Length)];
 
         float height = 0;
         float weight = 0;
 
-        if (genre == "Man")
+        
+
+        if (randomGender == Gender.Male)
         {
             name = menNames[Random.Range(0, menNames.Length)];
             ticketName = name;
+
+             
 
             if (age < 12) // Childrens
             {
@@ -116,7 +147,7 @@ public class VisitorsManager : MonoBehaviour
                 weight = bmi * (height / 100) * (height / 100);
             }
         }
-        else if (genre == "Woman")
+        else if (randomGender == Gender.Female)
         {
             name = womenNames[Random.Range(0, womenNames.Length)];
             ticketName = name;
@@ -138,17 +169,27 @@ public class VisitorsManager : MonoBehaviour
             }
         }
 
+        //Check if visitor will fraud
         if (Random.value < fraudValue)
         {
-            Fraud(genre);
+            Fraud(randomGender);
         }
 
-        
-        Visitor.VisitorID id = new Visitor.VisitorID(name, age, height, weight, genre);
+
+        newVisitor.SetPrefab(prefabVisitor);
+
+       //fill visitor's structs
+        Visitor.VisitorID id = new Visitor.VisitorID(name, age, height, weight, randomGender);
         Visitor.VisitorTicket ticket = new Visitor.VisitorTicket(ticketName, ticketAge, hasValidTicket, section);
-   
+  
         newVisitor.Initialize(id, ticket);
-    
+
+
+        //Condition check to see if allowed
+        VerificationAlgo.IsVisitorAllowed(newVisitor);
+
+
+
         visitorQueue.Add(newVisitor);
     }
 
@@ -156,20 +197,21 @@ public class VisitorsManager : MonoBehaviour
     /// <summary>
     /// Modifies the infos for the ticket
     /// </summary>
-    private void Fraud(string genre)
+    private void Fraud(Gender genre)
     {
 
             bool changeName = Random.value < fraudValue;
             bool changeAge = Random.value < fraudValue;
 
+        //Name fraud
         if (changeName)
             {
-                 if (genre == "Man")
+                 if (genre == Gender.Male)
                 {
                     string newName = menNames[Random.Range(0, menNames.Length)];
                     ticketName = newName;
                 }
-                else if (genre == "Woman")
+                else if (genre == Gender.Female)
                 {
                     string newName = womenNames[Random.Range(0, womenNames.Length)];
                     ticketName = newName;
@@ -177,6 +219,7 @@ public class VisitorsManager : MonoBehaviour
 
             }   
     
+        //Age fraud
         if (changeAge)
             {
                 
@@ -192,38 +235,33 @@ public class VisitorsManager : MonoBehaviour
     /// </summary>
     public void SpawnVisitors()
     {
-        if (currentVisitorIndex < visitorQueue.Count)
+        if (visitorQueue.Count > 0)
         {
-            if (visitorPrefab != null)
+
+            if (currentVisitorIndex < visitorQueue.Count)
             {
                 if (spawnPoint != null)
                 {
 
-                    GameObject currentVisitorObj = Instantiate(visitorPrefab, spawnPoint.position, Quaternion.identity);
-                    Visitor visitor = currentVisitorObj.GetComponent<Visitor>();
+                    Visitor visitorToSpawn = visitorQueue[currentVisitorIndex];
 
-                    Visitor visitorData = visitorQueue[currentVisitorIndex];
+                    GameObject currentVisitor = Instantiate(visitorToSpawn.prefab, spawnPoint.position, Quaternion.identity);
 
+                    Visitor newVisitor = currentVisitor.AddComponent<Visitor>();
+
+                    newVisitor.Initialize(visitorToSpawn.id, visitorToSpawn.ticket);
+                    newVisitor.SetPrefab(visitorToSpawn.prefab);
                     currentVisitorIndex++;
                 }
+
+            }
+            else
+            {
+                Debug.Log("La queue des visiteurs est vide.");
             }
         }
-        else
-        {
-            Debug.Log("La queue des visiteurs est vide.");
-        }
+        
     }
 
 
-    public void NextVisitor()
-    {
-        if (currentVisitorIndex < visitorQueue.Count)
-        {
-            SpawnVisitors(); 
-        }
-        else
-        {
-            Debug.Log("Aucun autre visiteur dans la queue.");
-        }
-    }
 }
