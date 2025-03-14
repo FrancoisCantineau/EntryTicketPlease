@@ -6,6 +6,8 @@ public class GameManager : SingletonMB<GameManager>
     #region VARIABLES ----------------------------------------------------------------
     SaveData currentData;
     RoundData roundData;
+
+   
     public static RoundData CurrentRoundData { get => Instance.roundData; }
     
     #endregion

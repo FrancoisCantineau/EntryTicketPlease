@@ -7,7 +7,11 @@ public class RoundManager : SingletonMB<RoundManager>
     #region VARIABLES ----------------------------------------------------------------
 
     [SerializeField] RoundOpening m_roundOpening;
-    [SerializeField] ClockScript m_clock;
+    [SerializeField] GameObject m_clock;
+    [SerializeField] ClockScript m_clockScript;
+
+    [SerializeField] WinLoseText winLoseText;
+
 
     [SerializeField] bool roundEnded;
 
@@ -17,7 +21,10 @@ public class RoundManager : SingletonMB<RoundManager>
 
     #endregion
     #region LIFECYCLE ----------------------------------------------------------------
-
+    void Start()
+    {
+        
+    }
     private void OnEnable()
     {
         Debug.Log("RoundManagerEnabled");
@@ -63,38 +70,65 @@ public class RoundManager : SingletonMB<RoundManager>
 
     void OpenRound(RoundData roundData)
     {
+      
+
         m_roundOpening.gameObject.SetActive(true);
         m_roundOpening.m_OnOpeningEnd.AddListener(StartRound);
     }
 
     void StartRound()
     {
+        
+
         succeededVisitors = 0;
-        //m_clock.gameObject.SetActive(true);
-        
-        
+
+        m_clock.transform.GetChild(0).gameObject.SetActive(true);
+
+        if (m_clockScript != null)
+        {
+            m_clockScript.Finished.AddListener(OnClockFinished);
+        }
     }
 
-    void WinCheck()
+    void OnClockFinished()
     {
-        roundEnded = true;
-        int queueSize = VisitorsManager.Instance.GetQueueSize();
-        if (queueSize == 0)
-        {
-            Debug.LogWarning("La file de visiteurs est vide !");
-            return;
-        }
+        WinCheck(false);
+    }
 
-        int percentage = (succeededVisitors * 100) / queueSize;
-
-       
+    void WinCheck(bool needCalculus)
+    {
+        bool isWin;
         int starsAmount = 0;
-        if (percentage == 100) starsAmount = 3; 
-        else if (percentage >= 70) starsAmount = 2;  
-        else if (percentage >= 30) starsAmount = 1;  
-        else starsAmount = 0;  
 
-        Debug.Log($"Performance : {percentage}% - Étoiles obtenues : {starsAmount}");
+        roundEnded = true;
+
+        if (needCalculus) {
+
+            isWin = true;
+
+            int queueSize = VisitorsManager.Instance.GetQueueSize();       
+
+            int percentage = (succeededVisitors * 100) / queueSize;
+
+
+            if (percentage == 100) starsAmount = 3;
+            else if (percentage >= 70) starsAmount = 2;
+            else if (percentage >= 30) starsAmount = 1;
+            else
+            {
+                starsAmount = 0;
+                isWin = false;
+            }
+
+            Debug.Log($"Performance : {percentage}% - Étoiles obtenues : {starsAmount}");
+        }
+        else
+        {
+            isWin = false;
+        }
+   
+        winLoseText.displayEndDayUI(isWin, starsAmount);
+
     }
 
     public void EndOfVisitor(bool isAllowed)
@@ -113,7 +147,7 @@ public class RoundManager : SingletonMB<RoundManager>
 
         if (!roundContinue)
         {
-            WinCheck();
+            WinCheck(true);
         }
     }
 

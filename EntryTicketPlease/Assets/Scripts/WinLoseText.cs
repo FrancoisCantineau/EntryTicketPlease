@@ -21,32 +21,40 @@ public class WinLoseText : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+   
+    void Awake()
     {
-        
+        DontDestroyOnLoad(gameObject);
     }
 
-    public void displayEndDayText(bool isWinning,int nbstars)
+    public void displayEndDayUI(bool m_isWinning,int m_nbStars)
     {
+   
+        isWinning = m_isWinning;
+        nbStars = m_nbStars;
+
         star1.enabled = false;
         star2.enabled = false;
         star3.enabled = false;
         if (isWinning)
         {
             winLosetext.text = "You Win";
-            switch (nbStars)
+            switch (m_nbStars)
             {
                 case 1:
                     star1.enabled = true;
+                    
                     break;
                 case 2:
                     star1.enabled = true;
                     star2.enabled = true;
+                   
                     break;
                 case 3:
                     star1.enabled = true;
                     star2.enabled = true;
                     star3.enabled = true;
+                   
                     break;
             }
         }
