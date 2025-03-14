@@ -13,6 +13,12 @@ public class GameSettings : SingletonMB<GameSettings>
     [SerializeField] int visitorMaxHeight = 220;
     [SerializeField] int visitorMinWeight = 30;
     [SerializeField] int visitorMaxWeight = 120;
+
+    public enum Genre
+    {
+        Man,
+        Woman
+    }
     #endregion
 
     public static int RulerMinHeightCm { get => Instance.rulerMinHeightCm; }
