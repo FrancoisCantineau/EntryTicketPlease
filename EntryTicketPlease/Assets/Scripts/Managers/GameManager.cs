@@ -41,17 +41,19 @@ public class GameManager : SingletonMB<GameManager>
     {
         currentData = SaveManager.Instance.FetchGameData();
         GenerateRound(currentData.currentDay);
+        
     }
 
     void GenerateRound(int currentDay)
     {
 
     }
+
     #endregion
     #region EVENTS
 
     public UnityEvent<RoundData> BeginRound { get; private set; } = new();
-    public UnityEvent 
+    public UnityEvent EndRound { get; private set; } = new();
 
     #endregion
 
