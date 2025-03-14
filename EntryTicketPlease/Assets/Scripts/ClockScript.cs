@@ -13,7 +13,7 @@ public class ClockScript : MonoBehaviour
     [SerializeField] int startHour;
     [SerializeField] int endHour;
     [SerializeField] DateTime date;
-    [SerializeField] int timewarnning = 2;
+    [SerializeField] int timewarnning = 2+1;
     bool isTimeLow = false;
     public UnityEvent<int> AlmostFinished = new();
     public UnityEvent Finished = new();
@@ -53,6 +53,8 @@ public class ClockScript : MonoBehaviour
         endHour = roundData.endingHour;
         duration = roundData.shiftLength;
 
+        Debug.Log($"{startHour} {endHour} {duration} {timewarnning} ");
+
         nbSeconds = (int)GameSettings.HourDurationSeconds * duration;
         ratio = (duration * 60) / nbSeconds;
         GameTime = date;
@@ -74,7 +76,7 @@ public class ClockScript : MonoBehaviour
             if (GameTime.Hour > endHour - timewarnning && !isTimeLow)
             {
                 isTimeLow = true;
-                timeLowObject.SetActive(true);
+                timeLowObject?.SetActive(true);
                 AlmostFinished.Invoke(timewarnning);
             }
         }

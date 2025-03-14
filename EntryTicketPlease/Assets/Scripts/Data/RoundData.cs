@@ -53,10 +53,10 @@ public class RoundData
     {
         RoundData data = new();
         data.currentDate = currentDate;
-        data.startingHour = 8;
-        data.endingHour = 18;
-        data.shiftLength = 10;
-        data.queueLength = 15;
+        data.startingHour = 9;
+        data.endingHour = 17;
+        data.shiftLength = 8;
+        data.queueLength = 12;
         data.incoherencesOdds = 0.2f;
         data.fraudOdds = 0.1f;
         data.notice = new();
