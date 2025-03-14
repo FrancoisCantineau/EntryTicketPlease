@@ -7,6 +7,9 @@ public class RoundManager : SingletonMB<RoundManager>
     #region VARIABLES ----------------------------------------------------------------
 
     [SerializeField] RoundOpening m_roundOpening;
+    [SerializeField] ClockScript m_clock;
+
+    public UnityEvent<RoundData> OnStartRound { get; private set; } = new();
 
     #endregion
     #region LIFECYCLE ----------------------------------------------------------------
@@ -15,28 +18,36 @@ public class RoundManager : SingletonMB<RoundManager>
     {
         Debug.Log("RoundManagerEnabled");
 
+
         if (GameManager.Instance != null)
         {
 
-            GameManager.Instance.BeginRound.AddListener(StartRound);
+            GameManager.Instance.BeginRound.AddListener(OpenRound);
         }
         else
         {
             Debug.LogWarning("GameManager.Instance is null. Cannot add listener to BeginRound.");
         }
+
+        
+
     }
 
     private void OnDisable()
     {
+
         if (GameManager.Instance != null)
         {
 
-            GameManager.Instance.BeginRound.RemoveListener(StartRound);
+            GameManager.Instance.BeginRound.RemoveListener(OpenRound);
         }
         else
         {
             Debug.LogWarning("GameManager.Instance is null. Cannot add listener to BeginRound.");
         }
+
+       
+
     }
 
     #endregion
@@ -46,9 +57,15 @@ public class RoundManager : SingletonMB<RoundManager>
     #endregion
     #region METHODS ------------------------------------------------------------------
 
-    void StartRound(RoundData roundData)
+    void OpenRound(RoundData roundData)
     {
         m_roundOpening.gameObject.SetActive(true);
+        m_roundOpening.m_OnOpeningEnd.AddListener(StartRound);
+    }
+
+    void StartRound()
+    {
+        m_clock.gameObject.SetActive(true);
     }
 
     #endregion

@@ -23,7 +23,7 @@ public class GameSettings : SingletonMB<GameSettings>
 
     [Header("RoundSettings")]
     [SerializeField] float queueLengthByShiftLengthFactor = 1.5f;
-    
+    [SerializeField] float hourDurationSeconds = 12f;
     #endregion
 
     public static int RulerMinHeightCm { get => Instance.rulerMinHeightCm; }
@@ -45,6 +45,7 @@ public class GameSettings : SingletonMB<GameSettings>
 
     public static float QueueLengthByShiftLengthFactor { get => Instance.queueLengthByShiftLengthFactor; }
 
+
     public static Dictionary<(int min_age, int max_age), int> priceTable = new Dictionary<(int, int), int>()
     {     
         {(5,12), 10},    // Tarif enfant
@@ -53,6 +54,9 @@ public class GameSettings : SingletonMB<GameSettings>
     };
     
 
+
+
+    public static float HourDurationSeconds { get => Instance.hourDurationSeconds; }
 
 
     #region LIFECYCLE ----------------------------------------------------------------

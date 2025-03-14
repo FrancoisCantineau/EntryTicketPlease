@@ -19,6 +19,8 @@ public class RoundOpening : MonoBehaviour
 
     List<string> thoughts;
 
+    public UnityEvent m_OnOpeningEnd = new UnityEvent();
+
 
     #endregion
     #region LIFECYCLE ----------------------------------------------------------------
@@ -36,6 +38,8 @@ public class RoundOpening : MonoBehaviour
     private void OnDisable()
     {
         m_StartSignal.SetActive(true);
+        m_OnOpeningEnd.Invoke();
+        m_OnOpeningEnd.RemoveAllListeners();
     }
 
     #endregion
