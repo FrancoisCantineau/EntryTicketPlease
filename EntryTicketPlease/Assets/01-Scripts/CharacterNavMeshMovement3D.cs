@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 public class CharacterNavMeshMovement3D : MonoBehaviour
 {
@@ -9,19 +10,26 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     public Vector3 refuseTarget = new Vector3(-1.867f, 0.898f, -6.201f);  // Après "Refuser"
 
     [Header("Paramètres")]
-    public float stoppingDistance = 0.1f; // Distance à laquelle le personnage s'arrête
-    public float rotationSpeed = 5f;      // Vitesse de rotation pour regarder la caméra
+    public float stoppingDistance = 0.1f;
+    public float rotationSpeed = 5f;     
 
-    private Vector3 targetPosition;       // Position cible actuelle
-    private NavMeshAgent navAgent;        // Référence au NavMeshAgent
-    private Animator animator;            // Pour gérer les animations
-    private Camera mainCamera;            // Référence à la caméra principale
-    private bool isMoving = false;        // Indique si le personnage bouge
-    private bool hasReachedInitialTarget = false; // Indique si le premier point est atteint
+    [Header("Sprites")]
+    public Sprite[] validateSprites;     
+    public Sprite[] refuseSprites;       
+    public float spriteHeight = 1.5f;    
+    public float spriteDuration = 2f;    
+
+    private Vector3 targetPosition;      
+    private NavMeshAgent navAgent;      
+    private Animator animator;          
+    private Camera mainCamera;            
+    private bool isMoving = false;       
+    private bool hasReachedInitialTarget = false; 
+    private GameObject currentSpriteObj;  
 
     [Header("UI")]
-    public UnityEngine.UI.Button validateButton; // Référence au bouton TMP "Valider"
-    public UnityEngine.UI.Button refuseButton;   // Référence au bouton TMP "Refuser"
+    public UnityEngine.UI.Button validateButton; 
+    public UnityEngine.UI.Button refuseButton;   
 
     void Start()
     {
@@ -35,7 +43,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             return;
         }
 
-        // Recherche automatique des boutons TMP
         if (validateButton == null)
         {
             GameObject validateObj = GameObject.Find("Valider");
@@ -49,11 +56,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         navAgent.updateRotation = false;
 
-        // Désactive les boutons au démarrage
         if (validateButton != null) validateButton.interactable = false;
         if (refuseButton != null) refuseButton.interactable = false;
 
-        // Ajuste toutes les cibles au NavMesh
         NavMeshHit hit;
         if (NavMesh.SamplePosition(initialTarget, out hit, 10.0f, NavMesh.AllAreas))
             initialTarget = hit.position;
@@ -126,11 +131,48 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         hasReachedInitialTarget = false;
     }
 
+    private void ShowSprite(Sprite sprite, Vector3 nextTarget)
+    {
+        if (currentSpriteObj != null)
+        {
+            Destroy(currentSpriteObj);
+        }
+
+        currentSpriteObj = new GameObject("SpriteFeedback");
+        currentSpriteObj.transform.SetParent(transform);
+        SpriteRenderer renderer = currentSpriteObj.AddComponent<SpriteRenderer>();
+        renderer.sprite = sprite;
+
+        Vector3 startPos = transform.position + Vector3.up * spriteHeight;
+        currentSpriteObj.transform.position = startPos;
+
+        currentSpriteObj.transform.localScale = Vector3.zero;
+        renderer.color = new Color(1f, 1f, 1f, 1f); 
+        Sequence spriteSequence = DOTween.Sequence();
+        spriteSequence
+            .Append(currentSpriteObj.transform.DOScale(1f, 0.5f)) 
+            .Join(currentSpriteObj.transform.DOMoveY(startPos.y + 0.5f, spriteDuration).SetEase(Ease.OutQuad)) 
+            .Append(renderer.DOFade(0f, 0.5f)) 
+            .OnComplete(() =>
+            {
+                Destroy(currentSpriteObj); 
+                SetTarget(nextTarget);   
+            });
+    }
+
     public void OnValidateButton()
     {
         if (hasReachedInitialTarget)
         {
-            SetTarget(validateTarget);
+            if (validateSprites != null && validateSprites.Length > 0)
+            {
+                Sprite randomSprite = validateSprites[Random.Range(0, validateSprites.Length)];
+                ShowSprite(randomSprite, validateTarget);
+            }
+            else
+            {
+                SetTarget(validateTarget); 
+            }
         }
     }
 
@@ -138,7 +180,15 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     {
         if (hasReachedInitialTarget)
         {
-            SetTarget(refuseTarget);
+            if (refuseSprites != null && refuseSprites.Length > 0)
+            {
+                Sprite randomSprite = refuseSprites[Random.Range(0, refuseSprites.Length)];
+                ShowSprite(randomSprite, refuseTarget);
+            }
+            else
+            {
+                SetTarget(refuseTarget);
+            }
         }
     }
 }
