@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class VerificationAlgo : MonoBehaviour
 {
+    public static VerificationAlgo Instance;
 
     private float minHeight;
-    private char forbiddenSection;
+
+    private char  forbiddenSection;
+
     private float maxWeight;
+    private float minWeight;
+
+    private int minAge;
+    private int maxAge;
 
     /// <summary>
     /// Delegate function to choose verifications for each day.
@@ -19,9 +26,68 @@ public class VerificationAlgo : MonoBehaviour
 
     private List<VisitorCondition> activeConditions = new List<VisitorCondition>();
 
-    public void UpdateAlgorithm()
+    private void Awake()
     {
         
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+    public void UpdateAlgorithm(RoundData roundData)
+    {
+        activeConditions.Clear();
+
+        minHeight = 0;
+
+        minWeight = 0;
+        maxWeight = 999;
+
+        minAge = 0;
+        maxAge = 999;
+
+        //Default conditions
+        AddCondition(HasValidTicket);
+        AddCondition(AgeMatch);
+        AddCondition(HasValidName);
+
+
+        if (roundData.notice.heightLimitEnabled)
+        {
+            AddCondition(HasValidHeight);
+            minHeight = roundData.notice.heightLimit;
+        }
+        if (roundData.notice.maxWeightRestrictionEnabled)
+        {
+            AddCondition(HasValidWeight);
+            maxWeight = roundData.notice.maxWeightRestriction;
+        }
+        if (roundData.notice.minWeightRestrictionEnabled)
+        {
+            AddCondition(HasValidHeight);
+            maxWeight = roundData.notice.minWeightRestriction;
+        }
+        if (roundData.notice.maxAgeRestrictionEnabled)
+        {
+            AddCondition(HasValidAge);
+            maxAge = roundData.notice.maxAgeRestriction;
+        }
+        if (roundData.notice.kidsAreForbidenEnabled)
+        {
+            AddCondition(HasValidAge);
+            minAge = 10;
+        }
+        if (roundData.notice.ForbiddenSectionEnabled)
+        {
+            AddCondition(HasValidSection);
+            forbiddenSection = forbiddenSection = roundData.notice.closedSection.ToString()[0]; 
+        }
+
     }
 
     /// <summary>
@@ -36,17 +102,6 @@ public class VerificationAlgo : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Removes a function for the delegate
-    /// </summary>
-    /// <param name="condition"></param>
-    public void RemoveCondition(VisitorCondition condition)
-    {
-        if (activeConditions.Contains(condition))
-        {
-            activeConditions.Remove(condition);
-        }
-    }
 
     /// <summary>
     /// Check is the visitor is allowed depending on the conditions
@@ -70,30 +125,34 @@ public class VerificationAlgo : MonoBehaviour
         return visitor.ticket.IsValid;
     }
 
-    private bool AgeIsRight(Visitor visitor)
+    private bool AgeMatch(Visitor visitor)
     {
         return visitor.id.Age == visitor.ticket.Age;
     }
 
-    private bool NameIsRight(Visitor visitor)
+    private bool HasValidName(Visitor visitor)
     {
         return visitor.ticket.Name == visitor.id.Name;
     }
 
     //VARIABLE CONDITIONS
 
-    private bool HasMinHeight(Visitor visitor)
+    private bool HasValidHeight(Visitor visitor)
     {
-        return visitor.id.Height >= minHeight;
+        return visitor.id.Height >= minHeight ;
     }
 
-    private bool IsSectionValid(Visitor visitor)
+    private bool HasValidSection(Visitor visitor)
     {
         return visitor.ticket.Section != forbiddenSection;
     }
     private bool HasValidWeight(Visitor visitor)
     {
-        return visitor.id.Weight <= maxWeight;
+        return visitor.id.Weight <= maxWeight && visitor.id.Weight >= minWeight;
+    }
+    private bool HasValidAge(Visitor visitor)
+    {
+        return visitor.id.Age >=minAge && visitor.id.Age <= maxAge;
     }
 
 

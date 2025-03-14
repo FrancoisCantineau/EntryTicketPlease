@@ -7,7 +7,7 @@ using UnityEngine.Analytics;
 public class Visitor : MonoBehaviour
 {
 
-    
+    public bool isAllowed;
     [System.Serializable] // Visitor's ID struct containing all infos for ID
     public struct VisitorID
     {
