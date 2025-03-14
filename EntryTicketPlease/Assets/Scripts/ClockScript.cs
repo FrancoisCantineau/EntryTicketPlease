@@ -9,6 +9,7 @@ public class ClockScript : MonoBehaviour
 {
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
+    [SerializeField] TextMeshProUGUI calandar;
     [SerializeField] int duration;
     [SerializeField] int startHour;
     [SerializeField] DateTime date;
@@ -16,8 +17,23 @@ public class ClockScript : MonoBehaviour
     public UnityEvent<int> AlmostFinished = new();
     public UnityEvent Finished = new();
     private float ratio;
-    
-   
+
+
+    public enum Season
+    {
+        Jan,
+        Feb,
+        Mar,
+        Apr,
+        May,
+        Jun,
+        Jul,
+        Aug,
+        Sep,
+        Oct,
+        Nov,
+        Dec,
+    }
 
 
     void Start()
@@ -26,18 +42,19 @@ public class ClockScript : MonoBehaviour
         GameTime = date;
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
         GameTime = GameTime.Date + ts;
+        calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
         GameTime = GameTime.AddMinutes(ratio * Time.deltaTime);
-        affichage.text = GameTime.ToString("H:mm dd/MM/yyyy");
-        if(GameTime.Hour == startHour + duration - timewarnning)
+        affichage.text = GameTime.ToString("H:mm");
+        if (GameTime.Hour == startHour + duration - timewarnning)
         {
             AlmostFinished.Invoke(timewarnning);
         }
-        if(GameTime.Hour == startHour + duration)
+        if (GameTime.Hour == startHour + duration)
         {
             Finished.Invoke();
         }

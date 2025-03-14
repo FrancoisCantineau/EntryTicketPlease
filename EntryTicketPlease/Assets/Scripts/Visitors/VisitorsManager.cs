@@ -95,8 +95,11 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     private void InitializeVisitor(int i)
     {
-    
-        Visitor newVisitor = new Visitor();
+        // As Visitor is a Monobehaviour, propose an alternative to "Visitor newVisitor = new Visitor();" to create a new visitor without triggering a warning
+        GameObject newVisitorObject = new GameObject("Visitor" + i);
+        Visitor newVisitor = newVisitorObject.AddComponent<Visitor>();
+
+
 
         Gender[] genres = { Gender.Male, Gender.Female };
         Gender randomGender = genres[Random.Range(0, genres.Length)];

@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SaveManager : SingletonMB<SaveManager>
 {
@@ -38,5 +39,10 @@ public class SaveManager : SingletonMB<SaveManager>
         {
             return SaveData.Default();
         }
+    }
+
+    public void ResetData()
+    {
+        File.Delete(savePath);
     }
 }

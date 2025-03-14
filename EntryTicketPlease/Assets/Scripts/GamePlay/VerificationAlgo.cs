@@ -67,10 +67,10 @@ public static class VerificationAlgo
             AddCondition(HasValidAge);
             minAge = 10;
         }
-        if (roundData.notice.ForbiddenSectionEnabled)
+        if (roundData.closedSection != ClosedSection.N)
         {
             AddCondition(HasValidSection);
-            forbiddenSection = forbiddenSection = roundData.notice.closedSection.ToString()[0]; 
+            forbiddenSection = forbiddenSection = roundData.closedSection.ToString()[0]; 
         }
 
     }
