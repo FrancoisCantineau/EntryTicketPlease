@@ -17,7 +17,7 @@ public class VisitorsManager : MonoBehaviour
 
     private string[] menNames = { "Bastien", "Mathias", "Francois" };
     private string[] womenNames = { "Lucie", "Julie", "Marion" };
-    private char[] sections = { 'A', 'B', 'C', 'D', 'E' };
+    private char[] sections = { 'A', 'B', 'C'};
     private string[] genres = { "Man", "Woman" };
 
     private List<Visitor> visitorQueue = new List<Visitor>();
@@ -56,6 +56,7 @@ public class VisitorsManager : MonoBehaviour
     
     public void RestartVisitors(int m_visitorsAmount)
     {
+      
         CreateQueue(m_visitorsAmount);
         SpawnVisitors();
     }
@@ -73,9 +74,11 @@ public class VisitorsManager : MonoBehaviour
             
         }
     }
+    
 
     private void InitializeVisitor(int i)
     {
+       
         GameObject visitorObj = new GameObject("Visitor");
         Visitor newVisitor = visitorObj.AddComponent<Visitor>();
 
@@ -138,17 +141,24 @@ public class VisitorsManager : MonoBehaviour
             }
         }
 
+        //Check if visitor will fraud
         if (Random.value < fraudValue)
         {
             Fraud(genre);
         }
-
         
+       //fill visitor's structs
         Visitor.VisitorID id = new Visitor.VisitorID(name, age, height, weight, genre);
         Visitor.VisitorTicket ticket = new Visitor.VisitorTicket(ticketName, ticketAge, hasValidTicket, section);
-   
+  
         newVisitor.Initialize(id, ticket);
-    
+
+
+        //Condition check to see if allowed
+        VerificationAlgo verificationAlgo = new VerificationAlgo();
+        newVisitor.isAllowed = verificationAlgo.IsVisitorAllowed(newVisitor);
+
+
         visitorQueue.Add(newVisitor);
     }
 
@@ -162,6 +172,7 @@ public class VisitorsManager : MonoBehaviour
             bool changeName = Random.value < fraudValue;
             bool changeAge = Random.value < fraudValue;
 
+        //Name fraud
         if (changeName)
             {
                  if (genre == "Man")
@@ -177,6 +188,7 @@ public class VisitorsManager : MonoBehaviour
 
             }   
     
+        //Age fraud
         if (changeAge)
             {
                 
