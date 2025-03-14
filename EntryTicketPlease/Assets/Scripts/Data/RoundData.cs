@@ -14,6 +14,8 @@ public class RoundData
     /// </summary>
     public int startingHour;
 
+    public int endingHour;
+
     /// <summary>
     /// Longueur du shift
     /// </summary>
@@ -30,6 +32,11 @@ public class RoundData
     /// </summary>
     public float incoherencesOdds;
 
+    /// <summary>
+    /// Compris entre 0 et 1
+    /// Chances que le visiteur tente vraiment de frauder
+    /// </summary>
+    public float fraudOdds;
 
     /// <summary>
     /// Règles supplémentaires pour la journées
@@ -45,10 +52,13 @@ public class RoundData
     public static RoundData Default(DateTime currentDate)
     {
         RoundData data = new();
+        data.currentDate = currentDate;
         data.startingHour = 8;
+        data.endingHour = 18;
         data.shiftLength = 10;
         data.queueLength = 15;
         data.incoherencesOdds = 0.2f;
+        data.fraudOdds = 0.1f;
         data.notice = new();
         data.closedSection = ClosedSection.None;
         return data;
