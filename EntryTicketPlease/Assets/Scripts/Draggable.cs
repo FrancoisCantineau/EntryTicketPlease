@@ -5,15 +5,22 @@ public class DraggableObject : MonoBehaviour
     private bool isDragging = false;
     private Vector3 offset;
     private Camera mainCamera;
-    private Vector3 initialScale; 
+    private Vector3 initialScale;
+    private SpriteRenderer spriteRenderer;
+    private int initialSortingOrder;
 
     public Vector2 minBounds = new Vector2(-5f, -5f);
     public Vector2 maxBounds = new Vector2(5f, 5f);
 
     public Collider2D noDragZone;
 
-    public float zoomScale = 1.5f; 
-    public float zoomSpeed = 5f;   
+    public float zoomScale = 1.5f;
+    public float zoomSpeed = 5f;
+
+    private static int highestSortingOrder = 0;
+
+    private AudioSource audioSource;
+    public AudioClip grabSound; 
 
     void Start()
     {
@@ -28,7 +35,29 @@ public class DraggableObject : MonoBehaviour
         {
             Debug.LogWarning("Aucune zone interdite définie");
         }
-        initialScale = transform.localScale; 
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer manquant sur cet objet !");
+            enabled = false;
+            return;
+        }
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        if (grabSound == null)
+        {
+            Debug.LogWarning("Aucun clip audio assigné à 'Grab Sound' dans l'inspecteur !");
+        }
+
+        initialScale = transform.localScale;
+        initialSortingOrder = spriteRenderer.sortingOrder;
+        highestSortingOrder = Mathf.Max(highestSortingOrder, initialSortingOrder);
     }
 
     void Update()
@@ -63,7 +92,7 @@ public class DraggableObject : MonoBehaviour
                     if (isDragging)
                     {
                         isDragging = false;
-                        ZoomOut(); 
+                        ZoomOut();
                     }
                     break;
             }
@@ -91,7 +120,7 @@ public class DraggableObject : MonoBehaviour
                 if (isDragging)
                 {
                     isDragging = false;
-                    ZoomOut(); 
+                    ZoomOut();
                 }
             }
         }
@@ -133,7 +162,7 @@ public class DraggableObject : MonoBehaviour
 
         if (noDragZone != null && noDragZone.OverlapPoint(newPosition))
         {
-            return; 
+            return;
         }
 
         newPosition.x = Mathf.Clamp(newPosition.x, minBounds.x, maxBounds.x);
@@ -144,13 +173,25 @@ public class DraggableObject : MonoBehaviour
 
     private void ZoomIn()
     {
-        // Applique immédiatement le zoom (optionnel si tu utilises Lerp)
-        // transform.localScale = initialScale * zoomScale;
+        if (audioSource != null && grabSound != null)
+        {
+            audioSource.PlayOneShot(grabSound);
+        }
+
+        SetOnTop();
     }
 
     private void ZoomOut()
     {
-        // Restaure immédiatement l'échelle (optionnel si tu utilises Lerp)
         // transform.localScale = initialScale;
+    }
+
+    private void SetOnTop()
+    {
+        if (spriteRenderer != null)
+        {
+            highestSortingOrder++;
+            spriteRenderer.sortingOrder = highestSortingOrder;
+        }
     }
 }
