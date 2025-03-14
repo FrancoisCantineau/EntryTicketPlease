@@ -56,6 +56,7 @@ public class VisitorsManager : MonoBehaviour
     
     public void RestartVisitors(int m_visitorsAmount)
     {
+      
         CreateQueue(m_visitorsAmount);
         SpawnVisitors();
     }
@@ -73,9 +74,11 @@ public class VisitorsManager : MonoBehaviour
             
         }
     }
+    
 
     private void InitializeVisitor(int i)
     {
+       
         GameObject visitorObj = new GameObject("Visitor");
         Visitor newVisitor = visitorObj.AddComponent<Visitor>();
 
