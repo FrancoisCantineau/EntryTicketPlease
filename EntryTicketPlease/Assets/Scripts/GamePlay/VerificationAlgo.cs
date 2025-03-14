@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class VerificationAlgo
@@ -29,50 +30,53 @@ public static class VerificationAlgo
         activeConditions.Clear();
 
         minHeight = 0;
-
         minWeight = 0;
         maxWeight = 999;
-
         minAge = 0;
         maxAge = 999;
 
-        //Default conditions
+        // Default conditions
         AddCondition(HasValidTicket);
-        AddCondition(AgeMatch);
         AddCondition(HasValidName);
 
-
+        // Variable conditions
         if (roundData.notice.heightLimitEnabled)
         {
-            AddCondition(HasValidHeight);
             minHeight = roundData.notice.heightLimit;
+            AddCondition(HasValidHeight);
         }
         if (roundData.notice.maxWeightRestrictionEnabled)
         {
-            AddCondition(HasValidWeight);
             maxWeight = roundData.notice.maxWeightRestriction;
+            AddCondition(HasValidWeight);
         }
         if (roundData.notice.minWeightRestrictionEnabled)
         {
-            AddCondition(HasValidHeight);
-            maxWeight = roundData.notice.minWeightRestriction;
+            minWeight = roundData.notice.minWeightRestriction;
+            AddCondition(HasValidWeight);
         }
         if (roundData.notice.maxAgeRestrictionEnabled)
         {
-            AddCondition(HasValidAge);
             maxAge = roundData.notice.maxAgeRestriction;
+            AddCondition(HasValidAge);
         }
         if (roundData.notice.kidsAreForbidenEnabled)
         {
+            minAge = GameSettings.ChildrensMaxAge;
             AddCondition(HasValidAge);
-            minAge = 10;
         }
         if (roundData.closedSection != ClosedSection.N)
         {
             AddCondition(HasValidSection);
-            forbiddenSection = forbiddenSection = roundData.closedSection.ToString()[0]; 
+            forbiddenSection = roundData.closedSection.ToString()[0];
+        }
+        if (roundData.priceGrid.childrenPriceModifEnabled || roundData.priceGrid.teensPriceModifEnabled || roundData.priceGrid.adultsPriceModifEnabled)
+        {
+            AddCondition(HasValidPrice);
         }
 
+        // Afficher les conditions actives
+        PrintActiveConditions();
     }
 
     /// <summary>
@@ -94,13 +98,17 @@ public static class VerificationAlgo
     /// <param name="Visitor"></param>
     public static bool IsVisitorAllowed(Visitor visitor)
     {
+       
         foreach (var condition in activeConditions)
         {
+         
             if (!condition(visitor))
             {
                 return false; // if fails, visitor not allowed
             }
+          
         }
+   
         return true;
     }
 
@@ -109,16 +117,11 @@ public static class VerificationAlgo
     {
         return visitor.ticket.IsValid;
     }
-
-    private static bool AgeMatch(Visitor visitor)
-    {
-        return visitor.id.Age == visitor.ticket.Age;
-    }
-
     private static bool HasValidName(Visitor visitor)
     {
-        return visitor.ticket.Name == visitor.id.Name;
+        return visitor.ticket.TicketName == visitor.id.Name;
     }
+    
 
     //VARIABLE CONDITIONS
 
@@ -137,11 +140,25 @@ public static class VerificationAlgo
     }
     private static bool HasValidAge(Visitor visitor)
     {
-        return visitor.id.Age >=minAge && visitor.id.Age <= maxAge;
+        return visitor.id.Age > minAge && visitor.id.Age < maxAge;
+    }
+    private static bool HasValidPrice(Visitor visitor)
+    {
+        return visitor.ticket.Price == GameSettings.priceTable
+     .FirstOrDefault(entry => visitor.id.Age >= entry.Key.min_age && visitor.id.Age <= entry.Key.max_age)
+     .Value;
     }
 
-
+    public static void PrintActiveConditions()
+    {
+        Debug.Log("Active Conditions for this round:");
+        foreach (var condition in activeConditions)
+        {
+            Debug.Log(condition.Method.Name); 
+        }
+    }
 }
+
 
 
 
