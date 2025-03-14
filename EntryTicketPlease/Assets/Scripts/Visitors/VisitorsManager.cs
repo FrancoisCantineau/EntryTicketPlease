@@ -155,8 +155,7 @@ public class VisitorsManager : MonoBehaviour
 
 
         //Condition check to see if allowed
-        VerificationAlgo verificationAlgo = new VerificationAlgo();
-        newVisitor.isAllowed = verificationAlgo.IsVisitorAllowed(newVisitor);
+        VerificationAlgo.Instance.IsVisitorAllowed(newVisitor);
 
 
         visitorQueue.Add(newVisitor);
