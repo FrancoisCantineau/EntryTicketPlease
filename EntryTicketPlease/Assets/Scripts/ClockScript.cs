@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +11,7 @@ public class ClockScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI calandar;
     [SerializeField] int duration;
     [SerializeField] int startHour;
+    [SerializeField] int endHour;
     [SerializeField] DateTime date;
     [SerializeField] int timewarnning = 2;
     bool isTimeLow = false;
@@ -22,6 +22,7 @@ public class ClockScript : MonoBehaviour
     [SerializeField] GameObject timesUpObject;
     [SerializeField] GameObject timeLowObject;
 
+    public DateTime GameTime { get; private set; }
 
     public enum Season
     {
@@ -48,8 +49,9 @@ public class ClockScript : MonoBehaviour
     void Start()
     {
         var roundData = GameManager.CurrentRoundData;
-        duration = roundData.shiftLength;
         startHour = roundData.startingHour;
+        endHour = roundData.endingHour;
+        duration = roundData.shiftLength;
 
         nbSeconds = (int)GameSettings.HourDurationSeconds * duration;
         ratio = (duration * 60) / nbSeconds;
@@ -57,27 +59,28 @@ public class ClockScript : MonoBehaviour
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
         GameTime = GameTime.Date + ts;
         calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
+        durationReturn = nbSeconds;
+
         StartCoroutine(Countdown());
     }
 
     IEnumerator Countdown()
     {
-        while (GameTime.Hour < startHour + duration)
+        while (GameTime.Hour < endHour)
         {
             yield return null;
             GameTime = GameTime.AddMinutes(ratio * Time.deltaTime);
             affichage.text = GameTime.ToString("H:mm");
-            if (GameTime.Hour > startHour + duration - timewarnning && !isTimeLow)
+            if (GameTime.Hour > endHour - timewarnning && !isTimeLow)
             {
-                AlmostFinished.Invoke(timewarnning);
                 isTimeLow = true;
                 timeLowObject.SetActive(true);
+                AlmostFinished.Invoke(timewarnning);
             }
         }
         Finished.Invoke();
         timesUpObject.SetActive(true);
     }
-    public DateTime GameTime { get; private set; }
 
 
 
@@ -96,4 +99,5 @@ public class ClockScript : MonoBehaviour
             yield return null;
         }
     }
+    public int durationReturn { get; private set; }
 }
