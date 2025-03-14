@@ -14,7 +14,7 @@ public class SaveManager : SingletonMB<SaveManager>
     
 
     /// <summary>
-    /// Sauvegarde les données
+    /// Sauvegarde les donnï¿½es
     /// </summary>
     public void SaveGameData(SaveData saveData)
     {
@@ -24,7 +24,7 @@ public class SaveManager : SingletonMB<SaveManager>
     }
 
     /// <summary>
-    /// Récupère les données
+    /// Rï¿½cupï¿½re les donnï¿½es
     /// </summary>
     public SaveData FetchGameData()
     {
