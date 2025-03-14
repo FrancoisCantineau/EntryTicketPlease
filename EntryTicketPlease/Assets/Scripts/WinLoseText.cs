@@ -16,6 +16,18 @@ public class WinLoseText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void displayEndDayText(bool isWinning,int nbstars)
+    {
         star1.enabled = false;
         star2.enabled = false;
         star3.enabled = false;
@@ -43,12 +55,5 @@ public class WinLoseText : MonoBehaviour
             nextDay.enabled = false;
             winLosetext.text = "You lose";
         }
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
