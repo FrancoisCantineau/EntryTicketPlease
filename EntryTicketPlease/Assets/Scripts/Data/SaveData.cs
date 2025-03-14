@@ -5,7 +5,7 @@ using UnityEngine;
 public class SaveData
 {
     public int currentDay;
-    DateTime currentDate;
+    public DateTime currentDate;
 
     public static SaveData Default()
     {
