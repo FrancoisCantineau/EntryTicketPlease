@@ -43,6 +43,7 @@ public class RoundData
     /// </summary>
     public Notice notice;
 
+    public PriceGrid priceGrid;
 
     /// <summary>
     /// Une section du parc est-elle fermée
@@ -53,16 +54,24 @@ public class RoundData
     {
         RoundData data = new();
         data.currentDate = currentDate;
-        data.startingHour = 8;
-        data.endingHour = 18;
-        data.shiftLength = 10;
-        data.queueLength = 15;
+        data.startingHour = 9;
+        data.endingHour = 17;
+        data.shiftLength = 8;
+        data.queueLength = 12;
         data.incoherencesOdds = 0.2f;
         data.fraudOdds = 0.1f;
         data.notice = new();
         data.closedSection = ClosedSection.N;
         return data;
     }
+}
+
+[System.Serializable]
+public class VisitorData
+{
+    public GameObject prefab;
+    public Visitor.VisitorID id;
+    public Visitor.VisitorTicket ticket;
 }
 
 /// <summary>
@@ -111,6 +120,29 @@ public struct Notice
     public bool kidsNotAllowedAfterHourEnabled;
     public int kidsNotAllowedAfterHour;
 }
+
+public struct PriceGrid
+{
+    /// <summary>
+    /// Faut-il modifier le prix des enfants ? 
+    /// </summary>
+    public bool childrenPriceModifEnabled;
+    public int childrenPrice;
+
+    /// <summary>
+    /// Faut-il modifier le prix des ados ? 
+    /// </summary>
+    public bool teensPriceModifEnabled;
+    public int teensPrice;
+
+    /// <summary>
+    /// Faut-il modifier le prix des adultes ? 
+    /// </summary>
+    public bool adultsPriceModifEnabled;
+    public int adultsPrice;
+}
+
+
 
 public enum ClosedSection
 {
