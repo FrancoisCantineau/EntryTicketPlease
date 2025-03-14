@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3121558958312333160}
   - component: {fileID: 6985494197735941147}
   - component: {fileID: 8609084187552023468}
+  - component: {fileID: 9148022009799918110}
   - component: {fileID: 4849547287424668510}
   - component: {fileID: 6175892876136020280}
   - component: {fileID: 7463260206721020799}
@@ -66,13 +67,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19c4f5509528afe489d52139442d8d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  buttonClickSound: {fileID: 8300000, guid: 9d55ffb5b93b7814c9fca5bd08455bf8, type: 3}
+  panelSlideSound: {fileID: 8300000, guid: 61c11a9a7d1ba784d905e6d139e8f75f, type: 3}
   listButton: {fileID: 0}
   panel: {fileID: 0}
   normalSprite: {fileID: 21300000, guid: 9bae25c23c952d447a24d018e5fa1c1a, type: 3}
   pressedSprite: {fileID: 21300000, guid: f880849a41ed02e489042ec44375932d, type: 3}
   animationDuration: 0.1
   buttonScaleFactor: 1.1
-  allowOtherPanels: 0
+  allowOtherPanels: 1
 --- !u!114 &6985494197735941147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +107,34 @@ MonoBehaviour:
   soundButton: {fileID: 0}
   soundOnSprite: {fileID: 21300000, guid: 1ff21a3d03deb9c4584a6017ec092721, type: 3}
   soundOffSprite: {fileID: 21300000, guid: 46800f4cf3b37c844be05a7324ee01e8, type: 3}
+--- !u!114 &9148022009799918110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508660678351303695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f36fb2f91fcc3f4da798e50cc5c105c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  starAppearSound: {fileID: 8300000, guid: c5a50f49a244b754c95c1b6526d47f4e, type: 3}
+  bigConfettiMusic: {fileID: 8300000, guid: beba1f179e69a6c4f95acdc17e2a2d83, type: 3}
+  winLoseText: {fileID: 0}
+  logo: {fileID: 0}
+  stars:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  animationDuration: 0.5
+  starShakeInterval: 1
+  confettiFX: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa,
+    type: 3}
+  bigConfettiFX: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa,
+    type: 3}
+  bigConfettiSpawnPoint: {fileID: 0}
 --- !u!114 &4849547287424668510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +163,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656e6a65d4f1449499a0e1c33241b922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  clickSounds:
+  - {fileID: 8300000, guid: 261965fc5705a654ab49649ba82bba64, type: 3}
+  - {fileID: 8300000, guid: 617d64aac5ce5074fac23c26b4044b0a, type: 3}
+  - {fileID: 8300000, guid: b5c95b143d4cc954abd3d585e174c3c6, type: 3}
   particleEffect: {fileID: 8960070331866059126, guid: 10c20cf698342fa468dd47d24f3f070f,
     type: 3}
   uiCamera: {fileID: 0}

@@ -261,6 +261,7 @@ MonoBehaviour:
   calandar: {fileID: 1434660286}
   duration: 10
   startHour: 8
+  endHour: 0
   timewarnning: 2
   AlmostFinished:
     m_PersistentCalls:
@@ -268,6 +269,8 @@ MonoBehaviour:
   Finished:
     m_PersistentCalls:
       m_Calls: []
+  timesUpObject: {fileID: 0}
+  timeLowObject: {fileID: 0}
 --- !u!114 &133173081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +400,10 @@ MonoBehaviour:
   refuseTarget: {x: -1.867, y: 0.898, z: -6.201}
   stoppingDistance: 0.1
   rotationSpeed: 5
+  validateSprites: []
+  refuseSprites: []
+  spriteHeight: 1.5
+  spriteDuration: 2
   validateButton: {fileID: 645582394}
   refuseButton: {fileID: 1512330762}
 --- !u!1 &232644134
@@ -1155,6 +1162,55 @@ Transform:
   - {fileID: 570133606}
   - {fileID: 980145475}
   - {fileID: 744631782}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &644723192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 644723194}
+  - component: {fileID: 644723193}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &644723193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644723192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+--- !u!4 &644723194
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644723192}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 524.2889, y: 1303.7285, z: 4.958078}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &645582392
@@ -2144,7 +2200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1031616750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2177,7 +2233,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Begin!
+  m_text: Begin !
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 79df182d0eca0904b8731c348f00fa03, type: 2}
   m_sharedMaterial: {fileID: 1375929348835708671, guid: 79df182d0eca0904b8731c348f00fa03,
@@ -2205,15 +2261,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 35
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 35
+  m_fontSizeMax: 75
+  m_fontStyle: 32
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: -5.53
   m_wordSpacing: 0
@@ -2308,6 +2364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_roundOpening: {fileID: 1302312016}
+  m_clock: {fileID: 0}
 --- !u!114 &1105230543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2364,7 +2421,14 @@ MonoBehaviour:
   visitorMaxHeight: 220
   visitorMinWeight: 30
   visitorMaxWeight: 120
+  childrensMinAge: 5
+  childrensMaxAge: 12
+  teensMinAge: 13
+  teensMaxAge: 17
+  adultsMinAge: 18
+  adultsMaxAge: 80
   queueLengthByShiftLengthFactor: 1.5
+  hourDurationSeconds: 12
 --- !u!4 &1105230547
 Transform:
   m_ObjectHideFlags: 0
@@ -2437,6 +2501,10 @@ MonoBehaviour:
   m_thoughtChipPrefab: {fileID: 5424012295250041404, guid: 1781ef73a9aaf0f4d8efa72daf9844e2,
     type: 3}
   m_StartSignal: {fileID: 1031616749}
+  globalVolume: {fileID: 644723193}
+  m_OnOpeningEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &1302312017 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5807815820376534060, guid: 364fd6cd014ce5e49a7e2b2a006e48c0,
@@ -2721,7 +2789,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -4004,6 +4072,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1406217930}
+  - {fileID: 644723194}
   - {fileID: 1706334029}
   - {fileID: 987858524}
   - {fileID: 636912685}

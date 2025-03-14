@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class ClickParticles : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource; // AudioSource pour jouer les sons
+    [SerializeField] private AudioClip[] clickSounds; // Tableau contenant 3 sons différents
+
     [SerializeField] private ParticleSystem particleEffect;
     [SerializeField] private Camera uiCamera; // Assigne ta caméra ici
 
@@ -24,6 +27,19 @@ public class ClickParticles : MonoBehaviour
     {
         ParticleSystem effect = Instantiate(particleEffect, position, Quaternion.identity);
         effect.Play();
+
+        // Jouer le son de clic
+        PlayRandomSound();
+
         Destroy(effect.gameObject, 2f); // Détruit l'effet après 2s
+    }
+
+    private void PlayRandomSound()
+    {
+        if (audioSource != null && clickSounds.Length > 0)
+        {
+            int randomIndex = Random.Range(0, clickSounds.Length); // Sélectionne un son aléatoire
+            audioSource.PlayOneShot(clickSounds[randomIndex]);
+        }
     }
 }

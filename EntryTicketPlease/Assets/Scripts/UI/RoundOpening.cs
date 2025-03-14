@@ -5,7 +5,10 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements.Experimental;
+using DG.Tweening;
 
 
 public class RoundOpening : MonoBehaviour
@@ -16,6 +19,8 @@ public class RoundOpening : MonoBehaviour
     [SerializeField] GameObject m_thougtsGrid;
     [SerializeField] GameObject m_thoughtChipPrefab;
     [SerializeField] GameObject m_StartSignal;
+    [SerializeField] private Volume globalVolume;
+    private DepthOfField depthOfField;
 
     List<string> thoughts;
 
@@ -29,15 +34,25 @@ public class RoundOpening : MonoBehaviour
     {
         SaveData saveData = SaveManager.Instance.FetchGameData();
         SetDay(saveData.currentDay);
-
         FetchThoughts();
 
+        // Récupérer la profondeur de champ
+        if (globalVolume.profile.TryGet(out depthOfField))
+        {
+            depthOfField.focusDistance.value = 0f;
+        }
+
         StartCoroutine(PlayOpening());
+
+        // Démarrer l'animation de vague si StartSignal est actif
+        if (m_StartSignal.activeInHierarchy)
+        {
+            StartCoroutine(AnimateStartSignalWave());
+        }
     }
 
     private void OnDisable()
     {
-        m_StartSignal.SetActive(true);
         m_OnOpeningEnd.Invoke();
         m_OnOpeningEnd.RemoveAllListeners();
     }
@@ -97,12 +112,22 @@ public class RoundOpening : MonoBehaviour
         transform.position = EnterPosition;
         float duration = 1f;
         float time = 0;
+
         while (time < duration)
         {
             transform.position = Vector3.Lerp(EnterPosition, CenterPosition, time / duration);
             time += Time.deltaTime;
             yield return null;
         }
+
+        // Début de l'effet Depth of Field
+        if (depthOfField != null)
+        {
+            DOTween.To(() => depthOfField.focusDistance.value,
+                       x => depthOfField.focusDistance.value = x,
+                       0f, 1f);
+        }
+
         time += Time.deltaTime;
         foreach (string thought in thoughts)
         {
@@ -110,7 +135,15 @@ public class RoundOpening : MonoBehaviour
             time += 0.5f;
             yield return new WaitForSeconds(0.5f);
         }
-        yield return new WaitForSeconds(6f-time);
+        yield return new WaitForSeconds(6f - time);
+
+        // Réduction progressive du Depth of Field
+        if (depthOfField != null)
+        {
+            DOTween.To(() => depthOfField.focusDistance.value,
+                       x => depthOfField.focusDistance.value = x,
+                       5f, 1f);
+        }
 
         var ExitPosition = new Vector3(CenterPosition.x + 1300, CenterPosition.y, CenterPosition.z);
         while (time < duration)
@@ -119,9 +152,66 @@ public class RoundOpening : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
+
+        // Activer le StartSignal APRÈS les thoughts
+        m_StartSignal.SetActive(true);
+
+        // Lancer l'animation une seule fois
+        StartCoroutine(AnimateStartSignalWave());
+
         transform.position = CenterPosition;
-        this.gameObject.SetActive(false);
     }
+
+
+    IEnumerator AnimateStartSignalWave()
+    {
+        TextMeshProUGUI startText = m_StartSignal.GetComponent<TextMeshProUGUI>();
+
+        if (startText == null)
+        {
+            Debug.LogError("StartSignal n'a pas de composant TextMeshProUGUI !");
+            yield break;
+        }
+
+        startText.ForceMeshUpdate(); // S'assurer que le texte est bien mis à jour
+        TMP_TextInfo textInfo = startText.textInfo;
+
+        float waveSpeed = 5f;  // Vitesse de l'animation
+        float waveHeight = 10f; // Amplitude de la vague
+
+        while (m_StartSignal.activeInHierarchy) // Tant que le message est affiché
+        {
+            startText.ForceMeshUpdate();
+            textInfo = startText.textInfo;
+
+            for (int i = 0; i < textInfo.characterCount; i++)
+            {
+                if (!textInfo.characterInfo[i].isVisible)
+                    continue;
+
+                int vertexIndex = textInfo.characterInfo[i].vertexIndex;
+                Vector3[] vertices = textInfo.meshInfo[textInfo.characterInfo[i].materialReferenceIndex].vertices;
+
+                // Génération d'un effet de vague en modifiant la position verticale
+                float yOffset = Mathf.Sin((Time.time * waveSpeed) + (i * 0.3f)) * waveHeight;
+
+                vertices[vertexIndex + 0].y += yOffset;
+                vertices[vertexIndex + 1].y += yOffset;
+                vertices[vertexIndex + 2].y += yOffset;
+                vertices[vertexIndex + 3].y += yOffset;
+            }
+
+            // Appliquer les nouvelles positions aux lettres
+            for (int i = 0; i < textInfo.meshInfo.Length; i++)
+            {
+                textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
+                startText.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
+            }
+
+            yield return null; // Attendre la prochaine frame pour mettre à jour l'animation
+        }
+    }
+
     #endregion
     #region EVENTS -------------------------------------------------------------------
 
