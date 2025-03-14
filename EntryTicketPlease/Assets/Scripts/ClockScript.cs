@@ -35,9 +35,15 @@ public class ClockScript : MonoBehaviour
         Dec,
     }
 
+    private void OnEnable()
+    {
+        StartCoroutine(PlayOpening());
+    }
+
 
     void Start()
     {
+        nbSeconds = (int)GameSettings.HourDurationSeconds*duration;
         ratio = (duration * 60) / nbSeconds;
         GameTime = date;
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
@@ -60,4 +66,22 @@ public class ClockScript : MonoBehaviour
         }
     }
     public DateTime GameTime { get; private set; }
+
+
+
+
+    IEnumerator PlayOpening()
+    {
+        var TargetPosition = transform.position;
+        var EnterPosition = new Vector3(TargetPosition.x + 800, TargetPosition.y, TargetPosition.z);
+        transform.position = EnterPosition;
+        float duration = 1f;
+        float time = 0;
+        while (time < duration)
+        {
+            transform.position = Vector3.Lerp(EnterPosition, TargetPosition, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+    }
 }

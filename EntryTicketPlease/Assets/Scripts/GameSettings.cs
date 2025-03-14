@@ -16,6 +16,7 @@ public class GameSettings : SingletonMB<GameSettings>
     
     [Header("RoundSettings")]
     [SerializeField] float queueLengthByShiftLengthFactor = 1.5f;
+    [SerializeField] float hourDurationSeconds = 20;
     
     #endregion
 
@@ -29,6 +30,7 @@ public class GameSettings : SingletonMB<GameSettings>
     public static int VisitorMaxWeight { get => Instance.visitorMaxWeight; }
 
     public static float QueueLengthByShiftLengthFactor { get => Instance.queueLengthByShiftLengthFactor; }
+    public static float HourDurationSeconds { get => Instance.hourDurationSeconds; }
 
 
     #region LIFECYCLE ----------------------------------------------------------------
