@@ -31,31 +31,31 @@ public class clipBoard : MonoBehaviour
     {
         if(roundData.notice.minWeightRestrictionEnabled)
         {
-            res += "Les personnes doivent au moins peusé " + roundData.notice.minWeightRestriction.ToString() + "Kg" + "<Br>";
+            res += "Les personnes doivent au moins peusé " + roundData.notice.minWeightRestriction.ToString() + "Kg" + "<br>";
         }
         if(roundData.notice.maxWeightRestrictionEnabled)
         {
-            res += "Les personnes doivent peusé au macximum" + roundData.notice.maxWeightRestriction.ToString() + "Kg" + "<Br>";
+            res += "Les personnes doivent peusé au macximum" + roundData.notice.maxWeightRestriction.ToString() + "Kg" + "<br>";
         }
         if(roundData.notice.heightLimitEnabled)
         {
-            res += "Les personnes doivent au minimum mesuré" + roundData.notice.heightLimit.ToString() + "cm" + "<Br>";
+            res += "Les personnes doivent au minimum mesuré" + roundData.notice.heightLimit.ToString() + "cm" + "<br>";
         }
         if(roundData.notice.kidsAreForbidenEnabled)
         {
-            res += "Les enfants ne sont pas autorisé" + "<Br>";
+            res += "Les enfants ne sont pas autorisé" + "<br>";
         }
         if(roundData.notice.kidsNotAllowedAfterHourEnabled)
         {
-            res += "Les enfants ne sont plus autorisé apres " + roundData.notice.kidsNotAllowedAfterHour.ToString() + "<Br>";
+            res += "Les enfants ne sont plus autorisé apres " + roundData.notice.kidsNotAllowedAfterHour.ToString() + "<br>";
         }
         if(roundData.notice.maxAgeRestrictionEnabled)
         {
-            res += "Les personne ne doivent pas avoir plus de " + roundData.notice.maxAgeRestriction.ToString() + "ans" + "<Br>";
+            res += "Les personne ne doivent pas avoir plus de " + roundData.notice.maxAgeRestriction.ToString() + "ans" + "<br>";
         }
         if(roundData.notice.validityExtensionEnabled)
         {
-            res += "Les billets on une extension de validitée de " + roundData.notice.validityExtensionDays.ToString() + "jours" + "<Br>";
+            res += "Les billets on une extension de validitée de " + roundData.notice.validityExtensionDays.ToString() + "jours" + "<br>";
         }
         clipBoardText.text = res;
     }
