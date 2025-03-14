@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0afe1238fd94a1d4ba7399aba3688e84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nbSeconds: 10
+  nbSeconds: 60
   affichage: {fileID: 2005768494}
   calandar: {fileID: 1434660286}
   duration: 10
@@ -3568,6 +3568,7 @@ GameObject:
   - component: {fileID: 1706334029}
   - component: {fileID: 1706334028}
   - component: {fileID: 1706334027}
+  - component: {fileID: 1706334030}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -3668,13 +3669,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1706334026}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.23399659, y: -0.68120944, z: 0.24572064, w: 0.6487069}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 39.67, y: -92.8, z: 0}
+--- !u!114 &1706334030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706334026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21db6277d96d9b4cb2960425c2a3252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HUD: {fileID: 133173078}
 --- !u!1 &1745347328 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f7724cf7bb009514fb6e47f14b8579a8,

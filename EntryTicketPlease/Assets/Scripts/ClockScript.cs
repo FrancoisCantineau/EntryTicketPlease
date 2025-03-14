@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -43,6 +44,7 @@ public class ClockScript : MonoBehaviour
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
         GameTime = GameTime.Date + ts;
         calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
+        durationReturn = nbSeconds;
     }
 
     // Update is called once per frame
@@ -60,4 +62,5 @@ public class ClockScript : MonoBehaviour
         }
     }
     public DateTime GameTime { get; private set; }
+    public int durationReturn { get; private set; }
 }
