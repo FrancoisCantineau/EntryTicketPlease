@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DraggableObject : MonoBehaviour
 {
@@ -6,16 +7,14 @@ public class DraggableObject : MonoBehaviour
     private Vector3 offset;
     private Camera mainCamera;
     private Vector3 initialScale;
-    private SpriteRenderer spriteRenderer;
-    private int initialSortingOrder;
+    private RectTransform rectTransform; 
 
-    public Vector2 minBounds = new Vector2(-5f, -5f);
+    public Vector2 minBounds = new Vector2(-5f, -5f); 
     public Vector2 maxBounds = new Vector2(5f, 5f);
-    public Collider2D noDragZone;
+    public RectTransform noDragZone; 
     public float zoomScale = 1.5f;
     public float zoomSpeed = 5f;
 
-    private static int highestSortingOrder = 0;
     private AudioSource audioSource;
     public AudioClip grabSound;
 
@@ -30,15 +29,11 @@ public class DraggableObject : MonoBehaviour
             enabled = false;
             return;
         }
-        if (noDragZone == null)
-        {
-            Debug.LogWarning("Aucune zone interdite définie");
-        }
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
+        rectTransform = GetComponent<RectTransform>();
+        if (rectTransform == null)
         {
-            Debug.LogError("SpriteRenderer manquant sur cet objet !");
+            Debug.LogError("RectTransform manquant sur cet objet !");
             enabled = false;
             return;
         }
@@ -49,16 +44,11 @@ public class DraggableObject : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-
-
-        initialScale = transform.localScale;
+        initialScale = rectTransform.localScale;
         if (initialScale == Vector3.zero)
         {
             initialScale = Vector3.one;
         }
-
-        initialSortingOrder = spriteRenderer.sortingOrder;
-        highestSortingOrder = Mathf.Max(highestSortingOrder, initialSortingOrder);
 
         Invoke("FinishSpawning", 0.6f);
     }
@@ -72,7 +62,6 @@ public class DraggableObject : MonoBehaviour
     {
         if (mainCamera == null || isSpawning) return;
 
-        // Mode Mobile (Touch)
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -84,7 +73,7 @@ public class DraggableObject : MonoBehaviour
                     if (IsTouchingObject(touchPosition))
                     {
                         isDragging = true;
-                        offset = transform.position - touchPosition;
+                        offset = rectTransform.position - touchPosition;
                         ZoomIn();
                     }
                     break;
@@ -105,7 +94,6 @@ public class DraggableObject : MonoBehaviour
                     break;
             }
         }
-        // Mode PC (Souris)
         else
         {
             Vector3 mousePosition = GetWorldPosition(Input.mousePosition);
@@ -115,9 +103,9 @@ public class DraggableObject : MonoBehaviour
                 if (IsTouchingObject(mousePosition))
                 {
                     isDragging = true;
-                    offset = transform.position - mousePosition;
+                    offset = rectTransform.position - mousePosition;
                     ZoomIn();
-                    Debug.Log("Début du drag à : " + transform.position);
+                    Debug.Log("Début du drag à : " + rectTransform.position);
                 }
             }
             else if (Input.GetMouseButton(0) && isDragging)
@@ -130,7 +118,7 @@ public class DraggableObject : MonoBehaviour
                 {
                     isDragging = false;
                     ZoomOut();
-                    Debug.Log("Fin du drag à : " + transform.position);
+                    Debug.Log("Fin du drag à : " + rectTransform.position);
                 }
             }
         }
@@ -139,16 +127,14 @@ public class DraggableObject : MonoBehaviour
         {
             if (isDragging)
             {
-                transform.localScale = Vector3.Lerp(transform.localScale, initialScale * zoomScale, Time.deltaTime * zoomSpeed);
+                rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, initialScale * zoomScale, Time.deltaTime * zoomSpeed);
             }
             else
             {
-                transform.localScale = Vector3.Lerp(transform.localScale, initialScale, Time.deltaTime * zoomSpeed);
+                rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, initialScale, Time.deltaTime * zoomSpeed);
             }
         }
     }
-
-
 
     private Vector3 GetWorldPosition(Vector2 screenPosition)
     {
@@ -157,34 +143,42 @@ public class DraggableObject : MonoBehaviour
         if (float.IsNaN(screenPosition.x) || float.IsNaN(screenPosition.y) ||
             float.IsInfinity(screenPosition.x) || float.IsInfinity(screenPosition.y))
         {
-            return transform.position;
+            return rectTransform.position;
         }
 
-        float zDepth = Mathf.Abs(transform.position.z - mainCamera.transform.position.z);
+        float zDepth = Mathf.Abs(rectTransform.position.z - mainCamera.transform.position.z);
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, zDepth));
-        return new Vector3(worldPos.x, worldPos.y, transform.position.z);
+        return new Vector3(worldPos.x, worldPos.y, rectTransform.position.z);
     }
 
     private bool IsTouchingObject(Vector3 worldPosition)
     {
-        Collider2D col = GetComponent<Collider2D>();
-        return col != null && col == Physics2D.OverlapPoint(worldPosition);
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            mainCamera.WorldToScreenPoint(worldPosition),
+            mainCamera,
+            out localPoint
+        );
+        return rectTransform.rect.Contains(localPoint);
     }
 
     private void MoveObject(Vector3 inputPosition)
     {
         Vector3 newPosition = inputPosition + offset;
 
-        if (noDragZone != null && noDragZone.OverlapPoint(newPosition))
+        if (noDragZone != null && RectTransformUtility.RectangleContainsScreenPoint(
+            noDragZone,
+            mainCamera.WorldToScreenPoint(newPosition),
+            mainCamera))
         {
             return;
         }
 
         newPosition.x = Mathf.Clamp(newPosition.x, minBounds.x, maxBounds.x);
         newPosition.y = Mathf.Clamp(newPosition.y, minBounds.y, maxBounds.y);
-        newPosition.z = transform.position.z;
-        transform.position = newPosition;
-
+        newPosition.z = rectTransform.position.z;
+        rectTransform.position = newPosition;
     }
 
     private void ZoomIn()
@@ -193,20 +187,11 @@ public class DraggableObject : MonoBehaviour
         {
             audioSource.PlayOneShot(grabSound);
         }
-        SetOnTop();
+        rectTransform.SetAsLastSibling();
     }
 
     private void ZoomOut()
     {
-        // Rien ici, géré dans Update
-    }
-
-    private void SetOnTop()
-    {
-        if (spriteRenderer != null)
-        {
-            highestSortingOrder++;
-            spriteRenderer.sortingOrder = highestSortingOrder;
-        }
+        // Ne rien faire ici pour laisser l'objet au-dessus
     }
 }
