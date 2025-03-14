@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -8,11 +9,13 @@ using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 public class VisitorsManager : SingletonMB<VisitorsManager>
 {
     private float validityTreshHoldValue = 0.3f; //Used to increase or decrease invalid tickets
-    private float fraudValue = 1f; //Variable to increase or decrease fraud among visitors
+    private float fraudValue = 0f; //Variable to increase or decrease fraud among visitors
 
     private int currentVisitorIndex = 0;
     private string ticketName;
-    private int ticketAge;
+    private int ticketPrice;
+
+    private GameObject currentVisitor;
 
     public Transform spawnPoint;
 
@@ -23,12 +26,6 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     [SerializeField] private CharacterData characterData;
 
     private List<Visitor> visitorQueue = new List<Visitor>();
-
-    void Start()
-    {
-       
-    }
-
 
 
     /// <summary>
@@ -77,6 +74,14 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         SpawnVisitors();
     }
 
+    /// <summary>
+    /// Returns Visitor currently used
+    /// </summary>
+    public GameObject GetVisitor()
+    {
+        return currentVisitor;
+    }
+
 
     public void NextVisitor()
     {
@@ -94,10 +99,10 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
 
     private void InitializeVisitor(int i)
-    {
-        // As Visitor is a Monobehaviour, propose an alternative to "Visitor newVisitor = new Visitor();" to create a new visitor without triggering a warning
+    { 
+
         GameObject newVisitorObject = new GameObject("Visitor" + i);
-        Visitor newVisitor = newVisitorObject.AddComponent<Visitor>();
+        Visitor addedVisitor = newVisitorObject.AddComponent<Visitor>();
 
 
 
@@ -112,10 +117,13 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         string name = "none";
         ticketName = name;
 
-        int age = Random.Range(5, 80);
-        ticketAge = age;
+        int age = Random.Range(GameSettings.ChildrensMinAge, GameSettings.AdultsMaxAge);
 
-        
+        ticketPrice = GameSettings.priceTable
+    .FirstOrDefault(entry => age >= entry.Key.min_age && age <= entry.Key.max_age)
+    .Value;
+
+
 
         //GameObject prefabVisitor = characterData.GetVisitorModel(randomGender);
 
@@ -135,8 +143,8 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
             if (age < 12) // Childrens
             {
-                height = Random.Range(90f, 140f);
-                weight = Random.Range(15f, 45f);
+                height = Random.Range(GameSettings.VisitorMinHeight, 140f);
+                weight = Random.Range(GameSettings.VisitorMinWeight, 45f);
             }
             else if (age < 18) // Teens
             {
@@ -145,7 +153,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             }
             else // Adults
             {
-                height = Random.Range(170f, 190f);
+                height = Random.Range(170f, GameSettings.VisitorMaxHeight);
                 float bmi = Random.Range(18f, 30f);
                 weight = bmi * (height / 100) * (height / 100);
             }
@@ -156,8 +164,8 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             ticketName = name;
             if (age < 12) // Children
             {
-                height = Random.Range(90f, 140f);
-                weight = Random.Range(15f, 40f);
+                height = Random.Range(GameSettings.VisitorMinHeight, 140f);
+                weight = Random.Range(GameSettings.VisitorMinWeight, 40f);
             }
             else if (age < 18) //Teens
             {
@@ -166,7 +174,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             }
             else // Adults
             {
-                height = Random.Range(150f, 175f);
+                height = Random.Range(150f, GameSettings.VisitorMinHeight);
                 float bmi = Random.Range(18f, 30f);
                 weight = bmi * (height / 100) * (height / 100);
             }
@@ -175,36 +183,34 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         //Check if visitor will fraud
         if (Random.value < fraudValue)
         {
-            Fraud(randomGender);
+            Fraud(randomGender, age);
         }
 
-
-        newVisitor.SetPrefab(prefabVisitor);
+        
+        addedVisitor.SetPrefab(prefabVisitor);
 
        //fill visitor's structs
         Visitor.VisitorID id = new Visitor.VisitorID(name, age, height, weight, randomGender);
-        Visitor.VisitorTicket ticket = new Visitor.VisitorTicket(ticketName, ticketAge, hasValidTicket, section);
-  
-        newVisitor.Initialize(id, ticket);
+        Visitor.VisitorTicket ticket = new Visitor.VisitorTicket(ticketName, ticketPrice, hasValidTicket, section);
 
+       
+        addedVisitor.Initialize(id, ticket);
+        
+        visitorQueue.Add(addedVisitor);
 
-        //Condition check to see if allowed
-        VerificationAlgo.IsVisitorAllowed(newVisitor);
-
-
-
-        visitorQueue.Add(newVisitor);
+        Destroy(newVisitorObject);
+        SpawnVisitors();
     }
 
 
     /// <summary>
     /// Modifies the infos for the ticket
     /// </summary>
-    private void Fraud(Gender genre)
+    private void Fraud(Gender genre, int age)
     {
 
             bool changeName = Random.value < fraudValue;
-            bool changeAge = Random.value < fraudValue;
+            bool changePrice = Random.value < fraudValue;
 
         //Name fraud
         if (changeName)
@@ -222,13 +228,22 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
             }   
     
-        //Age fraud
-        if (changeAge)
+        //Price fraud
+        if (changePrice)
             {
                 
-                int newAge = Random.Range(5, 80);
-                ticketAge = newAge; 
-            }
+                int newPrice = ticketPrice ;
+
+            List<int> lowerPrices = GameSettings.priceTable.Values
+            .Where(price => price < ticketPrice)
+            .ToList();
+
+            newPrice = lowerPrices.Count > 0 ? lowerPrices[Random.Range(0, lowerPrices.Count)] : ticketPrice;
+
+            Debug.Log($"Âge : {age}, Prix réel : {ticketPrice}, Prix modifié : {newPrice}");
+
+            ticketPrice = newPrice ;
+        }
         
     }
 
@@ -248,12 +263,20 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
                     Visitor visitorToSpawn = visitorQueue[currentVisitorIndex];
 
-                    GameObject currentVisitor = Instantiate(visitorToSpawn.prefab, spawnPoint.position, Quaternion.identity);
+                    visitorToSpawn.isAllowed = true;
 
-                    Visitor newVisitor = currentVisitor.AddComponent<Visitor>();
+                    GameObject currentVisit = Instantiate(visitorToSpawn.prefab, spawnPoint.position, Quaternion.identity);
+                    currentVisit.name = "Visitor" + currentVisitorIndex;
+
+                    Visitor newVisitor = currentVisit.AddComponent<Visitor>();
 
                     newVisitor.Initialize(visitorToSpawn.id, visitorToSpawn.ticket);
                     newVisitor.SetPrefab(visitorToSpawn.prefab);
+
+                    currentVisitor = currentVisit;
+
+                    CheckValidityCurrentVisitor();
+
                     currentVisitorIndex++;
                 }
 
@@ -264,6 +287,20 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             }
         }
         
+    }
+
+    /// <summary>
+    /// This method check if the current visitor is allowed in the park
+    /// Returns result
+    /// </summary>
+    public bool CheckValidityCurrentVisitor()
+    {
+        Visitor visitorComponent = currentVisitor.GetComponent<Visitor>();
+
+        visitorComponent.SetIsAllowed(VerificationAlgo.IsVisitorAllowed(visitorComponent));
+
+        return visitorComponent.GetIsAllowed();
+
     }
 
 
