@@ -15,7 +15,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     private string ticketName;
     private int ticketPrice;
 
-    private GameObject currentVisitor;
+    [SerializeField] private GameObject currentVisitor;
 
     public Transform spawnPoint;
 
@@ -72,16 +72,23 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         return currentVisitor;
     }
 
+    public int GetQueueSize()
+    {
+        return visitorQueue.Count;
+    }
 
-    public void NextVisitor()
+
+    public bool  NextVisitor()
     {
         if (currentVisitorIndex < visitorQueue.Count)
         {
             SpawnVisitors();
+            return true;
         }
         else
         {
             Debug.Log("Aucun autre visiteur dans la queue.");
+            return false;
         }
     }
     
@@ -190,7 +197,6 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         visitorQueue.Add(addedVisitor);
 
         Destroy(newVisitorObject);
-        SpawnVisitors();
     }
 
 
@@ -244,13 +250,16 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     /// </summary>
     public void SpawnVisitors()
     {
+       
         if (visitorQueue.Count > 0)
         {
-
+    
             if (currentVisitorIndex < visitorQueue.Count)
             {
+               
                 if (spawnPoint != null)
                 {
+                  
 
                     Visitor visitorToSpawn = visitorQueue[currentVisitorIndex];
 
@@ -266,7 +275,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
                     currentVisitor = currentVisit;
 
-                    CheckValidityCurrentVisitor();
+
 
                     currentVisitorIndex++;
                 }

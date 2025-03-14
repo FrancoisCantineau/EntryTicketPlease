@@ -261,6 +261,7 @@ MonoBehaviour:
   calandar: {fileID: 1434660286}
   duration: 10
   startHour: 8
+  endHour: 0
   timewarnning: 2
   AlmostFinished:
     m_PersistentCalls:
@@ -268,6 +269,8 @@ MonoBehaviour:
   Finished:
     m_PersistentCalls:
       m_Calls: []
+  timesUpObject: {fileID: 0}
+  timeLowObject: {fileID: 0}
 --- !u!114 &133173081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +400,10 @@ MonoBehaviour:
   refuseTarget: {x: -1.867, y: 0.898, z: -6.201}
   stoppingDistance: 0.1
   rotationSpeed: 5
+  validateSprites: []
+  refuseSprites: []
+  spriteHeight: 1.5
+  spriteDuration: 2
   validateButton: {fileID: 645582394}
   refuseButton: {fileID: 1512330762}
 --- !u!1 &232644134
@@ -853,6 +860,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1880969968251231191, guid: 1b66755f4f1c67e4490d6cd55c025fe3, type: 3}
+--- !u!1 &382596334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 382596335}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &382596335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382596334}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.08659056, y: 1.1806283, z: -7.738788}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &422794763 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a293a77ca0535e84c85ef0697851e514,
@@ -1251,6 +1289,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1105230542}
+        m_TargetAssemblyTypeName: RoundManager, Assembly-CSharp
+        m_MethodName: EndOfVisitor
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &645582395
 MonoBehaviour:
@@ -2308,6 +2358,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_roundOpening: {fileID: 1302312016}
+  m_clock: {fileID: 0}
+  roundEnded: 0
+  succeededVisitors: 0
 --- !u!114 &1105230543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2332,7 +2385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25785862202a696479e9c942e1b0a8e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoint: {fileID: 0}
+  currentVisitor: {fileID: 0}
+  spawnPoint: {fileID: 382596335}
   characterData: {fileID: 11400000, guid: f56c3e87dac3d864da00b1a354463ae8, type: 2}
 --- !u!114 &1105230545
 MonoBehaviour:
@@ -2364,7 +2418,14 @@ MonoBehaviour:
   visitorMaxHeight: 220
   visitorMinWeight: 30
   visitorMaxWeight: 120
+  childrensMinAge: 5
+  childrensMaxAge: 12
+  teensMinAge: 13
+  teensMaxAge: 17
+  adultsMinAge: 18
+  adultsMaxAge: 80
   queueLengthByShiftLengthFactor: 1.5
+  hourDurationSeconds: 12
 --- !u!4 &1105230547
 Transform:
   m_ObjectHideFlags: 0
@@ -2437,6 +2498,9 @@ MonoBehaviour:
   m_thoughtChipPrefab: {fileID: 5424012295250041404, guid: 1781ef73a9aaf0f4d8efa72daf9844e2,
     type: 3}
   m_StartSignal: {fileID: 1031616749}
+  m_OnOpeningEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &1302312017 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5807815820376534060, guid: 364fd6cd014ce5e49a7e2b2a006e48c0,
@@ -3285,6 +3349,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1105230542}
+        m_TargetAssemblyTypeName: RoundManager, Assembly-CSharp
+        m_MethodName: EndOfVisitor
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1512330763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4014,3 +4090,4 @@ SceneRoots:
   - {fileID: 133173079}
   - {fileID: 1455427626}
   - {fileID: 1105230547}
+  - {fileID: 382596335}

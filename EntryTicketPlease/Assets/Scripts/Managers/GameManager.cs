@@ -45,6 +45,7 @@ public class GameManager : SingletonMB<GameManager>
         GenerateRound(currentData.currentDay);
         VerificationAlgo.UpdateAlgorithm(roundData);
         VisitorsManager.Instance.CreateQueue(roundData.queueLength);
+        VisitorsManager.Instance.SpawnVisitors();
 
         BeginRound.Invoke(roundData);
     }

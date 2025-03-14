@@ -9,6 +9,10 @@ public class RoundManager : SingletonMB<RoundManager>
     [SerializeField] RoundOpening m_roundOpening;
     [SerializeField] ClockScript m_clock;
 
+    [SerializeField] bool roundEnded;
+
+
+    [SerializeField] private int succeededVisitors;
     public UnityEvent<RoundData> OnStartRound { get; private set; } = new();
 
     #endregion
@@ -65,7 +69,52 @@ public class RoundManager : SingletonMB<RoundManager>
 
     void StartRound()
     {
-        m_clock.gameObject.SetActive(true);
+        succeededVisitors = 0;
+        //m_clock.gameObject.SetActive(true);
+        
+        
+    }
+
+    void WinCheck()
+    {
+        roundEnded = true;
+        int queueSize = VisitorsManager.Instance.GetQueueSize();
+        if (queueSize == 0)
+        {
+            Debug.LogWarning("La file de visiteurs est vide !");
+            return;
+        }
+
+        int percentage = (succeededVisitors * 100) / queueSize;
+
+       
+        int starsAmount = 0;
+        if (percentage == 100) starsAmount = 3; 
+        else if (percentage >= 70) starsAmount = 2;  
+        else if (percentage >= 30) starsAmount = 1;  
+        else starsAmount = 0;  
+
+        Debug.Log($"Performance : {percentage}% - Étoiles obtenues : {starsAmount}");
+    }
+
+    public void EndOfVisitor(bool isAllowed)
+    {
+        if (roundEnded) return;
+
+      
+        bool isValid = VisitorsManager.Instance.CheckValidityCurrentVisitor();
+        Debug.Log( isValid );
+        if (isValid == isAllowed)
+        {
+            succeededVisitors += 1;
+        }
+
+        bool roundContinue =VisitorsManager.Instance.NextVisitor();
+
+        if (!roundContinue)
+        {
+            WinCheck();
+        }
     }
 
     #endregion
