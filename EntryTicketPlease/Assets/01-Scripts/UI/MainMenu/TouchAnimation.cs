@@ -1,24 +1,29 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class TouchAnimation : MonoBehaviour
+public class ClickParticles : MonoBehaviour
 {
-    [SerializeField] GameObject touchEffectPrefab;
-    [SerializeField] Canvas canvas;
+    [SerializeField] private ParticleSystem particleEffect;
+    [SerializeField] private Camera uiCamera; // Assigne ta caméra ici
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Fonctionne aussi pour les écrans tactiles
+        if (Input.GetMouseButtonDown(0))
         {
-            Vector2 touchPosition = Input.mousePosition;
-            SpawnEffect(touchPosition);
+            Vector3 worldPosition = GetWorldPositionFromUI(Input.mousePosition);
+            SpawnEffect(worldPosition);
         }
     }
 
-    void SpawnEffect(Vector2 position)
+    private Vector3 GetWorldPositionFromUI(Vector3 uiPosition)
     {
-        GameObject effect = Instantiate(touchEffectPrefab, canvas.transform);
-        effect.transform.position = position;
-        Destroy(effect, 1f); // Détruit l'effet après 1 seconde (modifiable)
+        uiPosition.z = uiCamera.nearClipPlane + 1f; // Ajuste la profondeur pour voir les particules
+        return uiCamera.ScreenToWorldPoint(uiPosition);
+    }
+
+    private void SpawnEffect(Vector3 position)
+    {
+        ParticleSystem effect = Instantiate(particleEffect, position, Quaternion.identity);
+        effect.Play();
+        Destroy(effect.gameObject, 2f); // Détruit l'effet après 2s
     }
 }
