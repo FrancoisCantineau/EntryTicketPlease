@@ -6,18 +6,21 @@ using UnityEngine.Analytics;
 
 public class Visitor : MonoBehaviour
 {
+    [SerializeField] public GameObject prefab;
 
-    public bool isAllowed;
+    private bool isAllowed;
+    
+
     [System.Serializable] // Visitor's ID struct containing all infos for ID
     public struct VisitorID
     {
-        private string name;
-        private int age;
-        private float height;
-        private float weight;
-        private string genre;
+        [SerializeField] private string name;
+        [SerializeField] private int age;
+        [SerializeField] private float height;
+        [SerializeField] private float weight;
+        [SerializeField] public Gender genre;
 
-        public VisitorID(string m_name, int m_age, float m_height, float m_weight, string m_genre)//Constructor
+        public VisitorID(string m_name, int m_age, float m_height, float m_weight, Gender m_genre)//Constructor
         {
             this.name = m_name;
             this.age = m_age;
@@ -47,7 +50,7 @@ public class Visitor : MonoBehaviour
             get { return weight; }
         }
 
-        public string Genre
+        public Gender Gender
         {
             get { return genre; }
         }
@@ -112,7 +115,17 @@ public class Visitor : MonoBehaviour
     public void Initialize(VisitorID m_id, VisitorTicket m_ticket)
     {
         ticket = m_ticket;
-        id = m_id;   
+        id = m_id;
+       
+    }
+    public bool GetIsAllowed()
+    {
+        return isAllowed;
+    }
+
+    public void SetPrefab(GameObject m_prefab)
+    {
+        prefab = m_prefab;
     }
 
 }
