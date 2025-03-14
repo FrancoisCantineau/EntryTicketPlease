@@ -17,12 +17,37 @@ public class RoundManager : SingletonMB<RoundManager>
     private void OnEnable()
     {
         Debug.Log("RoundManagerEnabled");
-        GameManager.Instance.BeginRound.AddListener(OpenRound);
+
+
+        if (GameManager.Instance != null)
+        {
+
+            GameManager.Instance.BeginRound.AddListener(OpenRound);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager.Instance is null. Cannot add listener to BeginRound.");
+        }
+
+        
+
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.BeginRound.RemoveListener(OpenRound);
+
+        if (GameManager.Instance != null)
+        {
+
+            GameManager.Instance.BeginRound.RemoveListener(OpenRound);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager.Instance is null. Cannot add listener to BeginRound.");
+        }
+
+       
+
     }
 
     #endregion

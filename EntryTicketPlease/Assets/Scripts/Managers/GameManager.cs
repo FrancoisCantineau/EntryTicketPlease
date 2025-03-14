@@ -43,6 +43,7 @@ public class GameManager : SingletonMB<GameManager>
 
     void InitGame()
     {
+
         currentData = SaveManager.Instance.FetchGameData();
         GenerateRound(currentData.currentDay);
         VerificationAlgo.UpdateAlgorithm(roundData);
@@ -61,7 +62,7 @@ public class GameManager : SingletonMB<GameManager>
     void GenerateRound(int currentDay)
     {
         roundData = RoundData.Default(currentData.currentDate);
-        Random.InitState(currentDay);
+        Random.InitState(10);
 
         // Modifier occasionnellement l'heure de départ et l'heure de fin
         bool changeBegin = Random.Range(0f, 1f) < 0.2f;
@@ -129,6 +130,27 @@ public class GameManager : SingletonMB<GameManager>
         if (roundData.notice.kidsNotAllowedAfterHourEnabled)
         {
             roundData.notice.kidsNotAllowedAfterHour = Random.Range(12, 18);
+        }
+
+        //Prix pour enfants
+        roundData.priceGrid.childrenPriceModifEnabled = Random.Range(0f, 1f) < 0.2f;
+        if (roundData.priceGrid.childrenPriceModifEnabled)
+        {
+            roundData.priceGrid.childrenPrice = Random.Range(8, 12);
+        }
+
+        //Prix pour ados
+        roundData.priceGrid.teensPriceModifEnabled = Random.Range(0f, 1f) < 0.2f;
+        if (roundData.priceGrid.teensPriceModifEnabled)
+        {
+            roundData.priceGrid.teensPrice = Random.Range(13, 17);
+        }
+
+        //Prix pour adultes
+        roundData.priceGrid.adultsPriceModifEnabled = Random.Range(0f, 1f) < 0.2f;
+        if (roundData.priceGrid.adultsPriceModifEnabled)
+        {
+            roundData.priceGrid.adultsPrice = Random.Range(18, 22);
         }
 
         // Gérer la fermeture d'une section
