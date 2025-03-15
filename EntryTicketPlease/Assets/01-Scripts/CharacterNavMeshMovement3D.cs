@@ -26,11 +26,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     [Header("Table")]
     public Transform tableTransform;
 
-    [Header("Draggable Zone")]
-    public RectTransform noDragZone;
-
-    [Header("Canvas")]
-    public Canvas worldSpaceCanvas;
+    // Plus besoin de déclarer noDragZone comme public
+    private RectTransform noDragZone;
+    private Canvas worldSpaceCanvas;
 
     private Vector3 targetPosition;
     private NavMeshAgent navAgent;
@@ -58,12 +56,44 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             return;
         }
 
-        if (worldSpaceCanvas == null || worldSpaceCanvas.renderMode != RenderMode.WorldSpace)
+        // Recherche du Canvas par nom spécifique
+        GameObject canvasObj = GameObject.Find("Zone"); // Nom exact du Canvas dans la scène
+        if (canvasObj != null)
         {
-            Debug.LogError("Canvas en World Space non assigné ou incorrect !");
+            worldSpaceCanvas = canvasObj.GetComponent<Canvas>();
+            if (worldSpaceCanvas == null || worldSpaceCanvas.renderMode != RenderMode.WorldSpace)
+            {
+                Debug.LogError("L'objet 'WorldCanvas' n’est pas un Canvas en mode WorldSpace !");
+                enabled = false;
+                return;
+            }
+        }
+        else
+        {
+            Debug.LogError("Aucun objet nommé 'WorldCanvas' trouvé dans la scène !");
             enabled = false;
             return;
         }
+        Debug.Log("Canvas WorldSpace trouvé : " + worldSpaceCanvas.name);
+
+        // Recherche de NoDragZone par nom spécifique
+        GameObject noDragObj = GameObject.Find("NoDragZone"); // Nom exact de l'objet dans la scène
+        if (noDragObj != null)
+        {
+            noDragZone = noDragObj.GetComponent<RectTransform>();
+            if (noDragZone == null)
+            {
+                Debug.LogError("L'objet 'NoDragZone' n’a pas de RectTransform !");
+                enabled = false;
+                return;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Aucun objet nommé 'NoDragZone' trouvé dans la scène !");
+            // Pas d'arrêt du script ici, car noDragZone est optionnel
+        }
+        if (noDragZone != null) Debug.Log("NoDragZone trouvé : " + noDragZone.name);
 
         if (validateButton == null)
         {
@@ -74,13 +104,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         {
             GameObject refuseObj = GameObject.Find("Refuser");
             if (refuseObj != null) refuseButton = refuseObj.GetComponent<UnityEngine.UI.Button>();
-        }
-
-        if (noDragZone == null)
-        {
-            GameObject noDragObj = GameObject.Find("NoDragZone");
-            if (noDragObj != null) noDragZone = noDragObj.GetComponent<RectTransform>();
-            if (noDragZone == null) Debug.LogWarning("NoDragZone non trouvé dans la scène !");
         }
 
         navAgent.updateRotation = false;
@@ -117,10 +140,10 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(navAgent.velocity.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
-        else if (!isMoving) // Réactiver la rotation vers la caméra
+        else if (!isMoving) // Rotation vers la caméra
         {
             Vector3 directionToCamera = (mainCamera.transform.position - transform.position).normalized;
-            directionToCamera.y = 0; // Ignorer l'axe Y pour éviter une inclinaison verticale
+            directionToCamera.y = 0;
             if (directionToCamera != Vector3.zero)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(directionToCamera, Vector3.up);
