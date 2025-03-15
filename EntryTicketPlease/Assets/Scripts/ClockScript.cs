@@ -8,7 +8,7 @@ public class ClockScript : MonoBehaviour
 {
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
-    [SerializeField] TextMeshProUGUI calandar;
+    [SerializeField] TextMeshPro calandar;
     [SerializeField] int duration;
     [SerializeField] int startHour;
     [SerializeField] int endHour;
