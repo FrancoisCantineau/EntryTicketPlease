@@ -16,37 +16,43 @@ public class WinLoseText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bool isWin = PlayerPrefs.GetString("isWin").ToLower().Equals("true");
+        int starsAmount = PlayerPrefs.GetInt("starAmount");
 
-        
+        displayEndDayUI(isWin, starsAmount);
     }
 
     // Update is called once per frame
-    void Update()
+   
+    
+    public void displayEndDayUI(bool m_isWinning,int m_nbStars)
     {
-        
-    }
+   
+        isWinning = m_isWinning;
+        nbStars = m_nbStars;
 
-    public void displayEndDayText(bool isWinning,int nbstars)
-    {
         star1.enabled = false;
         star2.enabled = false;
         star3.enabled = false;
         if (isWinning)
         {
             winLosetext.text = "You Win";
-            switch (nbStars)
+            switch (m_nbStars)
             {
                 case 1:
                     star1.enabled = true;
+                    
                     break;
                 case 2:
                     star1.enabled = true;
                     star2.enabled = true;
+                   
                     break;
                 case 3:
                     star1.enabled = true;
                     star2.enabled = true;
                     star3.enabled = true;
+                   
                     break;
             }
         }

@@ -76,12 +76,12 @@ public class ClockScript : MonoBehaviour
             if (GameTime.Hour > endHour - timewarnning && !isTimeLow)
             {
                 isTimeLow = true;
-                timeLowObject?.SetActive(true);
+                //timeLowObject?.SetActive(true);
                 AlmostFinished.Invoke(timewarnning);
             }
         }
         Finished.Invoke();
-        timesUpObject.SetActive(true);
+        //timesUpObject.SetActive(true);
     }
 
 

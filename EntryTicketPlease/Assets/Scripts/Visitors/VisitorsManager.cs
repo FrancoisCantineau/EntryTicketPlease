@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Analytics;
 using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 
@@ -15,13 +16,15 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     private string ticketName;
     private int ticketPrice;
 
-    private GameObject currentVisitor;
+    [SerializeField] private GameObject currentVisitor;
 
     public Transform spawnPoint;
 
     private string[] menNames = { "Bastien", "Mathias", "Francois", "Clement" };
     private string[] womenNames = { "Lucie", "Julie", "Marion", "Celine" };
     private char[] sections = { 'A', 'B', 'C'};
+
+    
 
     [SerializeField] private CharacterData characterData;
 
@@ -72,16 +75,23 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         return currentVisitor;
     }
 
+    public int GetQueueSize()
+    {
+        return visitorQueue.Count;
+    }
 
-    public void NextVisitor()
+
+    public bool  NextVisitor()
     {
         if (currentVisitorIndex < visitorQueue.Count)
         {
             SpawnVisitors();
+            return true;
         }
         else
         {
             Debug.Log("Aucun autre visiteur dans la queue.");
+            return false;
         }
     }
     
@@ -190,7 +200,6 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         visitorQueue.Add(addedVisitor);
 
         Destroy(newVisitorObject);
-        SpawnVisitors();
     }
 
 
@@ -244,13 +253,16 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     /// </summary>
     public void SpawnVisitors()
     {
+       
         if (visitorQueue.Count > 0)
         {
-
+    
             if (currentVisitorIndex < visitorQueue.Count)
             {
+               
                 if (spawnPoint != null)
                 {
+                  
 
                     Visitor visitorToSpawn = visitorQueue[currentVisitorIndex];
 
@@ -264,9 +276,13 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
                     newVisitor.Initialize(visitorToSpawn.id, visitorToSpawn.ticket);
                     newVisitor.SetPrefab(visitorToSpawn.prefab);
 
+                    newVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    newVisitor.AddComponent<NavMeshAgent>();
+
                     currentVisitor = currentVisit;
 
-                    CheckValidityCurrentVisitor();
+                    currentVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    currentVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitorIndex++;
                 }

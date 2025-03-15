@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,9 @@ public class GameManager : SingletonMB<GameManager>
     #region VARIABLES ----------------------------------------------------------------
     SaveData currentData;
     RoundData roundData;
+
+    [SerializeField] GameObject dontdestroy;
+
     public static RoundData CurrentRoundData { get => Instance.roundData; }
 
     [SerializeField] ClockScript m_clock;
@@ -16,14 +20,17 @@ public class GameManager : SingletonMB<GameManager>
     // Start is called before the first frame update
     void Start()
     {
+        //DontDestroyOnLoad(dontdestroy);
         currentData = SaveManager.Instance.FetchGameData();
         InitGame();
 
     }
+  
 
     private void OnEnable()
     {
         m_clock.Finished.AddListener(OnRoundTerminated);
+        
     }
     #endregion
     #region API -------------------------------------------------------------------------
@@ -48,14 +55,16 @@ public class GameManager : SingletonMB<GameManager>
         GenerateRound(currentData.currentDay);
         VerificationAlgo.UpdateAlgorithm(roundData);
         VisitorsManager.Instance.CreateQueue(roundData.queueLength);
+        VisitorsManager.Instance.SpawnVisitors();
 
         BeginRound.Invoke(roundData);
     }
 
-    void OnRoundTerminated()
+    public void OnRoundTerminated()
     {
         EndRound.Invoke();
         SceneManager.LoadScene("L_Mato_endDayScene", LoadSceneMode.Single);
+        
     }
 
 
