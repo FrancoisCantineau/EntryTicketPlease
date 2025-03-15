@@ -74,7 +74,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     {
         return currentVisitor;
     }
-
+   
     public int GetQueueSize()
     {
         return visitorQueue.Count;
