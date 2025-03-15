@@ -23,7 +23,7 @@ public class RoundManager : SingletonMB<RoundManager>
     #region LIFECYCLE ----------------------------------------------------------------
     void Start()
     {
-        
+
     }
     private void OnEnable()
     {
@@ -40,7 +40,7 @@ public class RoundManager : SingletonMB<RoundManager>
             Debug.LogWarning("GameManager.Instance is null. Cannot add listener to BeginRound.");
         }
 
-        
+
 
     }
 
@@ -57,7 +57,7 @@ public class RoundManager : SingletonMB<RoundManager>
             Debug.LogWarning("GameManager.Instance is null. Cannot add listener to BeginRound.");
         }
 
-       
+
 
     }
 
@@ -70,7 +70,7 @@ public class RoundManager : SingletonMB<RoundManager>
 
     void OpenRound(RoundData roundData)
     {
-      
+
 
         m_roundOpening.gameObject.SetActive(true);
         m_roundOpening.m_OnOpeningEnd.AddListener(StartRound);
@@ -78,7 +78,7 @@ public class RoundManager : SingletonMB<RoundManager>
 
     void StartRound()
     {
-        
+
 
         succeededVisitors = 0;
 
@@ -102,11 +102,12 @@ public class RoundManager : SingletonMB<RoundManager>
 
         roundEnded = true;
 
-        if (needCalculus) {
+        if (needCalculus)
+        {
 
             isWin = true;
 
-            int queueSize = VisitorsManager.Instance.GetQueueSize();       
+            int queueSize = VisitorsManager.Instance.GetQueueSize();
 
             int percentage = (succeededVisitors * 100) / queueSize;
 
@@ -126,7 +127,7 @@ public class RoundManager : SingletonMB<RoundManager>
         {
             isWin = false;
         }
-   
+
         winLoseText.displayEndDayUI(isWin, starsAmount);
 
     }
@@ -135,15 +136,15 @@ public class RoundManager : SingletonMB<RoundManager>
     {
         if (roundEnded) return;
 
-      
+
         bool isValid = VisitorsManager.Instance.CheckValidityCurrentVisitor();
-        Debug.Log( isValid );
+        Debug.Log(isValid);
         if (isValid == isAllowed)
         {
             succeededVisitors += 1;
         }
 
-        bool roundContinue =VisitorsManager.Instance.NextVisitor();
+        bool roundContinue = VisitorsManager.Instance.NextVisitor();
 
         if (!roundContinue)
         {
@@ -158,7 +159,7 @@ public class RoundManager : SingletonMB<RoundManager>
 }
 
 
- #region VARIABLES ----------------------------------------------------------------
+#region VARIABLES ----------------------------------------------------------------
 
 
 #endregion
@@ -175,4 +176,4 @@ public class RoundManager : SingletonMB<RoundManager>
 #endregion
 #region EVENTS -------------------------------------------------------------------
 
-#endregion 
+#endregion

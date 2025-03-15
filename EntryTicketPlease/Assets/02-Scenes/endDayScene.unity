@@ -166,12 +166,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &127787929 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 9114998223121500987, guid: a015c4cae0d63fe41b84ec2128f24b67,
-    type: 3}
-  m_PrefabInstance: {fileID: 1650148095}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &454783877
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,8 +275,7 @@ MonoBehaviour:
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
-  m_Cameras:
-  - {fileID: 127787929}
+  m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
@@ -804,7 +797,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6508660678351303695, guid: a015c4cae0d63fe41b84ec2128f24b67,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2042588054}
   m_SourcePrefab: {fileID: 100100000, guid: a015c4cae0d63fe41b84ec2128f24b67, type: 3}
 --- !u!1 &1832480725
 GameObject:
@@ -904,7 +901,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 681740326}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1015,7 +1012,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 280811953}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1635880430665793330, guid: dd80b2c25724ca2469a29a84899c7078,
         type: 3}
@@ -1150,31 +1147,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f36fb2f91fcc3f4da798e50cc5c105c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winLoseText: {fileID: 1826206203}
-  logo: {fileID: 1638230564}
+  audioSource: {fileID: 0}
+  starAppearSound: {fileID: 0}
+  bigConfettiMusic: {fileID: 0}
+  winLoseText: {fileID: 0}
+  logo: {fileID: 0}
   stars:
-  - {fileID: 467544990}
-  - {fileID: 1087328328}
-  - {fileID: 496112385}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   animationDuration: 0.5
   starShakeInterval: 1
   confettiFX: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa,
     type: 3}
   bigConfettiFX: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa,
     type: 3}
-  bigConfettiSpawnPoint: {fileID: 1638230564}
---- !u!114 &2066420496 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1120660409061948911, guid: 97f0d4bd21b4b984da7a4913ad502bb4,
-    type: 3}
-  m_PrefabInstance: {fileID: 195616609}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  bigConfettiSpawnPoint: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1184,3 +1172,5 @@ SceneRoots:
   - {fileID: 1832480728}
   - {fileID: 1650148095}
   - {fileID: 108998468}
+  - {fileID: 2024204243}
+  - {fileID: 1860285263}
