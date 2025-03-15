@@ -45,7 +45,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     public UnityEngine.UI.Button validateButton;
     public UnityEngine.UI.Button refuseButton;
 
-    void Start()
+    void OnEnable()
     {
         navAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
