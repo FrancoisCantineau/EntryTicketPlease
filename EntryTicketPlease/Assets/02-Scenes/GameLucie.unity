@@ -2010,7 +2010,7 @@ MonoBehaviour:
   adultsMinAge: 18
   adultsMaxAge: 80
   queueLengthByShiftLengthFactor: 1.5
-  hourDurationSeconds: 1
+  hourDurationSeconds: 50
 --- !u!4 &1105230547
 Transform:
   m_ObjectHideFlags: 0
