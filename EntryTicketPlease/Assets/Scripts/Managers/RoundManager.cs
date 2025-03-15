@@ -142,6 +142,8 @@ public class RoundManager : SingletonMB<RoundManager>
 
     public void EndOfVisitor(bool isAllowed)
     {
+        Debug.Log("Visitor spawned");
+
         if (roundEnded) return;
 
 

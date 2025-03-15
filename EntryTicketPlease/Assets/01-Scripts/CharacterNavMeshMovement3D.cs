@@ -38,6 +38,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     private bool isMoving = false;
     private bool hasReachedInitialTarget = false;
     private bool hasProcessedDecision = false;
+    private bool hasSpawnedTickets = false; // Nouveau drapeau pour éviter plusieurs spawns de tickets
 
     private GameObject currentSpriteObj;
     private List<GameObject> spawnedTickets = new List<GameObject>();
@@ -72,7 +73,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             enabled = false;
             return;
         }
-        Debug.Log("Canvas WorldSpace trouvé : " + worldSpaceCanvas.name);
 
         GameObject noDragObj = GameObject.Find("NoDragZone");
         if (noDragObj != null)
@@ -85,11 +85,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 return;
             }
         }
-        else
-        {
-            Debug.LogWarning("Aucun objet nommé 'NoDragZone' trouvé dans la scène !");
-        }
-        if (noDragZone != null) Debug.Log("NoDragZone trouvé : " + noDragZone.name);
 
         GameObject validateObj = GameObject.Find("ValidateButton");
         if (validateObj != null)
@@ -103,7 +98,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             }
             validateButton.onClick.RemoveAllListeners();
             validateButton.onClick.AddListener(OnValidateButton);
-            Debug.Log("Listener ajouté à ValidateButton pour " + gameObject.name);
         }
         else
         {
@@ -124,7 +118,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             }
             refuseButton.onClick.RemoveAllListeners();
             refuseButton.onClick.AddListener(OnRefuseButton);
-            Debug.Log("Listener ajouté à RefuseButton pour " + gameObject.name);
         }
         else
         {
@@ -134,17 +127,13 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
 
         navAgent.updateRotation = false;
-
         if (validateButton != null) validateButton.interactable = false;
         if (refuseButton != null) refuseButton.interactable = false;
 
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(initialTarget, out hit, 10.0f, NavMesh.AllAreas))
-            initialTarget = hit.position;
-        if (NavMesh.SamplePosition(validateTarget, out hit, 10.0f, NavMesh.AllAreas))
-            validateTarget = hit.position;
-        if (NavMesh.SamplePosition(refuseTarget, out hit, 10.0f, NavMesh.AllAreas))
-            refuseTarget = hit.position;
+        if (NavMesh.SamplePosition(initialTarget, out hit, 10.0f, NavMesh.AllAreas)) initialTarget = hit.position;
+        if (NavMesh.SamplePosition(validateTarget, out hit, 10.0f, NavMesh.AllAreas)) validateTarget = hit.position;
+        if (NavMesh.SamplePosition(refuseTarget, out hit, 10.0f, NavMesh.AllAreas)) refuseTarget = hit.position;
 
         targetPosition = initialTarget;
         SetTarget(targetPosition);
@@ -156,21 +145,29 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         if (!isMoving)
         {
-            if (!hasReachedInitialTarget && Vector3.Distance(transform.position, targetPosition) <= stoppingDistance)
+            // Vérifie spécifiquement si le personnage atteint initialTarget
+            if (!hasReachedInitialTarget && Vector3.Distance(transform.position, initialTarget) <= stoppingDistance)
             {
                 hasReachedInitialTarget = true;
                 if (validateButton != null) validateButton.interactable = true;
                 if (refuseButton != null) refuseButton.interactable = true;
-                SpawnTicketsOnTable();
+                if (!hasSpawnedTickets)
+                {
+                    SpawnTicketsOnTable();
+                    hasSpawnedTickets = true; // Empêche de respawn les tickets
+                    Debug.Log("Tickets spawnés à initialTarget pour " + gameObject.name);
+                }
             }
+            // Suppression quand il atteint validateTarget ou refuseTarget
             else if ((Vector3.Distance(transform.position, validateTarget) <= stoppingDistance) ||
                      (Vector3.Distance(transform.position, refuseTarget) <= stoppingDistance))
             {
-                Debug.Log("Suppression de " + gameObject.name);
+                Debug.Log("Suppression de " + gameObject.name + " à validate/refuseTarget");
                 Destroy(gameObject);
                 return;
             }
 
+            // Rotation vers la caméra lorsqu'il est immobile
             Vector3 directionToCamera = (mainCamera.transform.position - transform.position).normalized;
             directionToCamera.y = 0;
             if (directionToCamera != Vector3.zero)
@@ -215,7 +212,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         navAgent.SetDestination(targetPosition);
         isMoving = true;
-        hasReachedInitialTarget = false;
+        // Ne réinitialise pas hasReachedInitialTarget ici, car on veut conserver l'état
     }
 
     private void SpawnTicketsOnTable()
@@ -336,14 +333,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 Debug.LogWarning("RoundManager.Instance est null !");
             }
         }
-        else if (!hasReachedInitialTarget)
-        {
-            Debug.Log("hasReachedInitialTarget est false pour " + gameObject.name);
-        }
-        else if (hasProcessedDecision)
-        {
-            Debug.Log("Décision déjà traitée pour " + gameObject.name);
-        }
     }
 
     public void OnRefuseButton()
@@ -373,14 +362,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             {
                 Debug.LogWarning("RoundManager.Instance est null !");
             }
-        }
-        else if (!hasReachedInitialTarget)
-        {
-            Debug.Log("hasReachedInitialTarget est false pour " + gameObject.name);
-        }
-        else if (hasProcessedDecision)
-        {
-            Debug.Log("Décision déjà traitée pour " + gameObject.name);
         }
     }
 }
