@@ -129,9 +129,12 @@ public class RoundManager : SingletonMB<RoundManager>
             isWin = false;
         }
 
-        winLoseText.displayEndDayUI(isWin, starsAmount);
+        
 
         GameManager.Instance.OnRoundTerminated();
+
+        PlayerPrefs.SetInt("starAmount", starsAmount);
+        PlayerPrefs.SetString("isWin", isWin.ToString());
 
     }
 

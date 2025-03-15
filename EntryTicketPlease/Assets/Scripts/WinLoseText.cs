@@ -16,8 +16,10 @@ public class WinLoseText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bool isWin = PlayerPrefs.GetString("isWin").ToLower().Equals("true");
+        int starsAmount = PlayerPrefs.GetInt("starAmount");
 
-        
+        displayEndDayUI(isWin, starsAmount);
     }
 
     // Update is called once per frame

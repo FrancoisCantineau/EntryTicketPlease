@@ -20,7 +20,7 @@ public class GameManager : SingletonMB<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(dontdestroy);
+        //DontDestroyOnLoad(dontdestroy);
         currentData = SaveManager.Instance.FetchGameData();
         InitGame();
 
