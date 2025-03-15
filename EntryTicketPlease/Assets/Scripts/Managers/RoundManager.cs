@@ -83,6 +83,8 @@ public class RoundManager : SingletonMB<RoundManager>
 
         succeededVisitors = 0;
 
+        m_clock.gameObject.SetActive(true);
+
         m_clock.transform.GetChild(0).gameObject.SetActive(true);
 
         if (m_clockScript != null)
@@ -156,7 +158,7 @@ public class RoundManager : SingletonMB<RoundManager>
         {
             WinCheck(true);
         }
-        m_clock.gameObject.SetActive(true);
+        
         OnStartRound.Invoke(GameManager.CurrentRoundData);
     }
 

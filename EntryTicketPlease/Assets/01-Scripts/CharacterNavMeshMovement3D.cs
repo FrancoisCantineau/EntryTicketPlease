@@ -203,6 +203,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
     private void SetTarget(Vector3 newTarget)
     {
+        Debug.Log(newTarget);
         targetPosition = newTarget;
         NavMeshHit hit;
         if (NavMesh.SamplePosition(newTarget, out hit, 10.0f, NavMesh.AllAreas))
