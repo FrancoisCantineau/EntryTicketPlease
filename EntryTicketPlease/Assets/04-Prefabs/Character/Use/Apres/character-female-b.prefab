@@ -160,7 +160,7 @@ MonoBehaviour:
   idCardPrefab: {fileID: 2883937645465850040, guid: 263a74dd32fb1ab488e012cb318148fb,
     type: 3}
   idCardCount: 1
-  spriteHeight: 1.5
+  spriteHeight: 0.5
   spriteDuration: 2
   ticketSpawnRadius: 0.5
   tableTransform: {fileID: 166648581586935364, guid: e2a5cbf03d3779342a465a2135226f1a,

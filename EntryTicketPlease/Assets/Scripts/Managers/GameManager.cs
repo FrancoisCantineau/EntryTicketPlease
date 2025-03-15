@@ -10,6 +10,8 @@ public class GameManager : SingletonMB<GameManager>
     SaveData currentData;
     RoundData roundData;
 
+    public HeightMeter heightMeter;
+
     [SerializeField] GameObject dontdestroy;
 
     public static RoundData CurrentRoundData { get => Instance.roundData; }
@@ -63,6 +65,7 @@ public class GameManager : SingletonMB<GameManager>
 
     public void OnRoundTerminated()
     {
+        Debug.Log("End");
         EndRound.Invoke();
         StartCoroutine(Outro());
     }
@@ -76,7 +79,7 @@ public class GameManager : SingletonMB<GameManager>
     void GenerateRound(int currentDay)
     {
         roundData = RoundData.Default(currentData.currentDate);
-        Random.InitState(currentDay);
+        Random.InitState(20);
 
         // Modifier occasionnellement l'heure de départ et l'heure de fin
         bool changeBegin = Random.Range(0f, 1f) < 0.2f;
@@ -92,7 +95,7 @@ public class GameManager : SingletonMB<GameManager>
         roundData.shiftLength = roundData.endingHour - roundData.startingHour;
 
 
-        roundData.queueLength = Mathf.RoundToInt(roundData.shiftLength * GameSettings.QueueLengthByShiftLengthFactor);
+        roundData.queueLength = 3;//Mathf.RoundToInt(roundData.shiftLength * GameSettings.QueueLengthByShiftLengthFactor);
 
         // Gérer les incohérences et la fraude
         roundData.incoherencesOdds = Random.Range(0f, .8f); 
@@ -106,6 +109,7 @@ public class GameManager : SingletonMB<GameManager>
         if (roundData.notice.heightLimitEnabled)
         {
             roundData.notice.heightLimit = Random.Range(GameSettings.RulerMinHeightCm, GameSettings.RulerMaxHeightCm);
+            print(roundData.notice.heightLimit);
         }
 
         // extension de validité
@@ -166,6 +170,8 @@ public class GameManager : SingletonMB<GameManager>
         {
             roundData.priceGrid.adultsPrice = Random.Range(18, 22);
         }
+
+        heightMeter.UpdateMeterLimit(roundData.notice.heightLimit, roundData.notice.heightLimitEnabled);
 
         // Gérer la fermeture d'une section
         roundData.closedSection = (ClosedSection)Random.Range(0, 4);

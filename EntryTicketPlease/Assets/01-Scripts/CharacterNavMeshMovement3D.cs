@@ -156,8 +156,8 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 if (!hasSpawnedTickets)
                 {
                     SpawnTicketsOnTable();
-/*                    SpawnIdCardOnTable(); // Ajout de la carte d’identité
-*/                    hasSpawnedTickets = true;
+                  SpawnIdCardOnTable(); // Ajout de la carte d’identité
+                  hasSpawnedTickets = true;
                     Debug.Log("Tickets et ID card spawnés à initialTarget pour " + gameObject.name);
                 }
             }
@@ -263,7 +263,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
     }
 
-  /*  private void SpawnIdCardOnTable()
+    private void SpawnIdCardOnTable()
     {
         if (idCardPrefab == null)
         {
@@ -309,7 +309,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             idCardObj.SetActive(true);
             idCardObj.transform.DOScale(originalScale, 0.5f).SetEase(Ease.OutBack);
         }
-    }*/
+    }
 
     private void ShowSprite(Sprite sprite, Vector3 nextTarget)
     {

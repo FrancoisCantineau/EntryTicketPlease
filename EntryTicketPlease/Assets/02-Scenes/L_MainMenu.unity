@@ -1871,7 +1871,7 @@ PrefabInstance:
     - target: {fileID: 8772396129046626873, guid: a015c4cae0d63fe41b84ec2128f24b67,
         type: 3}
       propertyPath: nextSceneName
-      value: MAIN
+      value: MAINFrancois
       objectReference: {fileID: 0}
     - target: {fileID: 8772396129046626873, guid: a015c4cae0d63fe41b84ec2128f24b67,
         type: 3}
