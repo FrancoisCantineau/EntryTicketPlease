@@ -26,11 +26,10 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     [Header("Table")]
     public Transform tableTransform;
 
-    [Header("Draggable Zone")]
-    public RectTransform noDragZone;
-
-    // Canvas trouvé dans la scène, plus besoin de le déclarer public
+    private RectTransform noDragZone;
     private Canvas worldSpaceCanvas;
+    private UnityEngine.UI.Button validateButton;
+    private UnityEngine.UI.Button refuseButton;
 
     private Vector3 targetPosition;
     private NavMeshAgent navAgent;
@@ -38,12 +37,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     private Camera mainCamera;
     private bool isMoving = false;
     private bool hasReachedInitialTarget = false;
+    private bool hasProcessedDecision = false; // Nouveau drapeau pour éviter les doubles appels
     private GameObject currentSpriteObj;
     private List<GameObject> spawnedTickets = new List<GameObject>();
-
-    [Header("UI")]
-    public UnityEngine.UI.Button validateButton;
-    public UnityEngine.UI.Button refuseButton;
 
     void Start()
     {
@@ -59,42 +55,85 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
 
         // Recherche du Canvas par nom spécifique
-        GameObject canvasObj = GameObject.Find("Zone"); // Nom exact du Canvas dans la scène
+        GameObject canvasObj = GameObject.Find("Zone");
         if (canvasObj != null)
         {
             worldSpaceCanvas = canvasObj.GetComponent<Canvas>();
             if (worldSpaceCanvas == null || worldSpaceCanvas.renderMode != RenderMode.WorldSpace)
             {
-                Debug.LogError("L'objet 'WorldCanvas' n’est pas un Canvas en mode WorldSpace !");
+                Debug.LogError("L'objet 'Zone' n’est pas un Canvas en mode WorldSpace !");
                 enabled = false;
                 return;
             }
         }
         else
         {
-            Debug.LogError("Aucun objet nommé 'WorldCanvas' trouvé dans la scène !");
+            Debug.LogError("Aucun objet nommé 'Zone' trouvé dans la scène !");
             enabled = false;
             return;
         }
         Debug.Log("Canvas WorldSpace trouvé : " + worldSpaceCanvas.name);
 
-        if (validateButton == null)
+        // Recherche de NoDragZone par nom spécifique
+        GameObject noDragObj = GameObject.Find("NoDragZone");
+        if (noDragObj != null)
         {
-            GameObject validateObj = GameObject.Find("Valider");
-            if (validateObj != null) validateButton = validateObj.GetComponent<UnityEngine.UI.Button>();
+            noDragZone = noDragObj.GetComponent<RectTransform>();
+            if (noDragZone == null)
+            {
+                Debug.LogError("L'objet 'NoDragZone' n’a pas de RectTransform !");
+                enabled = false;
+                return;
+            }
         }
-        if (refuseButton == null)
+        else
         {
-            GameObject refuseObj = GameObject.Find("Refuser");
-            if (refuseObj != null) refuseButton = refuseObj.GetComponent<UnityEngine.UI.Button>();
+            Debug.LogWarning("Aucun objet nommé 'NoDragZone' trouvé dans la scène !");
         }
+        if (noDragZone != null) Debug.Log("NoDragZone trouvé : " + noDragZone.name);
 
-        if (noDragZone == null)
+        // Recherche des boutons dans la scène
+        GameObject validateObj = GameObject.Find("ValidateButton");
+        if (validateObj != null)
         {
-            GameObject noDragObj = GameObject.Find("NoDragZone");
-            if (noDragObj != null) noDragZone = noDragObj.GetComponent<RectTransform>();
-            if (noDragZone == null) Debug.LogWarning("NoDragZone non trouvé dans la scène !");
+            validateButton = validateObj.GetComponent<UnityEngine.UI.Button>();
+            if (validateButton == null)
+            {
+                Debug.LogError("L'objet 'ValidateButton' n’a pas de composant Button !");
+                enabled = false;
+                return;
+            }
+            validateButton.onClick.RemoveAllListeners(); // Supprime tout listener existant
+            validateButton.onClick.AddListener(OnValidateButton);
         }
+        else
+        {
+            Debug.LogError("Aucun objet nommé 'ValidateButton' trouvé dans la scène !");
+            enabled = false;
+            return;
+        }
+        Debug.Log("Bouton Valider trouvé : " + validateButton.name);
+
+        GameObject refuseObj = GameObject.Find("RefuseButton");
+        if (refuseObj != null)
+        {
+            refuseButton = refuseObj.GetComponent<UnityEngine.UI.Button>();
+            if (refuseButton == null)
+            {
+                Debug.LogError("L'objet 'RefuseButton' n’a pas de composant Button !");
+                enabled = false;
+                return;
+            }
+            refuseButton.onClick.RemoveAllListeners(); // Supprime tout listener existant
+            refuseButton.onClick.AddListener(OnRefuseButton);
+        }
+        else
+        {
+            Debug.LogError("Aucun objet nommé 'RefuseButton' trouvé dans la scène !");
+            enabled = false;
+            return;
+        }
+        Debug.Log("Bouton Refuser trouvé : " + refuseButton.name);
 
         navAgent.updateRotation = false;
 
@@ -117,21 +156,22 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     {
         isMoving = navAgent.velocity.magnitude > 0.1f && navAgent.remainingDistance > stoppingDistance;
 
-        if (!isMoving && !hasReachedInitialTarget && Vector3.Distance(transform.position, targetPosition) <= stoppingDistance)
+        if (!isMoving)
         {
-            hasReachedInitialTarget = true;
-            if (validateButton != null) validateButton.interactable = true;
-            if (refuseButton != null) refuseButton.interactable = true;
-            SpawnTicketsOnTable();
-        }
+            if (!hasReachedInitialTarget && Vector3.Distance(transform.position, targetPosition) <= stoppingDistance)
+            {
+                hasReachedInitialTarget = true;
+                if (validateButton != null) validateButton.interactable = true;
+                if (refuseButton != null) refuseButton.interactable = true;
+                SpawnTicketsOnTable();
+            }
+            else if ((Vector3.Distance(transform.position, validateTarget) <= stoppingDistance) ||
+                     (Vector3.Distance(transform.position, refuseTarget) <= stoppingDistance))
+            {
+                Destroy(gameObject);
+                return;
+            }
 
-        if (isMoving && navAgent.velocity != Vector3.zero)
-        {
-            Quaternion lookRotation = Quaternion.LookRotation(navAgent.velocity.normalized, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
-        }
-        else if (!isMoving) // Rotation vers la caméra
-        {
             Vector3 directionToCamera = (mainCamera.transform.position - transform.position).normalized;
             directionToCamera.y = 0;
             if (directionToCamera != Vector3.zero)
@@ -139,6 +179,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 Quaternion lookRotation = Quaternion.LookRotation(directionToCamera, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
             }
+        }
+        else if (isMoving && navAgent.velocity != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(navAgent.velocity.normalized, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
 
         UpdateAnimation();
@@ -215,9 +260,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 continue;
             }
 
-            Vector3 originalScale = rectTransform.localScale; // Récupérer l'échelle originale du prefab
-            draggable.SetInitialScale(originalScale); // Définir l'échelle dans DraggableObject
-            ticketObj.transform.localScale = Vector3.zero; // Mettre à zéro pour l'animation
+            Vector3 originalScale = rectTransform.localScale;
+            draggable.SetInitialScale(originalScale);
+            ticketObj.transform.localScale = Vector3.zero;
             ticketObj.SetActive(true);
             ticketObj.transform.DOScale(originalScale, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
             {
@@ -270,8 +315,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
     public void OnValidateButton()
     {
-        if (hasReachedInitialTarget)
+        Debug.Log("Clicked Valider");
+
+        if (hasReachedInitialTarget && !hasProcessedDecision)
         {
+            hasProcessedDecision = true; // Empêche les doubles appels
             DestroySpawnedTickets();
             if (validateSprites != null && validateSprites.Length > 0)
             {
@@ -282,13 +330,34 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             {
                 SetTarget(validateTarget);
             }
+
+            if (RoundManager.Instance != null)
+            {
+                RoundManager.Instance.EndOfVisitor(true);
+                Debug.Log("EndOfVisitor(true) appelé pour Valider");
+            }
+            else
+            {
+                Debug.LogWarning("RoundManager.Instance est null !");
+            }
+        }
+        else if (!hasReachedInitialTarget)
+        {
+            Debug.Log("hasReachedInitialTarget est false, clic ignoré.");
+        }
+        else if (hasProcessedDecision)
+        {
+            Debug.Log("Décision déjà traitée, clic ignoré.");
         }
     }
 
     public void OnRefuseButton()
     {
-        if (hasReachedInitialTarget)
+        Debug.Log("Clicked Refuser");
+
+        if (hasReachedInitialTarget && !hasProcessedDecision)
         {
+            hasProcessedDecision = true; // Empêche les doubles appels
             DestroySpawnedTickets();
             if (refuseSprites != null && refuseSprites.Length > 0)
             {
@@ -299,6 +368,24 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             {
                 SetTarget(refuseTarget);
             }
+
+            if (RoundManager.Instance != null)
+            {
+                RoundManager.Instance.EndOfVisitor(false);
+                Debug.Log("EndOfVisitor(false) appelé pour Refuser");
+            }
+            else
+            {
+                Debug.LogWarning("RoundManager.Instance est null !");
+            }
+        }
+        else if (!hasReachedInitialTarget)
+        {
+            Debug.Log("hasReachedInitialTarget est false, clic ignoré.");
+        }
+        else if (hasProcessedDecision)
+        {
+            Debug.Log("Décision déjà traitée, clic ignoré.");
         }
     }
 }
