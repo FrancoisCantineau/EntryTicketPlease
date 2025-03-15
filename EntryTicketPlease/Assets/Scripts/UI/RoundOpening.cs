@@ -120,13 +120,13 @@ public class RoundOpening : MonoBehaviour
             yield return null;
         }
 
-        // Début de l'effet Depth of Field
-        if (depthOfField != null)
-        {
-            DOTween.To(() => depthOfField.focusDistance.value,
-                       x => depthOfField.focusDistance.value = x,
-                       0f, 1f);
-        }
+        //// Début de l'effet Depth of Field
+        //if (depthOfField != null)
+        //{
+        //    DOTween.To(() => depthOfField.focusDistance.value,
+        //               x => depthOfField.focusDistance.value = x,
+        //               0f, 1f);
+        //}
 
         time += Time.deltaTime;
         foreach (string thought in thoughts)
@@ -146,6 +146,7 @@ public class RoundOpening : MonoBehaviour
         }
 
         var ExitPosition = new Vector3(CenterPosition.x + 1300, CenterPosition.y, CenterPosition.z);
+        time = 0;
         while (time < duration)
         {
             transform.position = Vector3.Lerp(CenterPosition, ExitPosition, time / duration);
@@ -160,6 +161,7 @@ public class RoundOpening : MonoBehaviour
         StartCoroutine(AnimateStartSignalWave());
 
         transform.position = CenterPosition;
+        gameObject.SetActive(false);
     }
 
 

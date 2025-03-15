@@ -51,6 +51,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
 
+        //Validation checks
         if (navAgent == null || animator == null || mainCamera == null || ticketPrefab == null)
         {
             Debug.LogError("Composants essentiels manquants !");
@@ -97,8 +98,17 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             refuseTarget = hit.position;
 
         targetPosition = initialTarget;
+    }
+
+    private void OnEnable()
+    {
+        RoundManager.Instance.OnStartRound.AddListener(OnBegin);
+    }
+    void OnBegin(RoundData data)
+    {
         SetTarget(targetPosition);
     }
+
 
     void Update()
     {
