@@ -37,7 +37,8 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     private Camera mainCamera;
     private bool isMoving = false;
     private bool hasReachedInitialTarget = false;
-    private bool hasProcessedDecision = false; // Nouveau drapeau pour éviter les doubles appels
+    private bool hasProcessedDecision = false;
+
     private GameObject currentSpriteObj;
     private List<GameObject> spawnedTickets = new List<GameObject>();
 
@@ -49,12 +50,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         if (navAgent == null || animator == null || mainCamera == null || ticketPrefab == null)
         {
-            Debug.LogError("Composants essentiels manquants !");
+            Debug.LogError("Composants essentiels manquants sur " + gameObject.name + " !");
             enabled = false;
             return;
         }
 
-        // Recherche du Canvas par nom spécifique
         GameObject canvasObj = GameObject.Find("Zone");
         if (canvasObj != null)
         {
@@ -74,7 +74,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
         Debug.Log("Canvas WorldSpace trouvé : " + worldSpaceCanvas.name);
 
-        // Recherche de NoDragZone par nom spécifique
         GameObject noDragObj = GameObject.Find("NoDragZone");
         if (noDragObj != null)
         {
@@ -92,7 +91,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
         if (noDragZone != null) Debug.Log("NoDragZone trouvé : " + noDragZone.name);
 
-        // Recherche des boutons dans la scène
         GameObject validateObj = GameObject.Find("ValidateButton");
         if (validateObj != null)
         {
@@ -103,8 +101,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 enabled = false;
                 return;
             }
-            validateButton.onClick.RemoveAllListeners(); // Supprime tout listener existant
+            validateButton.onClick.RemoveAllListeners();
             validateButton.onClick.AddListener(OnValidateButton);
+            Debug.Log("Listener ajouté à ValidateButton pour " + gameObject.name);
         }
         else
         {
@@ -112,7 +111,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             enabled = false;
             return;
         }
-        Debug.Log("Bouton Valider trouvé : " + validateButton.name);
 
         GameObject refuseObj = GameObject.Find("RefuseButton");
         if (refuseObj != null)
@@ -124,8 +122,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 enabled = false;
                 return;
             }
-            refuseButton.onClick.RemoveAllListeners(); // Supprime tout listener existant
+            refuseButton.onClick.RemoveAllListeners();
             refuseButton.onClick.AddListener(OnRefuseButton);
+            Debug.Log("Listener ajouté à RefuseButton pour " + gameObject.name);
         }
         else
         {
@@ -133,7 +132,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             enabled = false;
             return;
         }
-        Debug.Log("Bouton Refuser trouvé : " + refuseButton.name);
 
         navAgent.updateRotation = false;
 
@@ -168,6 +166,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             else if ((Vector3.Distance(transform.position, validateTarget) <= stoppingDistance) ||
                      (Vector3.Distance(transform.position, refuseTarget) <= stoppingDistance))
             {
+                Debug.Log("Suppression de " + gameObject.name);
                 Destroy(gameObject);
                 return;
             }
@@ -203,7 +202,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
     private void SetTarget(Vector3 newTarget)
     {
-        Debug.Log(newTarget);
         targetPosition = newTarget;
         NavMeshHit hit;
         if (NavMesh.SamplePosition(newTarget, out hit, 10.0f, NavMesh.AllAreas))
@@ -245,7 +243,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             if (noDragZone != null)
             {
                 draggable.noDragZone = noDragZone;
-                Debug.Log("NoDragZone assigné au ticket à : " + ticketObj.transform.position);
             }
 
             Image image = ticketObj.GetComponent<Image>();
@@ -265,10 +262,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             draggable.SetInitialScale(originalScale);
             ticketObj.transform.localScale = Vector3.zero;
             ticketObj.SetActive(true);
-            ticketObj.transform.DOScale(originalScale, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
-            {
-                Debug.Log("Animation terminée pour ticket à : " + ticketObj.transform.position + " échelle finale : " + ticketObj.transform.localScale);
-            });
+            ticketObj.transform.DOScale(originalScale, 0.5f).SetEase(Ease.OutBack);
         }
     }
 
@@ -311,16 +305,16 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             }
         }
         spawnedTickets.Clear();
-        Debug.Log("Tous les tickets spawnés ont été supprimés.");
+        Debug.Log("Tous les tickets spawnés ont été supprimés pour " + gameObject.name);
     }
 
     public void OnValidateButton()
     {
-        Debug.Log("Clicked Valider");
+        Debug.Log("Clicked Valider par " + gameObject.name);
 
         if (hasReachedInitialTarget && !hasProcessedDecision)
         {
-            hasProcessedDecision = true; // Empêche les doubles appels
+            hasProcessedDecision = true;
             DestroySpawnedTickets();
             if (validateSprites != null && validateSprites.Length > 0)
             {
@@ -335,7 +329,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             if (RoundManager.Instance != null)
             {
                 RoundManager.Instance.EndOfVisitor(true);
-                Debug.Log("EndOfVisitor(true) appelé pour Valider");
+                Debug.Log("EndOfVisitor(true) appelé par " + gameObject.name);
             }
             else
             {
@@ -344,21 +338,21 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
         else if (!hasReachedInitialTarget)
         {
-            Debug.Log("hasReachedInitialTarget est false, clic ignoré.");
+            Debug.Log("hasReachedInitialTarget est false pour " + gameObject.name);
         }
         else if (hasProcessedDecision)
         {
-            Debug.Log("Décision déjà traitée, clic ignoré.");
+            Debug.Log("Décision déjà traitée pour " + gameObject.name);
         }
     }
 
     public void OnRefuseButton()
     {
-        Debug.Log("Clicked Refuser");
+        Debug.Log("Clicked Refuser par " + gameObject.name);
 
         if (hasReachedInitialTarget && !hasProcessedDecision)
         {
-            hasProcessedDecision = true; // Empêche les doubles appels
+            hasProcessedDecision = true;
             DestroySpawnedTickets();
             if (refuseSprites != null && refuseSprites.Length > 0)
             {
@@ -373,7 +367,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             if (RoundManager.Instance != null)
             {
                 RoundManager.Instance.EndOfVisitor(false);
-                Debug.Log("EndOfVisitor(false) appelé pour Refuser");
+                Debug.Log("EndOfVisitor(false) appelé par " + gameObject.name);
             }
             else
             {
@@ -382,11 +376,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
         else if (!hasReachedInitialTarget)
         {
-            Debug.Log("hasReachedInitialTarget est false, clic ignoré.");
+            Debug.Log("hasReachedInitialTarget est false pour " + gameObject.name);
         }
         else if (hasProcessedDecision)
         {
-            Debug.Log("Décision déjà traitée, clic ignoré.");
+            Debug.Log("Décision déjà traitée pour " + gameObject.name);
         }
     }
 }
