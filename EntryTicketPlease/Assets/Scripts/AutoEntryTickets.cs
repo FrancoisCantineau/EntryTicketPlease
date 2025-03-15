@@ -23,11 +23,10 @@ public class AutoEntryTickets : MonoBehaviour
     private void changeTextDynamic()
     {
         Visitor.VisitorTicket ticket = VisitorsManager.Instance.GetVisitor().GetComponent<Visitor>().ticket;
-        prenom.GetComponent<TextMeshProUGUI>().text = ticket.TicketName;
-        section.GetComponent<TextMeshProUGUI>().text = ticket.Section.ToString();
+        prenom.GetComponent<TextMeshProUGUI>().SetText(ticket.TicketName);
+        section.GetComponent<TextMeshProUGUI>().SetText(ticket.Section.ToString());
         prix.GetComponent<TextMeshProUGUI>().text = ticket.Price.ToString();
         
-        prenom.GetComponent<TextMeshProUGUI>().ForceMeshUpdate(true);
         section.GetComponent<TextMeshProUGUI>().ForceMeshUpdate(true);
         prix.GetComponent<TextMeshProUGUI>().ForceMeshUpdate(true);
     }
