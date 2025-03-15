@@ -4,6 +4,10 @@ using DG.Tweening;
 
 public class PanelToggle : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource; // AudioSource pour jouer les sons
+    [SerializeField] private AudioClip buttonClickSound; // Son pour les boutons
+    [SerializeField] private AudioClip panelSlideSound; // Son pour l'animation du panel
+
     [SerializeField] private Button listButton;
     [SerializeField] private GameObject panel;
     [SerializeField] private Sprite normalSprite;
@@ -50,14 +54,24 @@ public class PanelToggle : MonoBehaviour
         isPanelOpen = !isPanelOpen;
         listButton.image.sprite = isPanelOpen ? pressedSprite : normalSprite;
 
+        // Jouer le son de bouton
+        PlaySound(buttonClickSound);
+
         if (isPanelOpen)
         {
             panel.SetActive(true);
+
+            // Jouer le son de slider
+            PlaySound(panelSlideSound);
+
             panelRect.DOAnchorPos(openPosition, animationDuration).SetEase(Ease.OutBounce).SetUpdate(true);
             listButton.transform.DOScale(originalButtonScale * buttonScaleFactor, animationDuration * 0.5f).SetEase(Ease.OutQuad).SetUpdate(true);
         }
         else
         {
+            // Jouer le son de slider
+            PlaySound(panelSlideSound);
+
             panelRect.DOAnchorPos(closedPosition, animationDuration).SetEase(Ease.InOutQuad).SetUpdate(true).OnComplete(() =>
             {
                 panel.SetActive(false);
@@ -65,4 +79,12 @@ public class PanelToggle : MonoBehaviour
             listButton.transform.DOScale(originalButtonScale, animationDuration * 0.5f).SetEase(Ease.InOutQuad).SetUpdate(true);
         }
     }
+    private void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
 }

@@ -20,6 +20,5 @@ public class LightRotation : MonoBehaviour
     {
         ratio = 140 / clock.durationReturn;
         gameObject.transform.Rotate( ratio * Time.deltaTime,0,0);
-
     }
 }

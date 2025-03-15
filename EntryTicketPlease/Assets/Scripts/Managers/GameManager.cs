@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonMB<GameManager>
 {
@@ -9,7 +10,9 @@ public class GameManager : SingletonMB<GameManager>
 
    
     public static RoundData CurrentRoundData { get => Instance.roundData; }
-    
+
+    [SerializeField] ClockScript m_clock;
+
     #endregion
     #region LIFECYCLE ----------------------------------------------------------------
     // Start is called before the first frame update
@@ -17,22 +20,22 @@ public class GameManager : SingletonMB<GameManager>
     {
         currentData = SaveManager.Instance.FetchGameData();
         InitGame();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        m_clock.Finished.AddListener(OnRoundTerminated);
     }
     #endregion
     #region API -------------------------------------------------------------------------
 
-    public void NextDay()
+    public void HandleNextDay()
     {
         Debug.Log("Next Day");
     }
 
-    public void RestartDay()
+    public void HandleRestartDay()
     {
         Debug.Log("Restart Day");
     }
@@ -51,6 +54,13 @@ public class GameManager : SingletonMB<GameManager>
 
         BeginRound.Invoke(roundData);
     }
+
+    void OnRoundTerminated()
+    {
+        EndRound.Invoke();
+        SceneManager.LoadScene("endDayScene", LoadSceneMode.Single);
+    }
+
 
     void GenerateRound(int currentDay)
     {

@@ -9,7 +9,6 @@ public class SingletonMB<T> : MonoBehaviour where T : SingletonMB<T>
         if(Instance == null)
         {
             Instance = this as T;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
