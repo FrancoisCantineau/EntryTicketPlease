@@ -31,13 +31,17 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     private List<Visitor> visitorQueue = new List<Visitor>();
 
-    UnityEvent spwanEvent = new();
+    public UnityEvent spwanEvent;
 
     /// <summary>
     /// Demands a float parameter between 0.0f and 1.0f. 
     /// 0.0 = 0% fraud and 1.0 = 100% fraud 
     /// </summary>
 
+    private void Start()
+    {
+        spwanEvent = new UnityEvent();
+    }
     public void SetFraudPercentage(float m_fraudValue)
     {
         fraudValue = m_fraudValue;
