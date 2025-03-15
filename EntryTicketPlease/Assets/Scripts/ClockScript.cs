@@ -48,7 +48,19 @@ public class ClockScript : MonoBehaviour
 
     void Start()
     {
-        
+        var roundData = GameManager.CurrentRoundData;
+        startHour = roundData.startingHour;
+        endHour = roundData.endingHour;
+        duration = roundData.shiftLength;
+
+        Debug.Log($"{startHour} {endHour} {duration} {timewarnning} ");
+
+        nbSeconds = (int)GameSettings.HourDurationSeconds * duration;
+        ratio = (duration * 60) / nbSeconds;
+        TimeSpan ts = new TimeSpan(startHour, 0, 0);
+        GameTime = GameTime.Date + ts;
+
+        durationReturn = nbSeconds;
 
         StartCoroutine(Countdown());
     }
@@ -63,12 +75,12 @@ public class ClockScript : MonoBehaviour
             if (GameTime.Hour > endHour - timewarnning && !isTimeLow)
             {
                 isTimeLow = true;
-                //timeLowObject?.SetActive(true);
+                timeLowObject?.SetActive(true);
                 AlmostFinished.Invoke(timewarnning);
             }
         }
         Finished.Invoke();
-        //timesUpObject.SetActive(true);
+        timesUpObject.SetActive(true);
     }
 
 
