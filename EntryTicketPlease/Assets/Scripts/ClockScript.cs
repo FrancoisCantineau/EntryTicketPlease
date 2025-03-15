@@ -9,12 +9,10 @@ public class ClockScript : MonoBehaviour
 {
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
-    [SerializeField] TextMeshPro calandar;
-    [SerializeField] TextMeshPro section;
+    
     [SerializeField] int duration;
     [SerializeField] int startHour;
     [SerializeField] int endHour;
-    [SerializeField] DateTime date;
     int timewarnning = 2+1;
     bool isTimeLow = false;
     public UnityEvent<int> AlmostFinished = new();
@@ -50,41 +48,7 @@ public class ClockScript : MonoBehaviour
 
     void Start()
     {
-        var roundData = GameManager.CurrentRoundData;
-        startHour = roundData.startingHour;
-        endHour = roundData.endingHour;
-        duration = roundData.shiftLength;
-
-        Debug.Log($"{startHour} {endHour} {duration} {timewarnning} ");
-
-        nbSeconds = (int)GameSettings.HourDurationSeconds * duration;
-        ratio = (duration * 60) / nbSeconds;
-        GameTime = date;
-        TimeSpan ts = new TimeSpan(startHour, 0, 0);
-        GameTime = GameTime.Date + ts;        
-        calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
-        calandar.ForceMeshUpdate(true);
-
-        switch (roundData.closedSection)
-        {
-            case ClosedSection.A:
-                section.text = "A";
-                break;
-            case ClosedSection.B:
-                section.text = "B";
-                break;
-            case ClosedSection.C:
-                section.text = "C";
-                break;
-            case ClosedSection.N:
-                section.text = "-";
-                break;
-        }
-        section.ForceMeshUpdate(true);
-
-
-
-        durationReturn = nbSeconds;
+        
 
         StartCoroutine(Countdown());
     }
