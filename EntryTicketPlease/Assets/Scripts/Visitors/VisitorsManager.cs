@@ -279,13 +279,13 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
                     newVisitor.Initialize(visitorToSpawn.id, visitorToSpawn.ticket);
                     newVisitor.SetPrefab(visitorToSpawn.prefab);
 
-                    newVisitor.AddComponent<CharacterNavMeshMovement3D>();
-                    newVisitor.AddComponent<NavMeshAgent>();
+/*                    newVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    newVisitor.AddComponent<NavMeshAgent>();*/
 
                     currentVisitor = currentVisit;
 
-                    currentVisitor.AddComponent<CharacterNavMeshMovement3D>();
-                    currentVisitor.AddComponent<NavMeshAgent>();
+                /*    currentVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    currentVisitor.AddComponent<NavMeshAgent>();*/
 
                     currentVisitorIndex++;
 
