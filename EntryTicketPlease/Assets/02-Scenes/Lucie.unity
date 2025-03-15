@@ -3556,6 +3556,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zone
       objectReference: {fileID: 0}
+    - target: {fileID: 4256103821566429912, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 648
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -136,7 +136,7 @@ MonoBehaviour:
   ticketPrefab: {fileID: 5294517919515109453, guid: 93548d26a0e97fd4599d8894f3390023,
     type: 3}
   ticketCount: 1
-  spriteHeight: 1.5
+  spriteHeight: 0.5
   spriteDuration: 2
   ticketSpawnRadius: 0.5
   tableTransform: {fileID: 166648581586935364, guid: e2a5cbf03d3779342a465a2135226f1a,
