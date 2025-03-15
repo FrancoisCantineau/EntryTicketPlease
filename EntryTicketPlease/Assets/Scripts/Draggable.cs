@@ -15,6 +15,9 @@ public class DraggableObject : MonoBehaviour
     public float zoomScale = 1.5f;
     public float zoomSpeed = 5f;
 
+    [SerializeField] private ParticleSystem smokeEffect; // Effet de fumée lors du relâchement de l'objet
+    [SerializeField] private AudioClip smokeSound; // Son joué lors de l'apparition de la fumée
+
     private AudioSource audioSource;
     public AudioClip grabSound;
 
@@ -188,6 +191,8 @@ public class DraggableObject : MonoBehaviour
     private void ZoomOut()
     {
         // Rien ici, l'échelle est gérée dans Update
+
+        SpawnSmokeEffect();
     }
 
     // Méthode publique pour définir l'échelle initiale
@@ -195,5 +200,43 @@ public class DraggableObject : MonoBehaviour
     {
         initialScale = scale;
         // Ne pas définir rectTransform.localScale ici, car l'animation DOTween le fera
+    }
+
+    private void SpawnSmokeEffect()
+    {
+        if (smokeEffect != null && mainCamera != null)
+        {
+            // Convertir la position de l'écran en une position locale relative au Canvas
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform.parent as RectTransform, // Utiliser le parent car l'objet est dans le Canvas
+                Input.mousePosition,
+                mainCamera,
+                out localPoint
+            );
+
+            // Convertir en position World Space en utilisant le parent du rectTransform
+            Vector3 spawnPosition = rectTransform.parent.TransformPoint(localPoint);
+
+            // Instancier la fumée avec un délai et ajuster son échelle
+            ParticleSystem effect = Instantiate(smokeEffect, spawnPosition, Quaternion.identity, rectTransform.parent);
+
+            // Ajuster l'échelle en fonction du Canvas
+            effect.transform.localScale = Vector3.one * 0.2f; // Ajuste ce facteur selon l’échelle de ton Canvas
+
+            effect.Play();
+            Destroy(effect.gameObject, 2f); // Détruit l'effet après 2s
+
+            // Jouer le son de fumée
+            PlaySound(smokeSound);
+        }
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
     }
 }
