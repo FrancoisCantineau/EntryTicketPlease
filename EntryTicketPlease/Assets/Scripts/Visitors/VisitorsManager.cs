@@ -116,7 +116,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         GameObject prefabVisitor = characterData.GetVisitorModel(randomGender);
 
 
-        bool hasValidTicket = Random.value > validityTreshHoldValue;
+        bool hasValidTicket = true;
 
         string name = "none";
         ticketName = name;
