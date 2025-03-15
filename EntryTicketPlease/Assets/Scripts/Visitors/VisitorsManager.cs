@@ -86,6 +86,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     public bool NextVisitor()
     {
+        Debug.Log(visitorQueue.Count + "amount");
         if (currentVisitorIndex < visitorQueue.Count)
         {
             SpawnVisitors();
@@ -284,8 +285,8 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
                     Debug.Log("Height" + newVisitor.id.Height);
                     UpdateVisitorSize(currentVisit.transform, newVisitor.id.Height);
 
-                    newVisitor.AddComponent<CharacterNavMeshMovement3D>();
-                    newVisitor.AddComponent<NavMeshAgent>();
+                    //newVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    //newVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitor = currentVisit;
 

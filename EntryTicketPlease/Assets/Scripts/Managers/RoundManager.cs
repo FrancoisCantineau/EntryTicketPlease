@@ -100,6 +100,7 @@ public class RoundManager : SingletonMB<RoundManager>
 
     void WinCheck(bool needCalculus)
     {
+        Debug.Log("End3");
         bool isWin;
         int starsAmount = 0;
 
@@ -112,7 +113,7 @@ public class RoundManager : SingletonMB<RoundManager>
 
             int queueSize = VisitorsManager.Instance.GetQueueSize();
 
-            int percentage = (succeededVisitors * 100) / queueSize;
+            int percentage = (succeededVisitors * 100) / 3;
 
 
             if (percentage == 100) starsAmount = 3;
@@ -135,7 +136,7 @@ public class RoundManager : SingletonMB<RoundManager>
 
         GameManager.Instance.OnRoundTerminated();
 
-        PlayerPrefs.SetInt("starAmount", starsAmount);
+        PlayerPrefs.SetInt("starAmount", 2);
         PlayerPrefs.SetString("isWin", isWin.ToString());
 
     }

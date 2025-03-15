@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -54,7 +55,7 @@ public class GameManager : SingletonMB<GameManager>
     {
 
         currentData = SaveManager.Instance.FetchGameData();
-        GenerateRound(currentData.currentDay);
+        GenerateRound(20);
         VerificationAlgo.UpdateAlgorithm(roundData);
         VisitorsManager.Instance.CreateQueue(roundData.queueLength);
         VisitorsManager.Instance.SpawnVisitors();
@@ -64,11 +65,16 @@ public class GameManager : SingletonMB<GameManager>
 
     public void OnRoundTerminated()
     {
+        Debug.Log("End");
         EndRound.Invoke();
-        SceneManager.LoadScene("L_Mato_endDayScene", LoadSceneMode.Single);
-        
+        StartCoroutine(Outro());
     }
 
+    IEnumerator Outro()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene("L_Mato_endDayScene", LoadSceneMode.Single);
+    }
 
     void GenerateRound(int currentDay)
     {
@@ -89,7 +95,7 @@ public class GameManager : SingletonMB<GameManager>
         roundData.shiftLength = roundData.endingHour - roundData.startingHour;
 
 
-        roundData.queueLength = Mathf.RoundToInt(roundData.shiftLength * GameSettings.QueueLengthByShiftLengthFactor);
+        roundData.queueLength = 3;//Mathf.RoundToInt(roundData.shiftLength * GameSettings.QueueLengthByShiftLengthFactor);
 
         // Gérer les incohérences et la fraude
         roundData.incoherencesOdds = Random.Range(0f, .8f); 

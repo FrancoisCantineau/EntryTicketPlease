@@ -74,11 +74,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3776c391edf13f54ea097d57f7217af8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1653249390468349669}
+      addedObject: {fileID: 4424498948503643361}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3776c391edf13f54ea097d57f7217af8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4424498948503643361}
+      addedObject: {fileID: 4028385191153736127}
   m_SourcePrefab: {fileID: 100100000, guid: 3776c391edf13f54ea097d57f7217af8, type: 3}
 --- !u!1 &1386295495551573824 stripped
 GameObject:
@@ -108,39 +108,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1653249390468349669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1386295495551573824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b4741ff30e01bf4ab5338c82ab93c07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialTarget: {x: -0.046, y: 0.898, z: -7.421}
-  validateTarget: {x: 1.38, y: 0.898, z: -6.36}
-  refuseTarget: {x: -1.867, y: 0.89, z: -6.78}
-  stoppingDistance: 0.1
-  rotationSpeed: 5
-  validateSprites:
-  - {fileID: 21300000, guid: 7e1930c4ab178554eb4a1fbbe7513adc, type: 3}
-  - {fileID: 21300000, guid: 769166dd7b690084fb7f56c3cb870d48, type: 3}
-  - {fileID: 21300000, guid: 59edcb1da9197154d87c86d3786487f4, type: 3}
-  refuseSprites:
-  - {fileID: 21300000, guid: 22c02749b081d3b4c85f6f73a9efa9a5, type: 3}
-  - {fileID: 21300000, guid: 422ef4bf6050af5438ae22e7c098d74a, type: 3}
-  - {fileID: 21300000, guid: 950788ed8ab54f9418e2525f8b525e75, type: 3}
-  ticketPrefab: {fileID: 5294517919515109453, guid: 93548d26a0e97fd4599d8894f3390023,
-    type: 3}
-  ticketCount: 1
-  spriteHeight: 0.5
-  spriteDuration: 2
-  ticketSpawnRadius: 0.5
-  tableTransform: {fileID: 166648581586935364, guid: e2a5cbf03d3779342a465a2135226f1a,
-    type: 3}
 --- !u!95 &4424498948503643361
 Animator:
   serializedVersion: 5
@@ -162,3 +129,39 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4028385191153736127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386295495551573824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b4741ff30e01bf4ab5338c82ab93c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialTarget: {x: -0.046, y: 0.898, z: -6.79}
+  validateTarget: {x: 1.38, y: 0.898, z: -6.36}
+  refuseTarget: {x: -1.867, y: 0.898, z: -6.201}
+  stoppingDistance: 0.1
+  rotationSpeed: 5
+  validateSprites:
+  - {fileID: 21300000, guid: 769166dd7b690084fb7f56c3cb870d48, type: 3}
+  - {fileID: 21300000, guid: 7e1930c4ab178554eb4a1fbbe7513adc, type: 3}
+  - {fileID: 21300000, guid: e7ee02991ed301c46b03cb8f92b295c9, type: 3}
+  refuseSprites:
+  - {fileID: 21300000, guid: 22c02749b081d3b4c85f6f73a9efa9a5, type: 3}
+  - {fileID: 21300000, guid: 950788ed8ab54f9418e2525f8b525e75, type: 3}
+  - {fileID: 21300000, guid: 422ef4bf6050af5438ae22e7c098d74a, type: 3}
+  ticketPrefab: {fileID: 5294517919515109453, guid: 93548d26a0e97fd4599d8894f3390023,
+    type: 3}
+  ticketCount: 1
+  idCardPrefab: {fileID: 2883937645465850040, guid: 263a74dd32fb1ab488e012cb318148fb,
+    type: 3}
+  idCardCount: 1
+  spriteHeight: 0.5
+  spriteDuration: 2
+  ticketSpawnRadius: 0.5
+  tableTransform: {fileID: 166648581586935364, guid: e2a5cbf03d3779342a465a2135226f1a,
+    type: 3}

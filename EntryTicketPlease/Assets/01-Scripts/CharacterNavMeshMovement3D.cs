@@ -19,6 +19,8 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     public Sprite[] refuseSprites;
     public GameObject ticketPrefab;
     public int ticketCount = 1;
+    public GameObject idCardPrefab; // Nouveau prefab pour la carte d’identité
+    public int idCardCount = 1;     // Nombre de cartes d’identité à spawner (par défaut 1)
     public float spriteHeight = 1.5f;
     public float spriteDuration = 2f;
     public float ticketSpawnRadius = 0.5f;
@@ -38,10 +40,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
     private bool isMoving = false;
     private bool hasReachedInitialTarget = false;
     private bool hasProcessedDecision = false;
-    private bool hasSpawnedTickets = false; // Nouveau drapeau pour éviter plusieurs spawns de tickets
+    private bool hasSpawnedTickets = false;
 
     private GameObject currentSpriteObj;
     private List<GameObject> spawnedTickets = new List<GameObject>();
+    private List<GameObject> spawnedIdCards = new List<GameObject>(); // Nouvelle liste pour les cartes d’identité
 
     void Start()
     {
@@ -49,9 +52,9 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
 
-        if (navAgent == null || animator == null || mainCamera == null || ticketPrefab == null)
+        if (navAgent == null || animator == null || mainCamera == null || ticketPrefab == null || idCardPrefab == null)
         {
-            Debug.LogError("Composants essentiels manquants sur " + gameObject.name + " !");
+            Debug.LogError("Composants essentiels manquants sur " + gameObject.name + " (ticketPrefab ou idCardPrefab manquant) !");
             enabled = false;
             return;
         }
@@ -145,7 +148,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         if (!isMoving)
         {
-            // Vérifie spécifiquement si le personnage atteint initialTarget
             if (!hasReachedInitialTarget && Vector3.Distance(transform.position, initialTarget) <= stoppingDistance)
             {
                 hasReachedInitialTarget = true;
@@ -154,11 +156,11 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 if (!hasSpawnedTickets)
                 {
                     SpawnTicketsOnTable();
-                    hasSpawnedTickets = true; // Empêche de respawn les tickets
-                    Debug.Log("Tickets spawnés à initialTarget pour " + gameObject.name);
+                  SpawnIdCardOnTable(); // Ajout de la carte d’identité
+                  hasSpawnedTickets = true;
+                    Debug.Log("Tickets et ID card spawnés à initialTarget pour " + gameObject.name);
                 }
             }
-            // Suppression quand il atteint validateTarget ou refuseTarget
             else if ((Vector3.Distance(transform.position, validateTarget) <= stoppingDistance) ||
                      (Vector3.Distance(transform.position, refuseTarget) <= stoppingDistance))
             {
@@ -167,7 +169,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
                 return;
             }
 
-            // Rotation vers la caméra lorsqu'il est immobile
             Vector3 directionToCamera = (mainCamera.transform.position - transform.position).normalized;
             directionToCamera.y = 0;
             if (directionToCamera != Vector3.zero)
@@ -212,7 +213,6 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         navAgent.SetDestination(targetPosition);
         isMoving = true;
-        // Ne réinitialise pas hasReachedInitialTarget ici, car on veut conserver l'état
     }
 
     private void SpawnTicketsOnTable()
@@ -263,6 +263,54 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         }
     }
 
+    private void SpawnIdCardOnTable()
+    {
+        if (idCardPrefab == null)
+        {
+            Debug.LogWarning("ID Card Prefab non assigné !");
+            return;
+        }
+
+        spawnedIdCards.Clear();
+
+        for (int i = 0; i < idCardCount; i++)
+        {
+            GameObject idCardObj = Instantiate(idCardPrefab, worldSpaceCanvas.transform);
+            spawnedIdCards.Add(idCardObj);
+
+            DraggableObject draggable = idCardObj.GetComponent<DraggableObject>();
+            if (draggable == null)
+            {
+                Debug.LogError("DraggableObject manquant sur le prefab de la carte d’identité !");
+                continue;
+            }
+
+            if (noDragZone != null)
+            {
+                draggable.noDragZone = noDragZone;
+            }
+
+            Image image = idCardObj.GetComponent<Image>();
+            if (image == null || image.sprite == null)
+            {
+                Debug.LogError("La carte d’identité spawnée n’a pas d’Image ou de sprite !");
+            }
+
+            RectTransform rectTransform = idCardObj.GetComponent<RectTransform>();
+            if (rectTransform == null)
+            {
+                Debug.LogError("RectTransform manquant sur le prefab de la carte d’identité !");
+                continue;
+            }
+
+            Vector3 originalScale = rectTransform.localScale;
+            draggable.SetInitialScale(originalScale);
+            idCardObj.transform.localScale = Vector3.zero;
+            idCardObj.SetActive(true);
+            idCardObj.transform.DOScale(originalScale, 0.5f).SetEase(Ease.OutBack);
+        }
+    }
+
     private void ShowSprite(Sprite sprite, Vector3 nextTarget)
     {
         if (currentSpriteObj != null)
@@ -292,7 +340,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             });
     }
 
-    private void DestroySpawnedTickets()
+    private void DestroySpawnedItems() // Renommé pour inclure tickets et idCards
     {
         foreach (GameObject ticket in spawnedTickets)
         {
@@ -302,7 +350,17 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             }
         }
         spawnedTickets.Clear();
-        Debug.Log("Tous les tickets spawnés ont été supprimés pour " + gameObject.name);
+
+        foreach (GameObject idCard in spawnedIdCards)
+        {
+            if (idCard != null)
+            {
+                Destroy(idCard);
+            }
+        }
+        spawnedIdCards.Clear();
+
+        Debug.Log("Tous les tickets et cartes d’identité spawnés ont été supprimés pour " + gameObject.name);
     }
 
     public void OnValidateButton()
@@ -312,7 +370,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         if (hasReachedInitialTarget && !hasProcessedDecision)
         {
             hasProcessedDecision = true;
-            DestroySpawnedTickets();
+            DestroySpawnedItems(); // Mise à jour pour détruire tickets et idCards
             if (validateSprites != null && validateSprites.Length > 0)
             {
                 Sprite randomSprite = validateSprites[Random.Range(0, validateSprites.Length)];
@@ -342,7 +400,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         if (hasReachedInitialTarget && !hasProcessedDecision)
         {
             hasProcessedDecision = true;
-            DestroySpawnedTickets();
+            DestroySpawnedItems(); // Mise à jour pour détruire tickets et idCards
             if (refuseSprites != null && refuseSprites.Length > 0)
             {
                 Sprite randomSprite = refuseSprites[Random.Range(0, refuseSprites.Length)];
