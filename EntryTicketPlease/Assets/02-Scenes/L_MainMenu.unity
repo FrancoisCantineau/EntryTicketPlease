@@ -1683,7 +1683,7 @@ PrefabInstance:
     - target: {fileID: 3184796236814441451, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
@@ -1698,7 +1698,7 @@ PrefabInstance:
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
@@ -1708,22 +1708,22 @@ PrefabInstance:
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 2337
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
@@ -1768,7 +1768,7 @@ PrefabInstance:
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -1168.5
       objectReference: {fileID: 0}
     - target: {fileID: 8034870353255455413, guid: d92e4a04835717348937aa2c84025a83,
         type: 3}
@@ -1871,7 +1871,7 @@ PrefabInstance:
     - target: {fileID: 8772396129046626873, guid: a015c4cae0d63fe41b84ec2128f24b67,
         type: 3}
       propertyPath: nextSceneName
-      value: L_Mato_Gameplay
+      value: MAIN
       objectReference: {fileID: 0}
     - target: {fileID: 8772396129046626873, guid: a015c4cae0d63fe41b84ec2128f24b67,
         type: 3}
