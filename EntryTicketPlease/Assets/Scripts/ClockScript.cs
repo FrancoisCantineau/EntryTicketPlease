@@ -9,12 +9,10 @@ public class ClockScript : MonoBehaviour
 {
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
-    [SerializeField] TextMeshPro calandar;
-    [SerializeField] TextMeshPro section;
+    
     [SerializeField] int duration;
     [SerializeField] int startHour;
     [SerializeField] int endHour;
-    [SerializeField] DateTime date;
     int timewarnning = 2+1;
     bool isTimeLow = false;
     public UnityEvent<int> AlmostFinished = new();
@@ -59,30 +57,8 @@ public class ClockScript : MonoBehaviour
 
         nbSeconds = (int)GameSettings.HourDurationSeconds * duration;
         ratio = (duration * 60) / nbSeconds;
-        GameTime = date;
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
-        GameTime = GameTime.Date + ts;        
-        calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
-        calandar.ForceMeshUpdate(true);
-
-        switch (roundData.closedSection)
-        {
-            case ClosedSection.A:
-                section.text = "A";
-                break;
-            case ClosedSection.B:
-                section.text = "B";
-                break;
-            case ClosedSection.C:
-                section.text = "C";
-                break;
-            case ClosedSection.N:
-                section.text = "-";
-                break;
-        }
-        section.ForceMeshUpdate(true);
-
-
+        GameTime = GameTime.Date + ts;
 
         durationReturn = nbSeconds;
 
@@ -99,12 +75,12 @@ public class ClockScript : MonoBehaviour
             if (GameTime.Hour > endHour - timewarnning && !isTimeLow)
             {
                 isTimeLow = true;
-                //timeLowObject?.SetActive(true);
+                timeLowObject?.SetActive(true);
                 AlmostFinished.Invoke(timewarnning);
             }
         }
         Finished.Invoke();
-        //timesUpObject.SetActive(true);
+        timesUpObject.SetActive(true);
     }
 
 

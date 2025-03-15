@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -52,7 +53,7 @@ public class GameManager : SingletonMB<GameManager>
     {
 
         currentData = SaveManager.Instance.FetchGameData();
-        GenerateRound(currentData.currentDay);
+        GenerateRound(20);
         VerificationAlgo.UpdateAlgorithm(roundData);
         VisitorsManager.Instance.CreateQueue(roundData.queueLength);
         VisitorsManager.Instance.SpawnVisitors();
@@ -63,10 +64,14 @@ public class GameManager : SingletonMB<GameManager>
     public void OnRoundTerminated()
     {
         EndRound.Invoke();
-        SceneManager.LoadScene("L_Mato_endDayScene", LoadSceneMode.Single);
-        
+        StartCoroutine(Outro());
     }
 
+    IEnumerator Outro()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene("L_Mato_endDayScene", LoadSceneMode.Single);
+    }
 
     void GenerateRound(int currentDay)
     {
