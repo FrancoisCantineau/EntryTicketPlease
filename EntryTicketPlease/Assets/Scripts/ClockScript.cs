@@ -9,6 +9,7 @@ public class ClockScript : MonoBehaviour
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
     [SerializeField] TextMeshPro calandar;
+    [SerializeField] TextMeshPro section;
     [SerializeField] int duration;
     [SerializeField] int startHour;
     [SerializeField] int endHour;
@@ -52,16 +53,24 @@ public class ClockScript : MonoBehaviour
         startHour = roundData.startingHour;
         endHour = roundData.endingHour;
         duration = roundData.shiftLength;
-
         Debug.Log($"{startHour} {endHour} {duration} {timewarnning} ");
 
         nbSeconds = (int)GameSettings.HourDurationSeconds * duration;
         ratio = (duration * 60) / nbSeconds;
-        GameTime = date;
+        GameTime = roundData.currentDate;
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
         GameTime = GameTime.Date + ts;
         calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
         durationReturn = nbSeconds;
+
+        switch (roundData.closedSection)
+        {
+            case ClosedSection.N : section.text = "-";break;
+            case ClosedSection.A : section.text = "A"; break;
+            case ClosedSection.B : section.text = "B"; break;
+            case ClosedSection.C : section.text = "C"; break;
+        }
+
 
         StartCoroutine(Countdown());
     }
