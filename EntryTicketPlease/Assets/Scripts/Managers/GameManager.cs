@@ -9,6 +9,8 @@ public class GameManager : SingletonMB<GameManager>
     SaveData currentData;
     RoundData roundData;
 
+    public HeightMeter heightMeter;
+
     [SerializeField] GameObject dontdestroy;
 
     public static RoundData CurrentRoundData { get => Instance.roundData; }
@@ -101,6 +103,7 @@ public class GameManager : SingletonMB<GameManager>
         if (roundData.notice.heightLimitEnabled)
         {
             roundData.notice.heightLimit = Random.Range(GameSettings.RulerMinHeightCm, GameSettings.RulerMaxHeightCm);
+            print(roundData.notice.heightLimit);
         }
 
         // extension de validité
@@ -161,6 +164,8 @@ public class GameManager : SingletonMB<GameManager>
         {
             roundData.priceGrid.adultsPrice = Random.Range(18, 22);
         }
+
+        heightMeter.UpdateMeterLimit(roundData.notice.heightLimit, roundData.notice.heightLimitEnabled);
 
         // Gérer la fermeture d'une section
         roundData.closedSection = (ClosedSection)Random.Range(0, 4);

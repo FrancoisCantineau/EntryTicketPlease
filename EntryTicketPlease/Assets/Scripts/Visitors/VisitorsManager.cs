@@ -276,16 +276,19 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
                     Visitor newVisitor = currentVisit.AddComponent<Visitor>();
 
+                    
+
                     newVisitor.Initialize(visitorToSpawn.id, visitorToSpawn.ticket);
                     newVisitor.SetPrefab(visitorToSpawn.prefab);
+
+                    Debug.Log("Height" + newVisitor.id.Height);
+                    UpdateVisitorSize(currentVisit.transform, newVisitor.id.Height);
 
                     newVisitor.AddComponent<CharacterNavMeshMovement3D>();
                     newVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitor = currentVisit;
 
-                    currentVisitor.AddComponent<CharacterNavMeshMovement3D>();
-                    currentVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitorIndex++;
 
@@ -299,6 +302,19 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             }
         }
 
+
+    }
+
+    public void UpdateVisitorSize(Transform visitorTransform, float currentHeight)
+    {
+        float normalizedScale = (float)(currentHeight - 100) / (220 - 100);
+
+        Debug.Log("normalized" + normalizedScale);
+        float minScale = 0.55f;  
+        float maxScale = 1.1f;  
+
+        float newScale = Mathf.Lerp(minScale, maxScale, normalizedScale);
+        visitorTransform.localScale = new Vector3(newScale, newScale, newScale);
     }
 
     /// <summary>

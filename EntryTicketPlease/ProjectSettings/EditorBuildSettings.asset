@@ -20,4 +20,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/02-Scenes/L_Mato_endDayScene.unity
     guid: 16ea902e153327941bdcfb2f79f32ae4
+  - enabled: 1
+    path: Assets/02-Scenes/Game.unity
+    guid: 2dcc6cc880abb184787eb4b0d9a902cd
+  - enabled: 1
+    path: "Assets/02-Scenes/Fran\xE7oisPremier.unity"
+    guid: 25b6f2fadb415f942a42f367d2e944e4
+  - enabled: 1
+    path: Assets/02-Scenes/SimonGame.unity
+    guid: 6fd8de468c2997547821cadcf0314d5f
   m_configObjects: {}

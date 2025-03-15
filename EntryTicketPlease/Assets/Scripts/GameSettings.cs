@@ -7,7 +7,7 @@ public class GameSettings : SingletonMB<GameSettings>
     #region VARIABLES ----------------------------------------------------------------
     [Header("Notice settings")]
     [SerializeField] int rulerMinHeightCm = 110;
-    [SerializeField] int rulerMaxHeightCm = 200;
+    [SerializeField] int rulerMaxHeightCm = 180;
 
     [Header("Visitor settings")]
     [SerializeField] int visitorMinHeight = 100;
