@@ -120,9 +120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4741ff30e01bf4ab5338c82ab93c07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialTarget: {x: -0.107, y: 0.851, z: -7.421}
+  initialTarget: {x: -0.046, y: 0.898, z: -7.421}
   validateTarget: {x: 1.38, y: 0.898, z: -6.36}
-  refuseTarget: {x: -1.867, y: 0.898, z: -6.201}
+  refuseTarget: {x: -1.867, y: 0.89, z: -6.78}
   stoppingDistance: 0.1
   rotationSpeed: 5
   validateSprites:
@@ -140,12 +140,6 @@ MonoBehaviour:
   spriteDuration: 2
   ticketSpawnRadius: 0.5
   tableTransform: {fileID: 166648581586935364, guid: e2a5cbf03d3779342a465a2135226f1a,
-    type: 3}
-  noDragZone: {fileID: 4494876416431066953, guid: eb48a0c0b5abfd649ba92dcb70f67e85,
-    type: 3}
-  validateButton: {fileID: 9055252933146750920, guid: 9d8bfc7c71dec444a9e62d1d0bb016f0,
-    type: 3}
-  refuseButton: {fileID: 2953304123720696446, guid: f09ae077cd0c4984ba642834e58bffa9,
     type: 3}
 --- !u!95 &3813364708439489334
 Animator:

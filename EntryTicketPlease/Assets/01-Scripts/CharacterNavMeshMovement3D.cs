@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CharacterNavMeshMovement3D : MonoBehaviour
 {
     [Header("Cibles")]
-    public Vector3 initialTarget = new Vector3(-0.107f, 0.851f, -7.421f);
+    public Vector3 initialTarget = new Vector3(-0.046f, 0.898f, -6.79f);
     public Vector3 validateTarget = new Vector3(1.38f, 0.898f, -6.36f);
     public Vector3 refuseTarget = new Vector3(-1.867f, 0.898f, -6.201f);
     [Header("Paramètres")]
