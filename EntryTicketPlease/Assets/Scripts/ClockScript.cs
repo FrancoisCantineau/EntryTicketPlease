@@ -101,5 +101,5 @@ public class ClockScript : MonoBehaviour
             yield return null;
         }
     }
-    public int durationReturn { get; private set; }
+    public int durationReturn { get; private set; } = 8;
 }

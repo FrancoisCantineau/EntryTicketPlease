@@ -70,7 +70,7 @@ public class GameManager : SingletonMB<GameManager>
     void GenerateRound(int currentDay)
     {
         roundData = RoundData.Default(currentData.currentDate);
-        Random.InitState(10);
+        Random.InitState(currentDay);
 
         // Modifier occasionnellement l'heure de départ et l'heure de fin
         bool changeBegin = Random.Range(0f, 1f) < 0.2f;

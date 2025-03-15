@@ -5,14 +5,12 @@ using UnityEngine;
 public class LightRotation : MonoBehaviour
 {
     [SerializeField] GameObject HUD;
-    private ClockScript clock;
+    [SerializeField] private ClockScript clock;
     private int ratio;
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.transform.rotation = Quaternion.Euler(50,-30,0);
-        clock = HUD.GetComponent<ClockScript>();
-        
+        gameObject.transform.rotation = Quaternion.Euler(50,-30,0);        
     }
 
     // Update is called once per frame

@@ -1,4 +1,5 @@
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -152,6 +153,8 @@ public class RoundManager : SingletonMB<RoundManager>
         {
             WinCheck(true);
         }
+        m_clock.gameObject.SetActive(true);
+        OnStartRound.Invoke(GameManager.CurrentRoundData);
     }
 
     #endregion
