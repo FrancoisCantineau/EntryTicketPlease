@@ -7,43 +7,43 @@ using UnityEngine.UI;
 public class CharacterNavMeshMovement3D : MonoBehaviour
 {
     [Header("Cibles")]
-    public Vector3 initialTarget = new Vector3(-0.107f, 0.851f, -7.421f); 
-    public Vector3 validateTarget = new Vector3(1.38f, 0.898f, -6.36f);  
-    public Vector3 refuseTarget = new Vector3(-1.867f, 0.898f, -6.201f); 
+    public Vector3 initialTarget = new Vector3(-0.107f, 0.851f, -7.421f);
+    public Vector3 validateTarget = new Vector3(1.38f, 0.898f, -6.36f);
+    public Vector3 refuseTarget = new Vector3(-1.867f, 0.898f, -6.201f);
     [Header("Paramètres")]
     public float stoppingDistance = 0.1f;
-    public float rotationSpeed = 5f;     
+    public float rotationSpeed = 5f;
 
     [Header("Sprites")]
-    public Sprite[] validateSprites;      
-    public Sprite[] refuseSprites;       
-    public GameObject ticketPrefab;       
-    public int ticketCount = 1;          
-    public float spriteHeight = 1.5f;    
-    public float spriteDuration = 2f;    
+    public Sprite[] validateSprites;
+    public Sprite[] refuseSprites;
+    public GameObject ticketPrefab;
+    public int ticketCount = 1;
+    public float spriteHeight = 1.5f;
+    public float spriteDuration = 2f;
     public float ticketSpawnRadius = 0.5f;
 
     [Header("Table")]
-    public Transform tableTransform;      
+    public Transform tableTransform;
 
     [Header("Draggable Zone")]
-    public RectTransform noDragZone;    
+    public RectTransform noDragZone;
 
     [Header("Canvas")]
-    public Canvas worldSpaceCanvas;      
+    public Canvas worldSpaceCanvas;
 
-    private Vector3 targetPosition;       
-    private NavMeshAgent navAgent;       
-    private Animator animator;            
-    private Camera mainCamera;            
-    private bool isMoving = false;        
-    private bool hasReachedInitialTarget = false; 
-    private GameObject currentSpriteObj;  
-    private List<GameObject> spawnedTickets = new List<GameObject>(); 
+    private Vector3 targetPosition;
+    private NavMeshAgent navAgent;
+    private Animator animator;
+    private Camera mainCamera;
+    private bool isMoving = false;
+    private bool hasReachedInitialTarget = false;
+    private GameObject currentSpriteObj;
+    private List<GameObject> spawnedTickets = new List<GameObject>();
 
     [Header("UI")]
-    public UnityEngine.UI.Button validateButton; 
-    public UnityEngine.UI.Button refuseButton;  
+    public UnityEngine.UI.Button validateButton;
+    public UnityEngine.UI.Button refuseButton;
 
     void Start()
     {
@@ -78,7 +78,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
 
         if (noDragZone == null)
         {
-            GameObject noDragObj = GameObject.Find("NoDragZone"); 
+            GameObject noDragObj = GameObject.Find("NoDragZone");
             if (noDragObj != null) noDragZone = noDragObj.GetComponent<RectTransform>();
             if (noDragZone == null) Debug.LogWarning("NoDragZone non trouvé dans la scène !");
         }
@@ -109,7 +109,7 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             hasReachedInitialTarget = true;
             if (validateButton != null) validateButton.interactable = true;
             if (refuseButton != null) refuseButton.interactable = true;
-            SpawnTicketsOnTable(); 
+            SpawnTicketsOnTable();
         }
 
         if (isMoving && navAgent.velocity != Vector3.zero)
@@ -117,10 +117,10 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(navAgent.velocity.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
         }
-        else if (!isMoving)
+        else if (!isMoving) // Réactiver la rotation vers la caméra
         {
             Vector3 directionToCamera = (mainCamera.transform.position - transform.position).normalized;
-            directionToCamera.y = 0;
+            directionToCamera.y = 0; // Ignorer l'axe Y pour éviter une inclinaison verticale
             if (directionToCamera != Vector3.zero)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(directionToCamera, Vector3.up);
@@ -174,20 +174,19 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
         for (int i = 0; i < ticketCount; i++)
         {
             GameObject ticketObj = Instantiate(ticketPrefab, worldSpaceCanvas.transform);
-
-  
-
             spawnedTickets.Add(ticketObj);
 
             DraggableObject draggable = ticketObj.GetComponent<DraggableObject>();
-            if (draggable != null && noDragZone != null)
+            if (draggable == null)
+            {
+                Debug.LogError("DraggableObject manquant sur le ticket prefab !");
+                continue;
+            }
+
+            if (noDragZone != null)
             {
                 draggable.noDragZone = noDragZone;
                 Debug.Log("NoDragZone assigné au ticket à : " + ticketObj.transform.position);
-            }
-            else
-            {
-                Debug.LogWarning("DraggableObject ou noDragZone manquant pour le ticket !");
             }
 
             Image image = ticketObj.GetComponent<Image>();
@@ -197,8 +196,15 @@ public class CharacterNavMeshMovement3D : MonoBehaviour
             }
 
             RectTransform rectTransform = ticketObj.GetComponent<RectTransform>();
-            Vector3 originalScale = rectTransform.localScale; 
-            ticketObj.transform.localScale = Vector3.zero;
+            if (rectTransform == null)
+            {
+                Debug.LogError("RectTransform manquant sur le ticket prefab !");
+                continue;
+            }
+
+            Vector3 originalScale = rectTransform.localScale; // Récupérer l'échelle originale du prefab
+            draggable.SetInitialScale(originalScale); // Définir l'échelle dans DraggableObject
+            ticketObj.transform.localScale = Vector3.zero; // Mettre à zéro pour l'animation
             ticketObj.SetActive(true);
             ticketObj.transform.DOScale(originalScale, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
             {
