@@ -261,7 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nbSeconds: 10000
   affichage: {fileID: 2005768494}
-  calandar: {fileID: 0}
+  calandar: {fileID: 1434660286}
   duration: 10
   startHour: 8
   endHour: 0
@@ -2144,9 +2144,6 @@ MonoBehaviour:
   currentVisitor: {fileID: 0}
   spawnPoint: {fileID: 382596335}
   characterData: {fileID: 11400000, guid: f56c3e87dac3d864da00b1a354463ae8, type: 2}
-  spawnEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1105230545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3406,7 +3403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nbSeconds: 60
   affichage: {fileID: 2005768494}
-  calandar: {fileID: 0}
+  calandar: {fileID: 1434660286}
   duration: 10
   startHour: 8
   endHour: 0

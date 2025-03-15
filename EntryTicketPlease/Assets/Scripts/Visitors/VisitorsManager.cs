@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.AI;
 using UnityEngine.Analytics;
 using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
@@ -31,15 +30,12 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     private List<Visitor> visitorQueue = new List<Visitor>();
 
-    public UnityEvent spawnEvent;
+
     /// <summary>
     /// Demands a float parameter between 0.0f and 1.0f. 
     /// 0.0 = 0% fraud and 1.0 = 100% fraud 
     /// </summary>
-    private void Start()
-    {
-        spawnEvent = new UnityEvent();
-    }
+    
     public void SetFraudPercentage(float m_fraudValue)
     {
         fraudValue = m_fraudValue;
@@ -244,7 +240,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
             newPrice = lowerPrices.Count > 0 ? lowerPrices[Random.Range(0, lowerPrices.Count)] : ticketPrice;
 
-            Debug.Log($"ï¿½ge : {age}, Prix rï¿½el : {ticketPrice}, Prix modifiï¿½ : {newPrice}");
+            Debug.Log($"Âge : {age}, Prix réel : {ticketPrice}, Prix modifié : {newPrice}");
 
             ticketPrice = newPrice ;
         }
@@ -289,8 +285,6 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
                     currentVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitorIndex++;
-
-                    spawnEvent.Invoke();
                 }
 
             }
