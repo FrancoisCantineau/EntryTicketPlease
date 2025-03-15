@@ -392,9 +392,6 @@ MonoBehaviour:
   spriteDuration: 2
   ticketSpawnRadius: 0.5
   tableTransform: {fileID: 1961101359}
-  noDragZone: {fileID: 2022815854}
-  validateButton: {fileID: 6366058127542496383}
-  refuseButton: {fileID: 7557443433566675246}
 --- !u!1001 &241347903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1646,7 +1643,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 09dc6055fc656434db871315e07403f0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.648
+      value: -0.046
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 09dc6055fc656434db871315e07403f0,
         type: 3}
@@ -1656,7 +1653,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 09dc6055fc656434db871315e07403f0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.208
+      value: -6.79
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 09dc6055fc656434db871315e07403f0,
         type: 3}
@@ -3404,12 +3401,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2005768492}
   m_CullTransparentMesh: 1
---- !u!224 &2022815854 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4256103821566429912, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1786864132156152500}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2052069992 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4605109967475719455, guid: 364fd6cd014ce5e49a7e2b2a006e48c0,
@@ -3430,6 +3421,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 172448898061864782, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 172448898061864782, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3542,6 +3538,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1963472736381517586, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963472736381517586, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 172724893}
@@ -3555,35 +3556,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zone
       objectReference: {fileID: 0}
+    - target: {fileID: 4256103821566429912, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 648
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa6b7adbad41a874a8ddb8f459fb89eb, type: 3}
---- !u!114 &6366058127542496383 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 172448898061864782, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1786864132156152500}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7557443433566675246 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1963472736381517586, guid: fa6b7adbad41a874a8ddb8f459fb89eb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1786864132156152500}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7582228255009022595
 PrefabInstance:
   m_ObjectHideFlags: 0
