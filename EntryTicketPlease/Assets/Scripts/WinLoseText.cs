@@ -22,11 +22,7 @@ public class WinLoseText : MonoBehaviour
 
     // Update is called once per frame
    
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
+    
     public void displayEndDayUI(bool m_isWinning,int m_nbStars)
     {
    

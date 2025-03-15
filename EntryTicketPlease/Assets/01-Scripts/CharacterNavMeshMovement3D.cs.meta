@@ -3,7 +3,13 @@ guid: 1b4741ff30e01bf4ab5338c82ab93c07
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ticketPrefab: {instanceID: 0}
+  - tableTransform: {instanceID: 0}
+  - noDragZone: {instanceID: 0}
+  - worldSpaceCanvas: {instanceID: 0}
+  - validateButton: {instanceID: 0}
+  - refuseButton: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

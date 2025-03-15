@@ -262,7 +262,6 @@ MonoBehaviour:
   duration: 10
   startHour: 8
   endHour: 0
-  timewarnning: 2
   AlmostFinished:
     m_PersistentCalls:
       m_Calls: []
@@ -716,12 +715,18 @@ Transform:
   m_GameObject: {fileID: 382596334}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.08659056, y: 1.1806283, z: -7.738788}
+  m_LocalPosition: {x: -1.648, y: 0.898, z: -6.208}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &402341544 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7585049756647330826, guid: 3e7e4fa2f8a488d4b928448eb7432ec2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1737746205}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &422794763 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a293a77ca0535e84c85ef0697851e514,
@@ -2071,7 +2076,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_roundOpening: {fileID: 1302312016}
-  m_clock: {fileID: 0}
+  m_clock: {fileID: 133173078}
+  m_clockScript: {fileID: 133173080}
+  winLoseText: {fileID: 1561937483}
+  roundEnded: 0
+  succeededVisitors: 0
 --- !u!114 &1105230543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2111,6 +2120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9037f722a3a75439038d9b1ef3400e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontdestroy: {fileID: 402341544}
+  m_clock: {fileID: 0}
 --- !u!114 &1105230546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2209,6 +2220,7 @@ MonoBehaviour:
   m_thoughtChipPrefab: {fileID: 5424012295250041404, guid: 1781ef73a9aaf0f4d8efa72daf9844e2,
     type: 3}
   m_StartSignal: {fileID: 1031616749}
+  globalVolume: {fileID: 0}
   m_OnOpeningEnd:
     m_PersistentCalls:
       m_Calls: []
@@ -3128,6 +3140,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1512330760}
   m_CullTransparentMesh: 1
+--- !u!114 &1561937483 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 258645612426620465, guid: 3e7e4fa2f8a488d4b928448eb7432ec2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1737746205}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402341544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10ff26851885fcc408091e5732356ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1634394533
 GameObject:
   m_ObjectHideFlags: 0
@@ -3905,7 +3929,7 @@ PrefabInstance:
     - target: {fileID: 7585049756647330826, guid: 3e7e4fa2f8a488d4b928448eb7432ec2,
         type: 3}
       propertyPath: m_Name
-      value: Canvas (1)
+      value: EndCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 7585049756647330826, guid: 3e7e4fa2f8a488d4b928448eb7432ec2,
         type: 3}

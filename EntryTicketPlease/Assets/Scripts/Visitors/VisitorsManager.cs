@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Analytics;
 using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 
@@ -22,6 +23,8 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     private string[] menNames = { "Bastien", "Mathias", "Francois", "Clement" };
     private string[] womenNames = { "Lucie", "Julie", "Marion", "Celine" };
     private char[] sections = { 'A', 'B', 'C'};
+
+    
 
     [SerializeField] private CharacterData characterData;
 
@@ -272,6 +275,9 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
                     newVisitor.Initialize(visitorToSpawn.id, visitorToSpawn.ticket);
                     newVisitor.SetPrefab(visitorToSpawn.prefab);
+
+                    newVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    newVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitor = currentVisit;
 

@@ -130,6 +130,8 @@ public class RoundManager : SingletonMB<RoundManager>
 
         winLoseText.displayEndDayUI(isWin, starsAmount);
 
+        GameManager.Instance.OnRoundTerminated();
+
     }
 
     public void EndOfVisitor(bool isAllowed)
