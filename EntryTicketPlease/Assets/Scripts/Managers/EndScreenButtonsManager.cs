@@ -14,7 +14,7 @@ public class EndScreenButtonsManager : MonoBehaviour
     public void RetryClicked()
     {
         Destroy(SaveManager.Instance);
-        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        SceneManager.LoadScene("GameLucie", LoadSceneMode.Single);
     }
     
     public void NextDayClicked()
@@ -24,7 +24,7 @@ public class EndScreenButtonsManager : MonoBehaviour
         data.currentDate = data.currentDate.AddDays(1);
         SaveManager.Instance.SaveGameData(data);
 
-        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        SceneManager.LoadScene("GameLucie", LoadSceneMode.Single);
     }
 
     #endregion
