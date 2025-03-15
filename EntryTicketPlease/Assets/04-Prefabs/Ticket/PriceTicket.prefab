@@ -128,7 +128,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 88.97247, y: 23.00826, z: 109.683655, w: 25.709496}
+  m_margin: {x: 88.97247, y: 23.00826, z: 109.030014, w: 25.709496}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 88.97247, y: 23.00826, z: 109.683655, w: 25.709496}
+  m_margin: {x: 88.97247, y: 23.00826, z: 108.99407, w: 25.709496}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -280,6 +280,7 @@ GameObject:
   - component: {fileID: 4135729012894393516}
   - component: {fileID: 8528077377619162299}
   - component: {fileID: 7458521552069822477}
+  - component: {fileID: 7737235886532406307}
   m_Layer: 0
   m_Name: PriceTicket
   m_TagString: Untagged
@@ -365,6 +366,21 @@ MonoBehaviour:
   zoomScale: 1.5
   zoomSpeed: 5
   grabSound: {fileID: 8300000, guid: b3bc4b7607a7dc34db3ea4ab49a9da81, type: 3}
+--- !u!114 &7737235886532406307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7465834391473640660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1699f5e8516484290fb4c4666679dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kidsPrice: {fileID: 6732214702373438164}
+  teensPrice: {fileID: 7912262206181818082}
+  adultsPrice: {fileID: 6733665030480241922}
 --- !u!1 &7912262206181818082
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,7 +509,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 88.97247, y: 23.00826, z: 109.683655, w: 25.709496}
+  m_margin: {x: 88.97247, y: 23.00826, z: 108.95165, w: 25.709496}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

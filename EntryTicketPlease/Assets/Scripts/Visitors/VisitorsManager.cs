@@ -69,6 +69,10 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     /// </summary>
     public GameObject GetVisitor()
     {
+        if (currentVisitor == null)
+        {
+            Debug.LogError("currentVisitor est NULL !");
+        }
         return currentVisitor;
     }
 
@@ -231,7 +235,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
             newPrice = lowerPrices.Count > 0 ? lowerPrices[Random.Range(0, lowerPrices.Count)] : ticketPrice;
 
-            Debug.Log($"Âge : {age}, Prix réel : {ticketPrice}, Prix modifié : {newPrice}");
+            Debug.Log($"ï¿½ge : {age}, Prix rï¿½el : {ticketPrice}, Prix modifiï¿½ : {newPrice}");
 
             ticketPrice = newPrice ;
         }
