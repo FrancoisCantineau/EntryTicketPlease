@@ -31,7 +31,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     private List<Visitor> visitorQueue = new List<Visitor>();
 
-    UnityEvent spwanEvent;
+    public UnityEvent spwanEvent;
 
     /// <summary>
     /// Demands a float parameter between 0.0f and 1.0f. 
