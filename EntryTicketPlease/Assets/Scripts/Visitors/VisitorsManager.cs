@@ -23,25 +23,22 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
     private string[] menNames = { "Bastien", "Mathias", "Francois", "Clement" };
     private string[] womenNames = { "Lucie", "Julie", "Marion", "Celine" };
-    private char[] sections = { 'A', 'B', 'C'};
+    private char[] sections = { 'A', 'B', 'C' };
 
-    
+
 
     [SerializeField] private CharacterData characterData;
 
     private List<Visitor> visitorQueue = new List<Visitor>();
 
-    UnityEvent spwanEvent;
+    public UnityEvent spwanEvent = new();
 
     /// <summary>
     /// Demands a float parameter between 0.0f and 1.0f. 
     /// 0.0 = 0% fraud and 1.0 = 100% fraud 
     /// </summary>
 
-    private void Start()
-    {
-        spwanEvent = new UnityEvent();
-    }
+
     public void SetFraudPercentage(float m_fraudValue)
     {
         fraudValue = m_fraudValue;
@@ -87,7 +84,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     }
 
 
-    public bool  NextVisitor()
+    public bool NextVisitor()
     {
         if (currentVisitorIndex < visitorQueue.Count)
         {
@@ -100,13 +97,13 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             return false;
         }
     }
-    
+
 
 
 
     private void InitializeVisitor(int i)
-    { 
-        
+    {
+
 
         GameObject newVisitorObject = new GameObject("Visitor" + i);
         Visitor addedVisitor = newVisitorObject.AddComponent<Visitor>();
@@ -117,7 +114,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         Gender randomGender = genres[Random.Range(0, genres.Length)];
 
         GameObject prefabVisitor = characterData.GetVisitorModel(randomGender);
-      
+
 
         bool hasValidTicket = Random.value > validityTreshHoldValue;
 
@@ -139,14 +136,14 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
         float height = 0;
         float weight = 0;
 
-        
+
 
         if (randomGender == Gender.Male)
         {
             name = menNames[Random.Range(0, menNames.Length)];
             ticketName = name;
 
-             
+
 
             if (age < 12) // Childrens
             {
@@ -193,16 +190,16 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
             Fraud(randomGender, age);
         }
 
-        
+
         addedVisitor.SetPrefab(prefabVisitor);
 
-       //fill visitor's structs
+        //fill visitor's structs
         Visitor.VisitorID id = new Visitor.VisitorID(name, age, height, weight, randomGender);
         Visitor.VisitorTicket ticket = new Visitor.VisitorTicket(ticketName, ticketPrice, hasValidTicket, section);
 
-       
+
         addedVisitor.Initialize(id, ticket);
-        
+
         visitorQueue.Add(addedVisitor);
 
         Destroy(newVisitorObject);
@@ -215,30 +212,30 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     private void Fraud(Gender genre, int age)
     {
 
-            bool changeName = Random.value < fraudValue;
-            bool changePrice = Random.value < fraudValue;
+        bool changeName = Random.value < fraudValue;
+        bool changePrice = Random.value < fraudValue;
 
         //Name fraud
         if (changeName)
+        {
+            if (genre == Gender.Male)
             {
-                 if (genre == Gender.Male)
-                {
-                    string newName = menNames[Random.Range(0, menNames.Length)];
-                    ticketName = newName;
-                }
-                else if (genre == Gender.Female)
-                {
-                    string newName = womenNames[Random.Range(0, womenNames.Length)];
-                    ticketName = newName;
-                }
+                string newName = menNames[Random.Range(0, menNames.Length)];
+                ticketName = newName;
+            }
+            else if (genre == Gender.Female)
+            {
+                string newName = womenNames[Random.Range(0, womenNames.Length)];
+                ticketName = newName;
+            }
 
-            }   
-    
+        }
+
         //Price fraud
         if (changePrice)
-            {
-                
-                int newPrice = ticketPrice ;
+        {
+
+            int newPrice = ticketPrice;
 
             List<int> lowerPrices = GameSettings.priceTable.Values
             .Where(price => price < ticketPrice)
@@ -246,11 +243,11 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
             newPrice = lowerPrices.Count > 0 ? lowerPrices[Random.Range(0, lowerPrices.Count)] : ticketPrice;
 
-            Debug.Log($"�ge : {age}, Prix r�el : {ticketPrice}, Prix modifi� : {newPrice}");
+            Debug.Log($" ge : {age}, Prix r el : {ticketPrice}, Prix modifi  : {newPrice}");
 
-            ticketPrice = newPrice ;
+            ticketPrice = newPrice;
         }
-        
+
     }
 
 
@@ -259,16 +256,16 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
     /// </summary>
     public void SpawnVisitors()
     {
-       
+
         if (visitorQueue.Count > 0)
         {
-    
+
             if (currentVisitorIndex < visitorQueue.Count)
             {
-               
+
                 if (spawnPoint != null)
                 {
-                  
+
 
                     Visitor visitorToSpawn = visitorQueue[currentVisitorIndex];
 
@@ -301,7 +298,7 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
                 Debug.Log("La queue des visiteurs est vide.");
             }
         }
-        
+
     }
 
     /// <summary>

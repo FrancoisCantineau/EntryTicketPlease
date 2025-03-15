@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,6 +10,7 @@ public class ClockScript : MonoBehaviour
     [SerializeField] int nbSeconds;
     [SerializeField] TextMeshProUGUI affichage;
     [SerializeField] TextMeshPro calandar;
+    [SerializeField] TextMeshPro section;
     [SerializeField] int duration;
     [SerializeField] int startHour;
     [SerializeField] int endHour;
@@ -59,8 +61,29 @@ public class ClockScript : MonoBehaviour
         ratio = (duration * 60) / nbSeconds;
         GameTime = date;
         TimeSpan ts = new TimeSpan(startHour, 0, 0);
-        GameTime = GameTime.Date + ts;
+        GameTime = GameTime.Date + ts;        
         calandar.text = (Season)(GameTime.Month - 1) + "<br>" + GameTime.Day.ToString();
+        calandar.ForceMeshUpdate(true);
+
+        switch (roundData.closedSection)
+        {
+            case ClosedSection.A:
+                section.text = "A";
+                break;
+            case ClosedSection.B:
+                section.text = "B";
+                break;
+            case ClosedSection.C:
+                section.text = "C";
+                break;
+            case ClosedSection.N:
+                section.text = "-";
+                break;
+        }
+        section.ForceMeshUpdate(true);
+
+
+
         durationReturn = nbSeconds;
 
         StartCoroutine(Countdown());
