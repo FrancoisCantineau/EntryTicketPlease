@@ -7,11 +7,11 @@ public class DraggableObject : MonoBehaviour
     private Vector3 offset;
     private Camera mainCamera;
     private Vector3 initialScale;
-    private RectTransform rectTransform; 
+    private RectTransform rectTransform;
 
-    public Vector2 minBounds = new Vector2(-5f, -5f); 
+    public Vector2 minBounds = new Vector2(-5f, -5f);
     public Vector2 maxBounds = new Vector2(5f, 5f);
-    public RectTransform noDragZone; 
+    public RectTransform noDragZone;
     public float zoomScale = 1.5f;
     public float zoomSpeed = 5f;
 
@@ -44,12 +44,7 @@ public class DraggableObject : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        initialScale = rectTransform.localScale;
-        if (initialScale == Vector3.zero)
-        {
-            initialScale = Vector3.one;
-        }
-
+        // Ne pas définir initialScale ici, il sera défini par CharacterNavMeshMovement3D via SetInitialScale
         Invoke("FinishSpawning", 0.6f);
     }
 
@@ -192,6 +187,13 @@ public class DraggableObject : MonoBehaviour
 
     private void ZoomOut()
     {
-        // Ne rien faire ici pour laisser l'objet au-dessus
+        // Rien ici, l'échelle est gérée dans Update
+    }
+
+    // Méthode publique pour définir l'échelle initiale
+    public void SetInitialScale(Vector3 scale)
+    {
+        initialScale = scale;
+        // Ne pas définir rectTransform.localScale ici, car l'animation DOTween le fera
     }
 }

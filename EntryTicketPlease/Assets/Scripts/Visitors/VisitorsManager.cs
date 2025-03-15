@@ -281,7 +281,8 @@ public class VisitorsManager : SingletonMB<VisitorsManager>
 
                     currentVisitor = currentVisit;
 
-
+                    currentVisitor.AddComponent<CharacterNavMeshMovement3D>();
+                    currentVisitor.AddComponent<NavMeshAgent>();
 
                     currentVisitorIndex++;
                 }

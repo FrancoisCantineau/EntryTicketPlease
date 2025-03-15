@@ -30,6 +30,7 @@ public class GameManager : SingletonMB<GameManager>
     private void OnEnable()
     {
         m_clock.Finished.AddListener(OnRoundTerminated);
+        
     }
     #endregion
     #region API -------------------------------------------------------------------------
@@ -63,7 +64,7 @@ public class GameManager : SingletonMB<GameManager>
     {
         EndRound.Invoke();
         SceneManager.LoadScene("L_Mato_endDayScene", LoadSceneMode.Single);
-        dontdestroy.SetActive(true);
+        
     }
 
 
