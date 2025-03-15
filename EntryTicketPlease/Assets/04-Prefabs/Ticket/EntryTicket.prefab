@@ -365,6 +365,9 @@ MonoBehaviour:
   noDragZone: {fileID: 0}
   zoomScale: 3
   zoomSpeed: 5
+  smokeEffect: {fileID: 386060736830547425, guid: db0fb83c0d599f04281de7d6fa510915,
+    type: 3}
+  smokeSound: {fileID: 8300000, guid: 193565e7cf4e71548ac7d0d33f58d1ba, type: 3}
   grabSound: {fileID: 8300000, guid: b3bc4b7607a7dc34db3ea4ab49a9da81, type: 3}
 --- !u!114 &7904622450887873545
 MonoBehaviour:

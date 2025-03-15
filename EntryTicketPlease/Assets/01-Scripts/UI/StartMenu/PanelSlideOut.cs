@@ -16,6 +16,7 @@ public class PanelSlideOut : MonoBehaviour
         visiblePosition = rectPanel.anchoredPosition;
         hiddenPosition = new Vector2(rectPanel.anchoredPosition.x, Screen.height);
         rectPanel.gameObject.SetActive(true);
+        StartBouncingEffect();
     }
 
     void Update()
@@ -28,6 +29,17 @@ public class PanelSlideOut : MonoBehaviour
 
     private void SlideOut()
     {
+        DOTween.Kill("BounceEffect"); // Stoppe le rebond
         rectPanel.DOAnchorPos(hiddenPosition, slideDuration).SetEase(Ease.InOutQuad);
     }
+
+    private void StartBouncingEffect()
+    {
+        rectPanel.DOAnchorPosY(visiblePosition.y + 50f, 0.3f) // Monte de 30 pixels
+            .SetEase(Ease.OutQuad)
+            .SetLoops(-1, LoopType.Yoyo) // Rebond infini
+            .SetDelay(3f) // Toutes les 3 secondes
+            .SetId("BounceEffect"); // Identifiant pour stopper l'animation plus tard
+    }
+
 }

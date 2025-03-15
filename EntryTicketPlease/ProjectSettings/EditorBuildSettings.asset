@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/02-Scenes/L_MainMenu.unity
     guid: 6a70af4be255d014cbf5dbde76a910e6
   - enabled: 1
+    path: Assets/02-Scenes/MAIN.unity
+    guid: 6b155fbce2dfe134a92a3e27184d87cc
+  - enabled: 1
+    path: Assets/02-Scenes/L_Mato_endDayScene.unity
+    guid: 16ea902e153327941bdcfb2f79f32ae4
+  - enabled: 1
     path: Assets/02-Scenes/Lucie.unity
     guid: 7b9065c42cda42947902831c85cbb3c3
   - enabled: 0
@@ -17,7 +23,4 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/02-Scenes/New Folder/Game.unity
     guid: 07da4e1c6ef080a4abeecc37956e547e
-  - enabled: 1
-    path: Assets/02-Scenes/L_Mato_endDayScene.unity
-    guid: 16ea902e153327941bdcfb2f79f32ae4
   m_configObjects: {}
